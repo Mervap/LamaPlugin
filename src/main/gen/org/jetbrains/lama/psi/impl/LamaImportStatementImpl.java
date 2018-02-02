@@ -30,7 +30,7 @@ public class LamaImportStatementImpl extends LamaExpressionImpl implements LamaI
   @Override
   @Nullable
   public LamaIdentifierExpression getIdentifierExpression() {
-    return findChildByClass(LamaIdentifierExpression.class);
+    return PsiTreeUtil.getChildOfType(this, LamaIdentifierExpression.class);
   }
 
 }

@@ -36,7 +36,7 @@ public class LamaWhileStatementImpl extends LamaExpressionImpl implements LamaWh
   @Override
   @Nullable
   public LamaScope getScope() {
-    return findChildByClass(LamaScope.class);
+    return PsiTreeUtil.getChildOfType(this, LamaScope.class);
   }
 
 }

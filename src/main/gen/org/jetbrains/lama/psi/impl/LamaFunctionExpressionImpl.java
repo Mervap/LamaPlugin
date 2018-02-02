@@ -30,13 +30,13 @@ public class LamaFunctionExpressionImpl extends LamaExpressionImpl implements La
   @Override
   @Nullable
   public LamaFunctionBody getFunctionBody() {
-    return findChildByClass(LamaFunctionBody.class);
+    return PsiTreeUtil.getChildOfType(this, LamaFunctionBody.class);
   }
 
   @Override
   @NotNull
   public LamaParameterList getParameterList() {
-    return findNotNullChildByClass(LamaParameterList.class);
+    return notNullChild(PsiTreeUtil.getChildOfType(this, LamaParameterList.class));
   }
 
 }

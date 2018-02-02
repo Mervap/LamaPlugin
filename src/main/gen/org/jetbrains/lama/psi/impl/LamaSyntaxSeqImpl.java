@@ -29,7 +29,7 @@ public class LamaSyntaxSeqImpl extends LamaElementImpl implements LamaSyntaxSeq 
   @Override
   @Nullable
   public LamaExpression getExpression() {
-    return findChildByClass(LamaExpression.class);
+    return PsiTreeUtil.getChildOfType(this, LamaExpression.class);
   }
 
   @Override

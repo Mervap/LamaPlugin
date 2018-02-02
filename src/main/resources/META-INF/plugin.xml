@@ -18,5 +18,11 @@
 
         <langCodeStyleSettingsProvider implementation="org.jetbrains.lama.editor.formatting.LamaCodeStyleSettingsProvider"/>
         <lang.formatter language="Lama" implementationClass="org.jetbrains.lama.editor.formatting.LamaFormattingModelBuilder"/>
+
+        <completion.contributor language="Lama" implementationClass="org.jetbrains.lama.editor.completion.LamaCompletionContributor"/>
+
+        <stubIndex implementation="org.jetbrains.lama.psi.stubs.indices.LamaVariableNameIndex"/>
+        <stubIndex implementation="org.jetbrains.lama.psi.stubs.indices.LamaFunctionDefinitionNameIndex"/>
+        <stubIndex implementation="org.jetbrains.lama.psi.stubs.indices.LamaInfixOperatorDefinitionNameIndex"/>
     </extensions>
 </idea-plugin>

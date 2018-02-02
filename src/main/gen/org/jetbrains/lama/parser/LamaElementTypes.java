@@ -4,7 +4,8 @@ package org.jetbrains.lama.parser;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.PsiElement;
 import com.intellij.lang.ASTNode;
-import org.jetbrains.lama.psi.LamaElementType;
+import org.jetbrains.lama.psi.elementTypes.LamaElementType;
+import org.jetbrains.lama.psi.elementTypes.LamaElementTypeFactory;
 import org.jetbrains.lama.psi.impl.*;
 
 public interface LamaElementTypes {
@@ -26,7 +27,7 @@ public interface LamaElementTypes {
   IElementType LAMA_EXPRESSION = new LamaElementType("LAMA_EXPRESSION");
   IElementType LAMA_FOR_STATEMENT = new LamaElementType("LAMA_FOR_STATEMENT");
   IElementType LAMA_FUNCTION_BODY = new LamaElementType("LAMA_FUNCTION_BODY");
-  IElementType LAMA_FUNCTION_DEFINITION = new LamaElementType("LAMA_FUNCTION_DEFINITION");
+  IElementType LAMA_FUNCTION_DEFINITION = LamaElementTypeFactory.getElementTypeByName("LAMA_FUNCTION_DEFINITION");
   IElementType LAMA_FUNCTION_EXPRESSION = new LamaElementType("LAMA_FUNCTION_EXPRESSION");
   IElementType LAMA_IDENTIFIER_EXPRESSION = new LamaElementType("LAMA_IDENTIFIER_EXPRESSION");
   IElementType LAMA_IF_BRANCH = new LamaElementType("LAMA_IF_BRANCH");
@@ -34,7 +35,7 @@ public interface LamaElementTypes {
   IElementType LAMA_IMPORT_STATEMENT = new LamaElementType("LAMA_IMPORT_STATEMENT");
   IElementType LAMA_INFIX_EXPRESSION = new LamaElementType("LAMA_INFIX_EXPRESSION");
   IElementType LAMA_INFIX_OPERATOR = new LamaElementType("LAMA_INFIX_OPERATOR");
-  IElementType LAMA_INFIX_OPERATOR_DEFINITION = new LamaElementType("LAMA_INFIX_OPERATOR_DEFINITION");
+  IElementType LAMA_INFIX_OPERATOR_DEFINITION = LamaElementTypeFactory.getElementTypeByName("LAMA_INFIX_OPERATOR_DEFINITION");
   IElementType LAMA_LAZY_EXPRESSION = new LamaElementType("LAMA_LAZY_EXPRESSION");
   IElementType LAMA_LIST_CONS_OPERATOR = new LamaElementType("LAMA_LIST_CONS_OPERATOR");
   IElementType LAMA_LIST_EXPRESSION = new LamaElementType("LAMA_LIST_EXPRESSION");
@@ -59,48 +60,48 @@ public interface LamaElementTypes {
   IElementType LAMA_SYNTAX_PRIMARY_PARENTHESIZED = new LamaElementType("LAMA_SYNTAX_PRIMARY_PARENTHESIZED");
   IElementType LAMA_SYNTAX_SEQ = new LamaElementType("LAMA_SYNTAX_SEQ");
   IElementType LAMA_S_OR_AT_PATTERN = new LamaElementType("LAMA_S_OR_AT_PATTERN");
-  IElementType LAMA_VARIABLE_DEFINITION = new LamaElementType("LAMA_VARIABLE_DEFINITION");
-  IElementType LAMA_VARIABLE_DEFINITION_EXPRESSION = new LamaElementType("LAMA_VARIABLE_DEFINITION_EXPRESSION");
+  IElementType LAMA_VARIABLE_DEFINITION = LamaElementTypeFactory.getElementTypeByName("LAMA_VARIABLE_DEFINITION");
+  IElementType LAMA_VARIABLE_DEFINITION_SERIES = new LamaElementType("LAMA_VARIABLE_DEFINITION_SERIES");
   IElementType LAMA_WHILE_STATEMENT = new LamaElementType("LAMA_WHILE_STATEMENT");
   IElementType LAMA_WILDCARD_PATTERN = new LamaElementType("LAMA_WILDCARD_PATTERN");
 
   IElementType LAMA_AFTER = new LamaElementType("after");
   IElementType LAMA_AND = new LamaElementType("&&");
-  IElementType LAMA_ARRAY = new LamaElementType("ARRAY");
+  IElementType LAMA_ARRAY = new LamaElementType("array");
   IElementType LAMA_ARROW = new LamaElementType("->");
   IElementType LAMA_ASSIGN = new LamaElementType(":=");
   IElementType LAMA_AT = new LamaElementType("at");
   IElementType LAMA_AT_SIGN = new LamaElementType("@");
   IElementType LAMA_BEFORE = new LamaElementType("before");
   IElementType LAMA_BOTTOM = new LamaElementType("_");
-  IElementType LAMA_BOX = new LamaElementType("BOX");
-  IElementType LAMA_CASE = new LamaElementType("CASE");
+  IElementType LAMA_BOX = new LamaElementType("box");
+  IElementType LAMA_CASE = new LamaElementType("case");
   IElementType LAMA_CASE_OR = new LamaElementType("|");
   IElementType LAMA_CHAR = new LamaElementType("CHAR");
   IElementType LAMA_COMMA = new LamaElementType(",");
   IElementType LAMA_DIV = new LamaElementType("/");
-  IElementType LAMA_DO = new LamaElementType("DO");
+  IElementType LAMA_DO = new LamaElementType("do");
   IElementType LAMA_DOLLAR_LPAR = new LamaElementType("$(");
   IElementType LAMA_DOT = new LamaElementType(".");
   IElementType LAMA_ELIF = new LamaElementType("elif");
   IElementType LAMA_ELSE = new LamaElementType("else");
   IElementType LAMA_EQ = new LamaElementType("=");
   IElementType LAMA_EQEQ = new LamaElementType("==");
-  IElementType LAMA_ESAC = new LamaElementType("ESAC");
-  IElementType LAMA_ETA = new LamaElementType("ETA");
-  IElementType LAMA_FALSE = new LamaElementType("FALSE");
-  IElementType LAMA_FI = new LamaElementType("FI");
-  IElementType LAMA_FOR = new LamaElementType("FOR");
-  IElementType LAMA_FUN = new LamaElementType("FUN");
+  IElementType LAMA_ESAC = new LamaElementType("esac");
+  IElementType LAMA_ETA = new LamaElementType("eta");
+  IElementType LAMA_FALSE = new LamaElementType("false");
+  IElementType LAMA_FI = new LamaElementType("fi");
+  IElementType LAMA_FOR = new LamaElementType("for");
+  IElementType LAMA_FUN = new LamaElementType("fun");
   IElementType LAMA_GE = new LamaElementType(">");
   IElementType LAMA_GEQ = new LamaElementType(">=");
-  IElementType LAMA_IF = new LamaElementType("IF");
-  IElementType LAMA_IMPORT = new LamaElementType("IMPORT");
-  IElementType LAMA_INFIX = new LamaElementType("INFIX");
+  IElementType LAMA_IF = new LamaElementType("if");
+  IElementType LAMA_IMPORT = new LamaElementType("import");
+  IElementType LAMA_INFIX = new LamaElementType("infix");
   IElementType LAMA_INFIXL = new LamaElementType("infixl");
   IElementType LAMA_INFIXR = new LamaElementType("infixr");
   IElementType LAMA_INFIX_OP = new LamaElementType("INFIX_OP");
-  IElementType LAMA_LAZY = new LamaElementType("LAZY");
+  IElementType LAMA_LAZY = new LamaElementType("lazy");
   IElementType LAMA_LBRACE = new LamaElementType("{");
   IElementType LAMA_LBRACKET = new LamaElementType("[");
   IElementType LAMA_LE = new LamaElementType("<");
@@ -113,8 +114,8 @@ public interface LamaElementTypes {
   IElementType LAMA_MUL = new LamaElementType("*");
   IElementType LAMA_NEQ = new LamaElementType("!=");
   IElementType LAMA_NUMBER = new LamaElementType("NUMBER");
-  IElementType LAMA_OD = new LamaElementType("OD");
-  IElementType LAMA_OF = new LamaElementType("OF");
+  IElementType LAMA_OD = new LamaElementType("od");
+  IElementType LAMA_OF = new LamaElementType("of");
   IElementType LAMA_OR = new LamaElementType("!!");
   IElementType LAMA_PLUS = new LamaElementType("+");
   IElementType LAMA_PUBLIC = new LamaElementType("public");
@@ -123,18 +124,18 @@ public interface LamaElementTypes {
   IElementType LAMA_RBRACKET = new LamaElementType("]");
   IElementType LAMA_RPAR = new LamaElementType(")");
   IElementType LAMA_SEMI = new LamaElementType(";");
-  IElementType LAMA_SEXP = new LamaElementType("SEXP");
+  IElementType LAMA_SEXP = new LamaElementType("sexp");
   IElementType LAMA_SHARP = new LamaElementType("#");
-  IElementType LAMA_SKIP = new LamaElementType("SKIP");
-  IElementType LAMA_STR = new LamaElementType("STR");
+  IElementType LAMA_SKIP = new LamaElementType("skip");
+  IElementType LAMA_STR = new LamaElementType("str");
   IElementType LAMA_STRING = new LamaElementType("STRING");
-  IElementType LAMA_SYNTAX = new LamaElementType("SYNTAX");
+  IElementType LAMA_SYNTAX = new LamaElementType("syntax");
   IElementType LAMA_THEN = new LamaElementType("then");
-  IElementType LAMA_TRUE = new LamaElementType("TRUE");
+  IElementType LAMA_TRUE = new LamaElementType("true");
   IElementType LAMA_UINDENT = new LamaElementType("UINDENT");
-  IElementType LAMA_VAL = new LamaElementType("VAL");
+  IElementType LAMA_VAL = new LamaElementType("val");
   IElementType LAMA_VAR = new LamaElementType("var");
-  IElementType LAMA_WHILE = new LamaElementType("WHILE");
+  IElementType LAMA_WHILE = new LamaElementType("while");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
@@ -289,8 +290,8 @@ public interface LamaElementTypes {
       else if (type == LAMA_VARIABLE_DEFINITION) {
         return new LamaVariableDefinitionImpl(node);
       }
-      else if (type == LAMA_VARIABLE_DEFINITION_EXPRESSION) {
-        return new LamaVariableDefinitionExpressionImpl(node);
+      else if (type == LAMA_VARIABLE_DEFINITION_SERIES) {
+        return new LamaVariableDefinitionSeriesImpl(node);
       }
       else if (type == LAMA_WHILE_STATEMENT) {
         return new LamaWhileStatementImpl(node);

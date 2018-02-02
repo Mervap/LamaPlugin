@@ -9,7 +9,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.jetbrains.lama.parser.LamaElementTypes.*;
 import org.jetbrains.lama.psi.api.*;
-import com.intellij.psi.PsiReference;
+import org.jetbrains.lama.psi.references.LamaReferenceBase;
 
 public class LamaOperatorImpl extends LamaElementImpl implements LamaOperator {
 
@@ -35,7 +35,7 @@ public class LamaOperatorImpl extends LamaElementImpl implements LamaOperator {
 
   @Override
   @Nullable
-  public PsiReference getReference() {
+  public LamaReferenceBase<?> getReference() {
     return LamaPsiImplUtil.getReference(this);
   }
 

@@ -1,7 +1,8 @@
-package org.jetbrains.lama.psi
+package org.jetbrains.lama.psi.elementTypes
 
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFileFactory
+import org.jetbrains.lama.psi.LamaLanguage
 import org.jetbrains.lama.psi.api.LamaFile
 import org.jetbrains.lama.psi.api.LamaPsiElement
 

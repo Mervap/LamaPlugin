@@ -4,8 +4,12 @@ package org.jetbrains.lama.psi.api;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNamedElement;
+import com.intellij.psi.StubBasedPsiElement;
+import org.jetbrains.lama.psi.stubs.LamaInfixOperatorDefinitionStub;
+import org.jetbrains.lama.psi.stubs.LamaInfixAssociativity;
 
-public interface LamaInfixOperatorDefinition extends LamaPsiElement {
+public interface LamaInfixOperatorDefinition extends LamaDefinition, PsiNamedElement, StubBasedPsiElement<LamaInfixOperatorDefinitionStub> {
 
   @Nullable
   LamaFunctionBody getFunctionBody();
@@ -15,5 +19,23 @@ public interface LamaInfixOperatorDefinition extends LamaPsiElement {
 
   @Nullable
   LamaParameterList getParameterList();
+
+  @NotNull
+  String getName();
+
+  @NotNull
+  PsiElement setName(@NotNull String name);
+
+  @NotNull
+  LamaInfixAssociativity getAssociativity();
+
+  @NotNull
+  String getParameters();
+
+  @NotNull
+  LamaOperator getNameOperator();
+
+  @Nullable
+  LamaOperator getLevelOperator();
 
 }

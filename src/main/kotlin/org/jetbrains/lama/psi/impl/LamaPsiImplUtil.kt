@@ -3,10 +3,17 @@
 package org.jetbrains.lama.psi.impl
 
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.PsiReference
 import com.intellij.psi.util.PsiTreeUtil
-import org.jetbrains.lama.psi.LamaElementFactory
+import com.intellij.psi.util.elementType
+import com.intellij.util.IncorrectOperationException
+import org.jetbrains.lama.parser.LamaElementTypes
+import org.jetbrains.lama.psi.elementTypes.LamaElementFactory
 import org.jetbrains.lama.psi.api.*
+import org.jetbrains.lama.psi.references.LamaReferenceBase
+import org.jetbrains.lama.psi.stubs.LAMA_INFIX_ASSOCIATIVITY_TYPES
+import org.jetbrains.lama.psi.stubs.LamaInfixAssociativity
 
 internal object LamaPsiImplUtil {
 
@@ -41,10 +48,10 @@ internal object LamaPsiImplUtil {
   }
 
   @JvmStatic
-  fun getReference(expression: LamaExpression): PsiReference? = null
+  fun getReference(expression: LamaExpression): LamaReferenceBase<*>? = null
 
   @JvmStatic
-  fun getReference(operator: LamaOperator): PsiReference? = null
+  fun getReference(operator: LamaOperator): LamaReferenceBase<*>? = null
 
   @JvmStatic
   fun getName(operator: LamaOperator): String = operator.text
@@ -70,5 +77,91 @@ internal object LamaPsiImplUtil {
   @JvmStatic
   fun getOperator(expr: LamaOperatorExpression): LamaOperator? {
     return PsiTreeUtil.getChildOfType(expr, LamaOperator::class.java)
+  }
+
+  @JvmStatic
+  fun setName(definition: LamaVariableDefinition, name: String): PsiElement {
+    val nameIdentifier = definition.nameIdentifier ?: throw IncorrectOperationException("Empty name: $this")
+    nameIdentifier.setName(name)
+    return definition
+  }
+
+  @JvmStatic
+  fun getName(definition: LamaVariableDefinitionImpl): String {
+    return definition.greenStub?.name ?: definition.nameIdentifier?.name ?: "<unnamed>"
+  }
+
+  @JvmStatic
+  fun getNameIdentifier(assignment: LamaVariableDefinition): PsiNamedElement? {
+    return assignment.firstChild as? PsiNamedElement
+  }
+
+  @JvmStatic
+  fun setName(definition: LamaFunctionDefinition, name: String): PsiElement {
+    val nameIdentifier = definition.nameIdentifier ?: throw IncorrectOperationException("Empty name: $this")
+    nameIdentifier.setName(name)
+    return definition
+  }
+
+  @JvmStatic
+  fun getName(definition: LamaFunctionDefinitionImpl): String {
+    return definition.greenStub?.name ?: definition.nameIdentifier?.name ?: "<unnamed>"
+  }
+
+  @JvmStatic
+  fun getNameIdentifier(assignment: LamaFunctionDefinition): PsiNamedElement? {
+    return PsiTreeUtil.getChildOfType(assignment, LamaIdentifierExpression::class.java)
+  }
+
+
+  @JvmStatic
+  fun setName(definition: LamaInfixOperatorDefinition, name: String): PsiElement {
+    val nameOperator = definition.nameOperator
+    val replacement = LamaElementFactory.createLamaPsiElementFromText(nameOperator.project, "1 $name 1").children[1]
+    return nameOperator.replace(replacement)
+  }
+
+  @JvmStatic
+  fun getName(definition: LamaInfixOperatorDefinitionImpl): String {
+    return definition.greenStub?.name ?: definition.nameOperator.name ?: "<unnamed>"
+  }
+
+  @JvmStatic
+  fun getDefaultValue(variable: LamaVariableDefinitionImpl): String? {
+    val stub = variable.greenStub
+    if (stub != null) {
+      return stub.defaultValue
+    }
+    return variable.defaultValueExpression?.text
+  }
+
+  @JvmStatic
+  fun isPublic(function: LamaFunctionDefinitionImpl): Boolean {
+    return function.greenStub?.isPublic ?: (function.firstChild?.elementType == LamaElementTypes.LAMA_PUBLIC)
+  }
+
+  @JvmStatic
+  fun getParameters(function: LamaFunctionDefinitionImpl): String {
+    return function.greenStub?.parameters ?: function.parameterList?.text ?: "()"
+  }
+
+  @JvmStatic
+  fun getParameters(infix: LamaInfixOperatorDefinitionImpl): String {
+    return infix.greenStub?.parameters ?: infix.parameterList?.text ?: "()"
+  }
+
+  @JvmStatic
+  fun getAssociativity(infix: LamaInfixOperatorDefinitionImpl): LamaInfixAssociativity {
+    val stub = infix.greenStub
+    if (stub != null) {
+      return stub.associativity
+    }
+
+    val associativity = infix.children.firstOrNull { it.elementType in LAMA_INFIX_ASSOCIATIVITY_TYPES }
+    return when (associativity?.elementType) {
+      LamaElementTypes.LAMA_INFIXL -> LamaInfixAssociativity.INFIXL
+      LamaElementTypes.LAMA_INFIXR -> LamaInfixAssociativity.INFIXR
+      else -> LamaInfixAssociativity.INFIX
+    }
   }
 }

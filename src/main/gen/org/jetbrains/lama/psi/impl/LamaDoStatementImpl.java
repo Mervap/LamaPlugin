@@ -36,7 +36,7 @@ public class LamaDoStatementImpl extends LamaExpressionImpl implements LamaDoSta
   @Override
   @Nullable
   public LamaScope getScope() {
-    return findChildByClass(LamaScope.class);
+    return PsiTreeUtil.getChildOfType(this, LamaScope.class);
   }
 
 }

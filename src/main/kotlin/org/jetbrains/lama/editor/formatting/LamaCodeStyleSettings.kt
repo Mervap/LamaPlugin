@@ -1,3 +1,5 @@
+@file:Suppress("PropertyName")
+
 package org.jetbrains.lama.editor.formatting
 
 import com.intellij.psi.codeStyle.CodeStyleSettings

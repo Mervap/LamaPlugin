@@ -30,7 +30,7 @@ public class LamaParenthesizedExpressionImpl extends LamaExpressionImpl implemen
   @Override
   @Nullable
   public LamaScope getScope() {
-    return findChildByClass(LamaScope.class);
+    return PsiTreeUtil.getChildOfType(this, LamaScope.class);
   }
 
 }

@@ -29,7 +29,7 @@ public class LamaFunctionBodyImpl extends LamaElementImpl implements LamaFunctio
   @Override
   @Nullable
   public LamaScope getScope() {
-    return findChildByClass(LamaScope.class);
+    return PsiTreeUtil.getChildOfType(this, LamaScope.class);
   }
 
 }

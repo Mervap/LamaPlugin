@@ -1,12 +1,15 @@
 {
   parserClass="org.jetbrains.lama.parser.LamaParser"
+  elementTypeFactory("variable_definition")="org.jetbrains.lama.psi.elementTypes.LamaElementTypeFactory.getElementTypeByName"
+  elementTypeFactory("function_definition")="org.jetbrains.lama.psi.elementTypes.LamaElementTypeFactory.getElementTypeByName"
+  elementTypeFactory("infix_operator_definition")="org.jetbrains.lama.psi.elementTypes.LamaElementTypeFactory.getElementTypeByName"
   implements="org.jetbrains.lama.psi.api.LamaPsiElement"
   extends="org.jetbrains.lama.psi.impl.LamaElementImpl"
 
   elementTypeHolderClass="org.jetbrains.lama.parser.LamaElementTypes"
   elementTypePrefix="LAMA_"
-  elementTypeClass="org.jetbrains.lama.psi.LamaElementType"
-  tokenTypeClass="org.jetbrains.lama.psi.LamaElementType"
+  elementTypeClass="org.jetbrains.lama.psi.elementTypes.LamaElementType"
+  tokenTypeClass="org.jetbrains.lama.psi.elementTypes.LamaElementType"
 
   psiImplUtilClass="org.jetbrains.lama.psi.impl.LamaPsiImplUtil"
 
@@ -56,13 +59,15 @@
   implements("identifier_expression")="com.intellij.psi.PsiNamedElement"
   implements("string_literal")="com.intellij.psi.PsiNamedElement"
   implements("char_literal")="com.intellij.psi.PsiNamedElement"
-
+  implements("variable_definition")="com.intellij.psi.PsiNameIdentifierOwner"
+  implements("function_definition")="com.intellij.psi.PsiNameIdentifierOwner"
+  implements("infix_operator_definition")="com.intellij.psi.PsiNamedElement"
   generateTokenAccessors=false
 }
 
 root ::= import_statement* scope
 import_statement ::= recoverable_import_statement ";" { pin=1 }
-private recoverable_import_statement ::= IMPORT identifier_expression { pin=1; recoverWhile=semi_recover_rule }
+private recoverable_import_statement ::= import identifier_expression { pin=1; recoverWhile=semi_recover_rule }
 private semi_recover_rule ::= !";"
 
 scope ::= definition* [ expression_series ]
@@ -84,21 +89,39 @@ private do_scope_recover_rule              ::= !od
 private for_scope_recover_rule             ::= !("," | do)
 private case_branch_recover_rule           ::= !("|" | esac)
 
-private definition ::= variable_definition_expression | function_definition | infix_operator_definition
+private definition ::= variable_definition_series | function_definition | infix_operator_definition
 
-variable_definition_expression ::= (variable_definition_var_expression | variable_definition_public_expression) ";" { pin=1 }
-private variable_definition_var_expression    ::= var variable_definition_sequence      { pin=1; recoverWhile=semi_recover_rule }
-private variable_definition_public_expression ::= public variable_definition_sequence   {        recoverWhile=semi_recover_rule }
+variable_definition_series ::= (variable_definition_var_series | variable_definition_public_series) ";" { pin=1 }
+private variable_definition_var_series    ::= var variable_definition_sequence      { pin=1; recoverWhile=semi_recover_rule }
+private variable_definition_public_series ::= public variable_definition_sequence   {        recoverWhile=semi_recover_rule }
 private variable_definition_sequence ::= variable_definition ("," variable_definition)* { pin(".*")='","'; }
-variable_definition ::= identifier_expression [ variable_definition_default_value ]     { pin=1; }
+variable_definition ::= identifier_expression [ variable_definition_default_value ]     {
+  pin=1
+  methods=[getName setName getNameIdentifier getDefaultValue defaultValueExpression="expression[1]"]
+  extends="org.jetbrains.lama.psi.impl.LamaVariableDefinitionBase"
+  stubClass="org.jetbrains.lama.psi.stubs.LamaVariableDefinitionStub"
+  implements="org.jetbrains.lama.psi.api.LamaDefinition"
+}
 private variable_definition_default_value ::= "=" expression { pin = 1 }
 
-function_definition ::= [ public ] fun identifier_expression parameter_list function_body { pin=3 }
+function_definition ::= [ public ] fun identifier_expression parameter_list function_body {
+  pin=3;
+  methods=[getName setName getNameIdentifier isPublic getParameters]
+  extends="org.jetbrains.lama.psi.impl.LamaFunctionDefinitionBase"
+  stubClass="org.jetbrains.lama.psi.stubs.LamaFunctionDefinitionStub"
+  implements="org.jetbrains.lama.psi.api.LamaDefinition"
+}
 parameter_list ::= "(" [ pattern_list ] ")"     { pin=1 }
 private pattern_list ::= pattern ("," pattern)* { pin(".*")='","' }
 function_body ::= "{" function_body_scope "}"   { pin=1; }
 
-infix_operator_definition ::= infix_head parameter_list function_body { pin=1 }
+infix_operator_definition ::= infix_head parameter_list function_body {
+  pin=1
+  methods=[getName setName getAssociativity getParameters nameOperator="operator[0]" levelOperator="operator[1]"]
+  extends="org.jetbrains.lama.psi.impl.LamaInfixOperatorDefinitionBase"
+  stubClass="org.jetbrains.lama.psi.stubs.LamaInfixOperatorDefinitionStub"
+  implements="org.jetbrains.lama.psi.api.LamaDefinition"
+}
 private infix_head ::= [ public ] (infix | infixl | infixr) any_operator [ at | before | after ] any_operator
 
 private expression_series_list ::= expression_series ("," expression_series)* { pin(".*")='","' }
@@ -126,7 +149,7 @@ compare_operator     ::= "==" | "!=" | "<=" | "<" | ">=" | ">"
 plus_minus_operator  ::= "+" | "-"
 mul_div_mod_operator ::= "*" | "/" | "%"
 dot_operator         ::= "."
-infix_operator       ::= INFIX_OP | "@" | "#" | "->" | ("|" !(pattern "->")) { methods=[ setName ] }
+infix_operator       ::= INFIX_OP | "@" | "#" | "->" | ("|" !(pattern "->")) | "=" | "?" { methods=[ setName ] }
 
 fake operator_expression ::= { methods=[ getOperator getLeftExpr getRightExpr ] }
 
@@ -147,11 +170,11 @@ mul_div_mod_expression    ::= expression mul_div_mod_operator expression { eleme
 dot_expression            ::= expression dot_operator expression         { elementType=operator_expression }
 infix_operator_expression ::= expression infix_operator expression       { elementType=operator_expression }
 
-infix_expression ::= INFIX any_operator { pin=1 }
-eta_expression   ::= ETA   expression   { pin=1 }
-lazy_expression  ::= LAZY  expression   { pin=1 }
+infix_expression ::= infix any_operator { pin=1 }
+eta_expression   ::= eta   expression   { pin=1 }
+lazy_expression  ::= lazy  expression   { pin=1 }
 
-syntax_expression   ::= SYNTAX "(" syntax_seqs ")"   { pin=1 }
+syntax_expression   ::= syntax "(" syntax_seqs ")"   { pin=1 }
 private syntax_seqs ::= syntax_seq ("|" syntax_seq)* { pin(".*")=1 }
 syntax_seq ::= syntax_binding+ [ syntax_seq_body ]   { pin=1 }
 private syntax_seq_body ::= "{" expression "}"       { pin=1 }
@@ -164,15 +187,15 @@ syntax_primary_expression_from ::= "$(" expression_series ")"         { pin=1 }
 numeric_literal ::= NUMBER | "-" NUMBER
 string_literal  ::= STRING { methods=[ getName setName ] }
 char_literal    ::= CHAR   { methods=[ getName setName ] }
-boolean_literal ::= TRUE | FALSE
-skip_expression ::= SKIP
+boolean_literal ::= true | false
+skip_expression ::= skip
 
-function_expression ::= FUN parameter_list function_body { pin=2 }
-if_statement        ::= IF expression_series then_branch elif_branch* [ else_branch ] FI     { pin=1 }
-while_statement ::= WHILE expression_series DO do_scope OD { pin=1 }
-do_statement    ::= DO do_while_scope WHILE expression_series OD { pin=1 }
-for_statement   ::= FOR for_scope "," expression_series "," expression_series DO do_scope OD { pin=1; methods=[ beforeAll="scope[0]" ] }
-case_statement  ::= CASE expression_series OF case_branch another_case_branch* ESAC          { pin=1 }
+function_expression ::= fun parameter_list function_body { pin=2 }
+if_statement        ::= if expression_series then_branch elif_branch* [ else_branch ] fi     { pin=1 }
+while_statement ::= while expression_series do do_scope od { pin=1 }
+do_statement    ::= do do_while_scope while expression_series od { pin=1 }
+for_statement   ::= for for_scope "," expression_series "," expression_series do do_scope od { pin=1; methods=[ beforeAll="scope[0]" ] }
+case_statement  ::= case expression_series of case_branch another_case_branch* esac          { pin=1 }
 
 fake if_branch ::= {}
 then_branch ::= then then_scope                        { elementType=if_branch; pin=1 }
@@ -194,6 +217,6 @@ private s_pattern_suffix  ::= "(" pattern_list ")" { pin=1 }
 private at_pattern_suffix ::= "@" pattern          { pin=1 }
 array_pattern ::= "[" [ pattern_list ] "]"         { pin=1 }
 list_pattern  ::= "{" [ pattern_list ] "}"         { pin=1 }
-sharp_pattern ::= "#" (BOX | VAL | STR | ARRAY | SEXP | FUN)
+sharp_pattern ::= "#" (box | val | str | array | sexp | fun)
 
 identifier_expression ::= UINDENT | LINDENT { methods=[ getReference getName setName ] }

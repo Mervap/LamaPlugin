@@ -44,4 +44,10 @@ public class LamaScopeImpl extends LamaElementImpl implements LamaScope {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaInfixOperatorDefinition.class);
   }
 
+  @Override
+  @NotNull
+  public List<LamaVariableDefinitionSeries> getVariableDefinitionSeriesList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaVariableDefinitionSeries.class);
+  }
+
 }

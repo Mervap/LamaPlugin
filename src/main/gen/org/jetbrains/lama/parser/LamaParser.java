@@ -46,8 +46,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
       LAMA_FOR_STATEMENT, LAMA_FUNCTION_EXPRESSION, LAMA_IDENTIFIER_EXPRESSION, LAMA_IF_STATEMENT,
       LAMA_IMPORT_STATEMENT, LAMA_INFIX_EXPRESSION, LAMA_LAZY_EXPRESSION, LAMA_LIST_EXPRESSION,
       LAMA_NUMERIC_LITERAL, LAMA_OPERATOR_EXPRESSION, LAMA_PARENTHESIZED_EXPRESSION, LAMA_SKIP_EXPRESSION,
-      LAMA_STRING_LITERAL, LAMA_SUBSCRIPTION_EXPRESSION, LAMA_SYNTAX_EXPRESSION, LAMA_VARIABLE_DEFINITION_EXPRESSION,
-      LAMA_WHILE_STATEMENT),
+      LAMA_STRING_LITERAL, LAMA_SUBSCRIPTION_EXPRESSION, LAMA_SYNTAX_EXPRESSION, LAMA_WHILE_STATEMENT),
   };
 
   /* ********************************************************** */
@@ -229,11 +228,11 @@ public class LamaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // variable_definition_expression | function_definition | infix_operator_definition
+  // variable_definition_series | function_definition | infix_operator_definition
   static boolean definition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "definition")) return false;
     boolean r;
-    r = variable_definition_expression(b, l + 1);
+    r = variable_definition_series(b, l + 1);
     if (!r) r = function_definition(b, l + 1);
     if (!r) r = infix_operator_definition(b, l + 1);
     return r;
@@ -573,7 +572,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INFIX_OP | "@" | "#" | "->" | ("|" !(pattern "->"))
+  // INFIX_OP | "@" | "#" | "->" | ("|" !(pattern "->")) | "=" | "?"
   public static boolean infix_operator(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "infix_operator")) return false;
     boolean r;
@@ -583,6 +582,8 @@ public class LamaParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, LAMA_SHARP);
     if (!r) r = consumeToken(b, LAMA_ARROW);
     if (!r) r = infix_operator_4(b, l + 1);
+    if (!r) r = consumeToken(b, LAMA_EQ);
+    if (!r) r = consumeToken(b, LAMA_QUEST);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -851,7 +852,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IMPORT identifier_expression
+  // import identifier_expression
   static boolean recoverable_import_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "recoverable_import_statement")) return false;
     boolean r, p;
@@ -972,7 +973,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // "#" (BOX | VAL | STR | ARRAY | SEXP | FUN)
+  // "#" (box | val | str | array | sexp | fun)
   public static boolean sharp_pattern(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "sharp_pattern")) return false;
     if (!nextTokenIs(b, LAMA_SHARP)) return false;
@@ -984,7 +985,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // BOX | VAL | STR | ARRAY | SEXP | FUN
+  // box | val | str | array | sexp | fun
   private static boolean sharp_pattern_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "sharp_pattern_1")) return false;
     boolean r;
@@ -1333,34 +1334,9 @@ public class LamaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (variable_definition_var_expression | variable_definition_public_expression) ";"
-  public static boolean variable_definition_expression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "variable_definition_expression")) return false;
-    if (!nextTokenIs(b, "<variable definition expression>", LAMA_PUBLIC, LAMA_VAR)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, LAMA_VARIABLE_DEFINITION_EXPRESSION, "<variable definition expression>");
-    r = variable_definition_expression_0(b, l + 1);
-    p = r; // pin = 1
-    r = r && consumeToken(b, LAMA_SEMI);
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
-  }
-
-  // variable_definition_var_expression | variable_definition_public_expression
-  private static boolean variable_definition_expression_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "variable_definition_expression_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = variable_definition_var_expression(b, l + 1);
-    if (!r) r = variable_definition_public_expression(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  /* ********************************************************** */
   // public variable_definition_sequence
-  static boolean variable_definition_public_expression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "variable_definition_public_expression")) return false;
+  static boolean variable_definition_public_series(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "variable_definition_public_series")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_);
     r = consumeToken(b, LAMA_PUBLIC);
@@ -1406,9 +1382,34 @@ public class LamaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // (variable_definition_var_series | variable_definition_public_series) ";"
+  public static boolean variable_definition_series(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "variable_definition_series")) return false;
+    if (!nextTokenIs(b, "<variable definition series>", LAMA_PUBLIC, LAMA_VAR)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, LAMA_VARIABLE_DEFINITION_SERIES, "<variable definition series>");
+    r = variable_definition_series_0(b, l + 1);
+    p = r; // pin = 1
+    r = r && consumeToken(b, LAMA_SEMI);
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // variable_definition_var_series | variable_definition_public_series
+  private static boolean variable_definition_series_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "variable_definition_series_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = variable_definition_var_series(b, l + 1);
+    if (!r) r = variable_definition_public_series(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // var variable_definition_sequence
-  static boolean variable_definition_var_expression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "variable_definition_var_expression")) return false;
+  static boolean variable_definition_var_series(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "variable_definition_var_series")) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
     r = consumeToken(b, LAMA_VAR);
@@ -1552,7 +1553,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // IF expression_series then_branch elif_branch* [ else_branch ] FI
+  // if expression_series then_branch elif_branch* [ else_branch ] fi
   public static boolean if_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "if_statement")) return false;
     if (!nextTokenIsSmart(b, LAMA_IF)) return false;
@@ -1587,7 +1588,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // WHILE expression_series DO do_scope OD
+  // while expression_series do do_scope od
   public static boolean while_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "while_statement")) return false;
     if (!nextTokenIsSmart(b, LAMA_WHILE)) return false;
@@ -1603,7 +1604,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // FOR for_scope "," expression_series "," expression_series DO do_scope OD
+  // for for_scope "," expression_series "," expression_series do do_scope od
   public static boolean for_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "for_statement")) return false;
     if (!nextTokenIsSmart(b, LAMA_FOR)) return false;
@@ -1623,7 +1624,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // DO do_while_scope WHILE expression_series OD
+  // do do_while_scope while expression_series od
   public static boolean do_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "do_statement")) return false;
     if (!nextTokenIsSmart(b, LAMA_DO)) return false;
@@ -1639,7 +1640,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // CASE expression_series OF case_branch another_case_branch* ESAC
+  // case expression_series of case_branch another_case_branch* esac
   public static boolean case_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "case_statement")) return false;
     if (!nextTokenIsSmart(b, LAMA_CASE)) return false;
@@ -1667,7 +1668,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // FUN parameter_list function_body
+  // fun parameter_list function_body
   public static boolean function_expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "function_expression")) return false;
     if (!nextTokenIsSmart(b, LAMA_FUN)) return false;
@@ -1681,7 +1682,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // ETA   expression
+  // eta   expression
   public static boolean eta_expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "eta_expression")) return false;
     if (!nextTokenIsSmart(b, LAMA_ETA)) return false;
@@ -1694,7 +1695,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // LAZY  expression
+  // lazy  expression
   public static boolean lazy_expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "lazy_expression")) return false;
     if (!nextTokenIsSmart(b, LAMA_LAZY)) return false;
@@ -1707,7 +1708,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // SYNTAX "(" syntax_seqs ")"
+  // syntax "(" syntax_seqs ")"
   public static boolean syntax_expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "syntax_expression")) return false;
     if (!nextTokenIsSmart(b, LAMA_SYNTAX)) return false;
@@ -1721,7 +1722,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // SKIP
+  // skip
   public static boolean skip_expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "skip_expression")) return false;
     if (!nextTokenIsSmart(b, LAMA_SKIP)) return false;
@@ -1807,7 +1808,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // INFIX any_operator
+  // infix any_operator
   public static boolean infix_expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "infix_expression")) return false;
     if (!nextTokenIsSmart(b, LAMA_INFIX)) return false;
@@ -1861,7 +1862,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // TRUE | FALSE
+  // true | false
   public static boolean boolean_literal(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "boolean_literal")) return false;
     if (!nextTokenIsSmart(b, LAMA_FALSE, LAMA_TRUE)) return false;

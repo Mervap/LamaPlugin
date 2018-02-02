@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface LamaVariableDefinitionExpression extends LamaExpression {
+public interface LamaVariableDefinitionSeries extends LamaPsiElement {
 
   @NotNull
   List<LamaVariableDefinition> getVariableDefinitionList();

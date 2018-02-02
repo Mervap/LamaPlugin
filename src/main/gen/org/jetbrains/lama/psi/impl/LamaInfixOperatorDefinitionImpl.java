@@ -9,11 +9,18 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.jetbrains.lama.parser.LamaElementTypes.*;
 import org.jetbrains.lama.psi.api.*;
+import org.jetbrains.lama.psi.stubs.LamaInfixAssociativity;
+import org.jetbrains.lama.psi.stubs.LamaInfixOperatorDefinitionStub;
+import com.intellij.psi.stubs.IStubElementType;
 
-public class LamaInfixOperatorDefinitionImpl extends LamaElementImpl implements LamaInfixOperatorDefinition {
+public class LamaInfixOperatorDefinitionImpl extends LamaInfixOperatorDefinitionBase implements LamaInfixOperatorDefinition {
 
   public LamaInfixOperatorDefinitionImpl(@NotNull ASTNode node) {
     super(node);
+  }
+
+  public LamaInfixOperatorDefinitionImpl(@NotNull LamaInfixOperatorDefinitionStub stub, @NotNull IStubElementType<?, ?> type) {
+    super(stub, type);
   }
 
   public void accept(@NotNull LamaVisitor visitor) {
@@ -29,7 +36,7 @@ public class LamaInfixOperatorDefinitionImpl extends LamaElementImpl implements 
   @Override
   @Nullable
   public LamaFunctionBody getFunctionBody() {
-    return findChildByClass(LamaFunctionBody.class);
+    return PsiTreeUtil.getChildOfType(this, LamaFunctionBody.class);
   }
 
   @Override
@@ -41,7 +48,45 @@ public class LamaInfixOperatorDefinitionImpl extends LamaElementImpl implements 
   @Override
   @Nullable
   public LamaParameterList getParameterList() {
-    return findChildByClass(LamaParameterList.class);
+    return PsiTreeUtil.getChildOfType(this, LamaParameterList.class);
+  }
+
+  @Override
+  @NotNull
+  public String getName() {
+    return LamaPsiImplUtil.getName(this);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement setName(@NotNull String name) {
+    return LamaPsiImplUtil.setName(this, name);
+  }
+
+  @Override
+  @NotNull
+  public LamaInfixAssociativity getAssociativity() {
+    return LamaPsiImplUtil.getAssociativity(this);
+  }
+
+  @Override
+  @NotNull
+  public String getParameters() {
+    return LamaPsiImplUtil.getParameters(this);
+  }
+
+  @Override
+  @NotNull
+  public LamaOperator getNameOperator() {
+    List<LamaOperator> p1 = getOperatorList();
+    return p1.get(0);
+  }
+
+  @Override
+  @Nullable
+  public LamaOperator getLevelOperator() {
+    List<LamaOperator> p1 = getOperatorList();
+    return p1.size() < 2 ? null : p1.get(1);
   }
 
 }

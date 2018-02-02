@@ -30,7 +30,7 @@ public class LamaSOrAtPatternImpl extends LamaPatternImpl implements LamaSOrAtPa
   @Override
   @NotNull
   public LamaIdentifierExpression getIdentifierExpression() {
-    return findNotNullChildByClass(LamaIdentifierExpression.class);
+    return notNullChild(PsiTreeUtil.getChildOfType(this, LamaIdentifierExpression.class));
   }
 
 }

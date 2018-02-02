@@ -29,13 +29,13 @@ public class LamaSyntaxBindingImpl extends LamaElementImpl implements LamaSyntax
   @Override
   @Nullable
   public LamaIdentifierExpression getIdentifierExpression() {
-    return findChildByClass(LamaIdentifierExpression.class);
+    return PsiTreeUtil.getChildOfType(this, LamaIdentifierExpression.class);
   }
 
   @Override
   @Nullable
   public LamaPattern getPattern() {
-    return findChildByClass(LamaPattern.class);
+    return PsiTreeUtil.getChildOfType(this, LamaPattern.class);
   }
 
   @Override
@@ -47,13 +47,13 @@ public class LamaSyntaxBindingImpl extends LamaElementImpl implements LamaSyntax
   @Override
   @Nullable
   public LamaSyntaxPrimaryExpressionFrom getSyntaxPrimaryExpressionFrom() {
-    return findChildByClass(LamaSyntaxPrimaryExpressionFrom.class);
+    return PsiTreeUtil.getChildOfType(this, LamaSyntaxPrimaryExpressionFrom.class);
   }
 
   @Override
   @Nullable
   public LamaSyntaxPrimaryParenthesized getSyntaxPrimaryParenthesized() {
-    return findChildByClass(LamaSyntaxPrimaryParenthesized.class);
+    return PsiTreeUtil.getChildOfType(this, LamaSyntaxPrimaryParenthesized.class);
   }
 
 }

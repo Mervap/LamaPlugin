@@ -29,13 +29,13 @@ public class LamaCaseBranchImpl extends LamaElementImpl implements LamaCaseBranc
   @Override
   @NotNull
   public LamaPattern getPattern() {
-    return findNotNullChildByClass(LamaPattern.class);
+    return notNullChild(PsiTreeUtil.getChildOfType(this, LamaPattern.class));
   }
 
   @Override
   @Nullable
   public LamaScope getScope() {
-    return findChildByClass(LamaScope.class);
+    return PsiTreeUtil.getChildOfType(this, LamaScope.class);
   }
 
 }

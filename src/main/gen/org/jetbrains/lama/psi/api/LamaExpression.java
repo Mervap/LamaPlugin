@@ -4,11 +4,11 @@ package org.jetbrains.lama.psi.api;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
+import org.jetbrains.lama.psi.references.LamaReferenceBase;
 
 public interface LamaExpression extends LamaPsiElement {
 
   @Nullable
-  PsiReference getReference();
+  LamaReferenceBase<?> getReference();
 
 }

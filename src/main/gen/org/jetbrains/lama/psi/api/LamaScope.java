@@ -16,4 +16,7 @@ public interface LamaScope extends LamaPsiElement {
   @NotNull
   List<LamaInfixOperatorDefinition> getInfixOperatorDefinitionList();
 
+  @NotNull
+  List<LamaVariableDefinitionSeries> getVariableDefinitionSeriesList();
+
 }

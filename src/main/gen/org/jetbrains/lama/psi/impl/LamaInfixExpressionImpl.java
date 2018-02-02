@@ -30,7 +30,7 @@ public class LamaInfixExpressionImpl extends LamaExpressionImpl implements LamaI
   @Override
   @Nullable
   public LamaOperator getOperator() {
-    return findChildByClass(LamaOperator.class);
+    return PsiTreeUtil.getChildOfType(this, LamaOperator.class);
   }
 
 }

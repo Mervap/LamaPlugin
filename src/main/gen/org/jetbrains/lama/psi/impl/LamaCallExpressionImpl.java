@@ -30,13 +30,13 @@ public class LamaCallExpressionImpl extends LamaExpressionImpl implements LamaCa
   @Override
   @NotNull
   public LamaArgumentList getArgumentList() {
-    return findNotNullChildByClass(LamaArgumentList.class);
+    return notNullChild(PsiTreeUtil.getChildOfType(this, LamaArgumentList.class));
   }
 
   @Override
   @NotNull
   public LamaExpression getExpression() {
-    return findNotNullChildByClass(LamaExpression.class);
+    return notNullChild(PsiTreeUtil.getChildOfType(this, LamaExpression.class));
   }
 
 }

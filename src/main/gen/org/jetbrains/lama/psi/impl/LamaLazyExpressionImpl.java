@@ -30,7 +30,7 @@ public class LamaLazyExpressionImpl extends LamaExpressionImpl implements LamaLa
   @Override
   @Nullable
   public LamaExpression getExpression() {
-    return findChildByClass(LamaExpression.class);
+    return PsiTreeUtil.getChildOfType(this, LamaExpression.class);
   }
 
 }

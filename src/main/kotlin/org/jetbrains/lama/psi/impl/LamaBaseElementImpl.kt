@@ -8,6 +8,7 @@ import com.intellij.psi.stubs.IStubElementType
 import com.intellij.psi.stubs.StubElement
 import org.jetbrains.lama.psi.LamaLanguage
 import org.jetbrains.lama.psi.api.LamaPsiElement
+import org.jetbrains.lama.psi.references.LamaReferenceBase
 
 open class LamaBaseElementImpl<T : StubElement<*>> : StubBasedPsiElementBase<T>, LamaPsiElement {
   constructor(node: ASTNode) : super(node)
@@ -18,4 +19,6 @@ open class LamaBaseElementImpl<T : StubElement<*>> : StubBasedPsiElementBase<T>,
   override fun accept(visitor: PsiElementVisitor) {
     visitor.visitElement(this)
   }
+
+  override fun getReference(): LamaReferenceBase<*>? = null
 }

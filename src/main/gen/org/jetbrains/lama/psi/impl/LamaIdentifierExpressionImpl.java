@@ -9,7 +9,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.jetbrains.lama.parser.LamaElementTypes.*;
 import org.jetbrains.lama.psi.api.*;
-import com.intellij.psi.PsiReference;
+import org.jetbrains.lama.psi.references.LamaReferenceBase;
 
 public class LamaIdentifierExpressionImpl extends LamaExpressionImpl implements LamaIdentifierExpression {
 
@@ -30,7 +30,7 @@ public class LamaIdentifierExpressionImpl extends LamaExpressionImpl implements 
 
   @Override
   @Nullable
-  public PsiReference getReference() {
+  public LamaReferenceBase<?> getReference() {
     return LamaPsiImplUtil.getReference(this);
   }
 
