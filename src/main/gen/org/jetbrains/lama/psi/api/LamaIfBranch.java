@@ -5,12 +5,6 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface LamaIfStatement extends LamaExpression {
-
-  @NotNull
-  List<LamaExpression> getExpressionList();
-
-  @NotNull
-  List<LamaIfBranch> getIfBranchList();
+public interface LamaIfBranch extends LamaPsiElement {
 
 }

@@ -1,0 +1,3 @@
+if a !! b&&c then 5 fi
+-- DELIMITER --
+if a !! b && c then 5 fi

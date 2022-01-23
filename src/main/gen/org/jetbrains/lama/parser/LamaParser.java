@@ -63,6 +63,20 @@ public class LamaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // "|" case_branch_impl
+  public static boolean another_case_branch(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "another_case_branch")) return false;
+    if (!nextTokenIs(b, LAMA_CASE_OR)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, LAMA_CASE_BRANCH, null);
+    r = consumeToken(b, LAMA_CASE_OR);
+    p = r; // pin = 1
+    r = r && case_branch_impl(b, l + 1);
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  /* ********************************************************** */
   // predefined_operator | infix_operator
   static boolean any_operator(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "any_operator")) return false;
@@ -143,11 +157,22 @@ public class LamaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // pattern "->" case_branch_scope
+  // case_branch_impl
   public static boolean case_branch(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "case_branch")) return false;
-    boolean r, p;
+    boolean r;
     Marker m = enter_section_(b, l, _NONE_, LAMA_CASE_BRANCH, "<case branch>");
+    r = case_branch_impl(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // pattern "->" case_branch_scope
+  static boolean case_branch_impl(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "case_branch_impl")) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
     r = pattern(b, l + 1);
     r = r && consumeToken(b, LAMA_ARROW);
     p = r; // pin = 2
@@ -271,45 +296,28 @@ public class LamaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ELIF expression_series THEN then_scope [ elif_expression | else_expression ]
-  static boolean elif_expression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elif_expression")) return false;
+  // elif expression_series then then_scope
+  public static boolean elif_branch(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "elif_branch")) return false;
     if (!nextTokenIs(b, LAMA_ELIF)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
+    Marker m = enter_section_(b, l, _NONE_, LAMA_IF_BRANCH, null);
     r = consumeToken(b, LAMA_ELIF);
     p = r; // pin = 1
     r = r && report_error_(b, expression_series(b, l + 1));
     r = p && report_error_(b, consumeToken(b, LAMA_THEN)) && r;
-    r = p && report_error_(b, then_scope(b, l + 1)) && r;
-    r = p && elif_expression_4(b, l + 1) && r;
+    r = p && then_scope(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
-  // [ elif_expression | else_expression ]
-  private static boolean elif_expression_4(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elif_expression_4")) return false;
-    elif_expression_4_0(b, l + 1);
-    return true;
-  }
-
-  // elif_expression | else_expression
-  private static boolean elif_expression_4_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "elif_expression_4_0")) return false;
-    boolean r;
-    r = elif_expression(b, l + 1);
-    if (!r) r = else_expression(b, l + 1);
-    return r;
-  }
-
   /* ********************************************************** */
-  // ELSE else_scope
-  static boolean else_expression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "else_expression")) return false;
+  // else else_scope
+  public static boolean else_branch(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "else_branch")) return false;
     if (!nextTokenIs(b, LAMA_ELSE)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
+    Marker m = enter_section_(b, l, _NONE_, LAMA_IF_BRANCH, null);
     r = consumeToken(b, LAMA_ELSE);
     p = r; // pin = 1
     r = r && else_scope(b, l + 1);
@@ -1244,6 +1252,20 @@ public class LamaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // then then_scope
+  public static boolean then_branch(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "then_branch")) return false;
+    if (!nextTokenIs(b, LAMA_THEN)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, LAMA_IF_BRANCH, null);
+    r = consumeToken(b, LAMA_THEN);
+    p = r; // pin = 1
+    r = r && then_scope(b, l + 1);
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  /* ********************************************************** */
   // !(fi | else | elif)
   static boolean then_expression_scope_recover_rule(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "then_expression_scope_recover_rule")) return false;
@@ -1530,7 +1552,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // IF expression_series THEN then_scope [ elif_expression | else_expression ] FI
+  // IF expression_series then_branch elif_branch* [ else_branch ] FI
   public static boolean if_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "if_statement")) return false;
     if (!nextTokenIsSmart(b, LAMA_IF)) return false;
@@ -1539,28 +1561,30 @@ public class LamaParser implements PsiParser, LightPsiParser {
     r = consumeTokenSmart(b, LAMA_IF);
     p = r; // pin = 1
     r = r && report_error_(b, expression_series(b, l + 1));
-    r = p && report_error_(b, consumeToken(b, LAMA_THEN)) && r;
-    r = p && report_error_(b, then_scope(b, l + 1)) && r;
+    r = p && report_error_(b, then_branch(b, l + 1)) && r;
+    r = p && report_error_(b, if_statement_3(b, l + 1)) && r;
     r = p && report_error_(b, if_statement_4(b, l + 1)) && r;
     r = p && consumeToken(b, LAMA_FI) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
-  // [ elif_expression | else_expression ]
-  private static boolean if_statement_4(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "if_statement_4")) return false;
-    if_statement_4_0(b, l + 1);
+  // elif_branch*
+  private static boolean if_statement_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "if_statement_3")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!elif_branch(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "if_statement_3", c)) break;
+    }
     return true;
   }
 
-  // elif_expression | else_expression
-  private static boolean if_statement_4_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "if_statement_4_0")) return false;
-    boolean r;
-    r = elif_expression(b, l + 1);
-    if (!r) r = else_expression(b, l + 1);
-    return r;
+  // [ else_branch ]
+  private static boolean if_statement_4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "if_statement_4")) return false;
+    else_branch(b, l + 1);
+    return true;
   }
 
   // WHILE expression_series DO do_scope OD
@@ -1615,7 +1639,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // CASE expression_series OF case_branch ("|" case_branch)* ESAC
+  // CASE expression_series OF case_branch another_case_branch* ESAC
   public static boolean case_statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "case_statement")) return false;
     if (!nextTokenIsSmart(b, LAMA_CASE)) return false;
@@ -1632,26 +1656,15 @@ public class LamaParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // ("|" case_branch)*
+  // another_case_branch*
   private static boolean case_statement_4(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "case_statement_4")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!case_statement_4_0(b, l + 1)) break;
+      if (!another_case_branch(b, l + 1)) break;
       if (!empty_element_parsed_guard_(b, "case_statement_4", c)) break;
     }
     return true;
-  }
-
-  // "|" case_branch
-  private static boolean case_statement_4_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "case_statement_4_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokenSmart(b, LAMA_CASE_OR);
-    r = r && case_branch(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
   }
 
   // FUN parameter_list function_body

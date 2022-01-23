@@ -89,6 +89,10 @@ public class LamaVisitor extends PsiElementVisitor {
     // visitPsiNamedElement(o);
   }
 
+  public void visitIfBranch(@NotNull LamaIfBranch o) {
+    visitPsiElement(o);
+  }
+
   public void visitIfStatement(@NotNull LamaIfStatement o) {
     visitExpression(o);
   }

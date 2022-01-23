@@ -10,33 +10,20 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static org.jetbrains.lama.parser.LamaElementTypes.*;
 import org.jetbrains.lama.psi.api.*;
 
-public class LamaIfStatementImpl extends LamaExpressionImpl implements LamaIfStatement {
+public class LamaIfBranchImpl extends LamaElementImpl implements LamaIfBranch {
 
-  public LamaIfStatementImpl(@NotNull ASTNode node) {
+  public LamaIfBranchImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull LamaVisitor visitor) {
-    visitor.visitIfStatement(this);
+    visitor.visitIfBranch(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LamaVisitor) accept((LamaVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @NotNull
-  public List<LamaExpression> getExpressionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaExpression.class);
-  }
-
-  @Override
-  @NotNull
-  public List<LamaIfBranch> getIfBranchList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaIfBranch.class);
   }
 
 }

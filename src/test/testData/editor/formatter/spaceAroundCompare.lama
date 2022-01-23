@@ -1,0 +1,17 @@
+if a==5
+  then 5
+  elif a!=5 then 6
+  elif a<5 then 7
+  elif a<=5 then 8
+  elif a>=5 then 9
+  elif a>5 then 10
+fi
+-- DELIMITER --
+if a == 5
+  then 5
+  elif a != 5 then 6
+  elif a < 5 then 7
+  elif a <= 5 then 8
+  elif a >= 5 then 9
+  elif a > 5 then 10
+fi

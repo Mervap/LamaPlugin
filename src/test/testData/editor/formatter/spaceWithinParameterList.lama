@@ -1,0 +1,11 @@
+infix === at == (x, y) { }
+infix === at == () { }
+
+fun f(x) { }
+fun f() { }
+-- DELIMITER --
+infix === at == ( x, y ) { }
+infix === at == () { }
+
+fun f( x ) { }
+fun f() { }

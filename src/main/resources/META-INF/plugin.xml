@@ -15,5 +15,8 @@
         <lang.braceMatcher language="Lama" implementationClass="org.jetbrains.lama.editor.LamaBraceMatcher"/>
 
         <annotator language="Lama" implementationClass="org.jetbrains.lama.annotator.LamaAnnotator"/>
+
+        <langCodeStyleSettingsProvider implementation="org.jetbrains.lama.editor.formatting.LamaCodeStyleSettingsProvider"/>
+        <lang.formatter language="Lama" implementationClass="org.jetbrains.lama.editor.formatting.LamaFormattingModelBuilder"/>
     </extensions>
 </idea-plugin>

@@ -1,0 +1,5 @@
+f(a, b);
+f()
+-- DELIMITER --
+f (a, b);
+f ()

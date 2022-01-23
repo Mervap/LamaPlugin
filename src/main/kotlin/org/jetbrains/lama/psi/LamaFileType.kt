@@ -8,8 +8,8 @@ import javax.swing.Icon
 object LamaLanguage : Language("Lama")
 
 object LamaFileType : LanguageFileType(LamaLanguage) {
-    override fun getName(): String = "Lama"
-    override fun getDescription(): String = "Lama source file"
-    override fun getDefaultExtension(): String = "lama"
-    override fun getIcon(): Icon = LamaIcons.FileIcon
+  override fun getName(): String = "Lama"
+  override fun getDescription(): String = "Lama source file"
+  override fun getDefaultExtension(): String = "lama"
+  override fun getIcon(): Icon = LamaIcons.FileIcon
 }

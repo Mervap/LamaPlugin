@@ -29,6 +29,7 @@ public interface LamaElementTypes {
   IElementType LAMA_FUNCTION_DEFINITION = new LamaElementType("LAMA_FUNCTION_DEFINITION");
   IElementType LAMA_FUNCTION_EXPRESSION = new LamaElementType("LAMA_FUNCTION_EXPRESSION");
   IElementType LAMA_IDENTIFIER_EXPRESSION = new LamaElementType("LAMA_IDENTIFIER_EXPRESSION");
+  IElementType LAMA_IF_BRANCH = new LamaElementType("LAMA_IF_BRANCH");
   IElementType LAMA_IF_STATEMENT = new LamaElementType("LAMA_IF_STATEMENT");
   IElementType LAMA_IMPORT_STATEMENT = new LamaElementType("LAMA_IMPORT_STATEMENT");
   IElementType LAMA_INFIX_EXPRESSION = new LamaElementType("LAMA_INFIX_EXPRESSION");
@@ -128,7 +129,7 @@ public interface LamaElementTypes {
   IElementType LAMA_STR = new LamaElementType("STR");
   IElementType LAMA_STRING = new LamaElementType("STRING");
   IElementType LAMA_SYNTAX = new LamaElementType("SYNTAX");
-  IElementType LAMA_THEN = new LamaElementType("THEN");
+  IElementType LAMA_THEN = new LamaElementType("then");
   IElementType LAMA_TRUE = new LamaElementType("TRUE");
   IElementType LAMA_UINDENT = new LamaElementType("UINDENT");
   IElementType LAMA_VAL = new LamaElementType("VAL");
@@ -194,6 +195,9 @@ public interface LamaElementTypes {
       }
       else if (type == LAMA_IDENTIFIER_EXPRESSION) {
         return new LamaIdentifierExpressionImpl(node);
+      }
+      else if (type == LAMA_IF_BRANCH) {
+        return new LamaIfBranchImpl(node);
       }
       else if (type == LAMA_IF_STATEMENT) {
         return new LamaIfStatementImpl(node);
