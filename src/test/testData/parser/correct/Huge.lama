@@ -1,0 +1,322 @@
+-- Ostap.
+-- (C) Dmitry Boulytchev, JetBrains Research, St. Petersburg State University, 2020
+--
+-- This unit provides an implementation of monadic parser combinators in CPS with
+-- memoization.
+
+import List;
+import Collection;
+import Ref;
+import Fun;
+import Matcher;
+
+var tab, hct, restab, log = false;
+
+public fun logOn () {
+  log := true
+}
+
+public fun initOstap () {
+  tab    := ref (emptyHashTab (1024, hash, compare));
+  restab := emptyCustomMemo (fun (x) {case x of #str -> true | _ -> false esac}, compare);
+  hct    := emptyMemo ()
+}
+
+public fun memo (f) {
+  f := lookupMemo (hct, f);
+
+  if log then printf ("Memoizing %x=%s\n", f, f.string) fi;
+
+  case findHashTab (deref (tab), f) of
+    None      -> if log then printf ("new table...\n") fi;
+                 tab ::= addHashTab (deref (tab), f, ref (emptyMap (compare)))
+
+  | Some (tt) -> skip
+  esac;
+
+  fun (k) {
+    fun (s) {
+      var t =
+         case findHashTab (deref (tab), f) of
+           Some (t) -> t
+         esac;
+      if log then printf ("Applying memoized parser to %s\n", s.string) fi;
+      case findMap (deref (t), s) of
+        None  ->
+          t ::= addMap (deref (t), s, [addSet (emptySet (compare), k), emptySet (fun (r1, r2) {
+                                                                                   case [r1, r2] of
+                                                                                     [Fail (_, _, _), Fail (_, _, _)] -> 0
+                                                                                   | _                                -> compare (r1, r2)
+                                                                                   esac
+                                                                                 })]);
+          f (fun (r) {
+               r := lookupMemo (restab, r);
+               if log then printf ("Running continuation with result %s\n", r.string) fi;
+               case findMap (deref (t), s) of
+                 Some ([ks, rs]) ->
+                   if memSet (rs, r)
+                   then skip
+                   else
+                     t ::= addMap (deref (t), s, [ks, addSet (rs, r)]);
+                     iterSet (fun (k) {k (r)}, ks)
+                   fi
+               esac
+             }
+            )
+            (s)
+      | Some ([ks, rs]) ->
+          t ::= addMap (deref (t), s, [addSet (ks, k), rs]);
+          iterSet (k, rs)
+      esac
+    }
+  }
+}
+
+public fun token (x) {
+  case x of
+    #str -> memo $ fun (k) {fun (s) {k $ matchString (s, x)}}
+  | _    -> memo $ fun (k) {fun (s) {k $ matchRegexp (s, x)}}
+  esac
+}
+
+public fun loc (k) {
+  fun (s) {
+    k $ Succ ([s.getLine, s.getCol], s)
+  }
+}
+
+public fun eof (k) {
+  fun (s) {
+    k (endOfMatcher (s))
+  }
+}
+
+public fun empty (k) {
+  fun (s) {k (Succ ({}, s))}
+}
+
+public fun alt (a, b) {
+  memo $
+  fun (k) {
+    fun (s) {
+      if log then printf ("Running alt at %s\n", s.string) fi;
+      a (k) (s);
+      b (k) (s)
+    }
+  }
+}
+
+public fun seq (a, b) {
+  memo $
+  fun (k) {
+    fun (s) {
+      if log then printf ("Running seq at %s\n", s.string) fi;
+      a (fun (ar) {
+                  case ar of
+                    Succ (x, s) -> b (x) (k) (s)
+                  | _           -> k (ar)
+                  esac
+         }) (s)
+    }
+  }
+}
+
+public infixr |  before !! (a, b) {alt (a, b)}
+public infixr |> after  |  (a, b) {seq (a, b)}
+
+public infix @ at * (a, f) {
+  fun (k) {
+    fun (s) {
+      a (fun (x) {k (case x of
+                       Succ (x, s) -> Succ (f (x), s)
+                     | _           -> x
+                     esac)}) (s)
+    }
+  }
+}
+
+public fun lift (f) {
+  fun (x) {f}
+}
+
+public fun bypass (f) {
+  fun (x) {f @ lift (x)}
+}
+
+public fun opt (a) {empty @ lift (None) | a @ fun (x) {Some (x)}}
+
+public fun rep0 (a) {
+  empty @ lift({}) | a |> fun (x) {rep0 (a) @ fun (as) {x : as}}
+}
+
+public fun rep (a) {
+  a |> (fun (x) {rep0 (a) @ fun (as) {x : as}})
+}
+
+public fun listBy (item, sep) {
+  item |> fun (i) {rep0 (sep |> lift (item)) @ fun (is) {i : is}}
+}
+
+public fun list0By (item, sep) {
+  empty @ lift ({}) | listBy (item, sep)
+}
+
+public fun list (item) {
+  listBy (item, token (","))
+}
+
+public fun list0 (item) {
+  list0By (item, token (","))
+}
+
+public fun observe (name, f) {
+  fun (k) {
+    fun (s) {
+      printf ("%s at %s\n", name, s.string);
+      f (k)(s)
+    }
+  }
+}
+
+public fun showStream (name) {
+  fun (k) {
+    fun (s) {
+      printf ("%s: %s\n", name, showMatcher (s));
+      k (Succ ({}, s))
+    }
+  }
+}
+
+fun createResult () {
+  var errors   = ref ({}),
+        line     = ref (0),
+        col      = ref (0),
+        value    = ref ({}),
+        hasError = ref (false),
+        hasValue = ref (false);
+
+  fun k (x) {
+    if log then printf ("Result: %s\n", x.string) fi;
+    case x of
+      Succ (v, s)    ->
+        if log then printf ("Result stream: %s\n", showMatcher (s)) fi;
+        if deref (hasValue)
+        then failure (sprintf ("Ostap: ambiguous parsing (%s vs. %s)", deref (value).string, v.string))
+        else
+          hasValue ::= true;
+          value    ::= v
+        fi
+    | Fail (err, l, c) ->
+        if deref (hasError)
+        then
+          var c = compare ([line, col], [l, c]);
+
+          if   c == 0 then errors ::= err : deref (errors)
+          elif c <  0 then errors ::= {err}; line ::= l; col ::= c
+          fi
+        else
+          hasError ::= true;
+          errors   ::= {err};
+          line     ::= l;
+          col      ::= c
+        fi
+    esac
+  }
+
+  fun get () {
+    if   deref (hasValue) then Succ (deref (value))
+    elif deref (hasError) then Fail (deref (errors), deref (line), deref (col))
+    else failure ("Ostap::createAcceptor::get: nothing to return\n")
+    fi
+  }
+
+  [k, get]
+}
+
+fun k (acc) {
+  acc [0]
+}
+
+fun result (acc) {
+  acc [1] ()
+}
+
+public fun parse (p, m) {
+  var acc = createResult ();
+
+  p (acc.k) (m);
+
+  acc.result
+}
+
+public fun parseString (p, s) {
+  var acc = createResult ();
+
+  p (acc.k) (initMatcher (s));
+
+  acc.result
+}
+
+public fun left (op, f) {
+  fun (c, x) {
+     fun (y) {
+       f (c (x), op, y)
+     }
+  }
+}
+
+public fun right (op, f) {
+  fun (c, x) {
+    fun (y) {
+      c (f (x, op, y))
+    }
+  }
+}
+
+--- ops -> fun (x, y) {x `op` y}
+fun altl (level) {
+  case level of
+    [assoc, ps] ->
+       var assfun = case assoc of Left -> left | Right -> right | Nona -> left esac;
+       case map (fun (p) {
+                   case p of
+                     [op, sema] -> op @ fun (op) {assfun (op, sema)}
+                   esac
+                 }, ps) of
+         p : ps -> foldl (infix |, p, ps)
+       esac
+  esac
+}
+
+public fun expr (ops, opnd) {
+  fun inner (ops) {
+    case ops of
+      {}         -> fun (c) {opnd @ c}
+    | level : tl ->
+        var lops = altl (level),
+              next = inner (tl);
+
+        case level.fst of
+          Nona ->
+           fun this (c) {
+             next (id) |> fun (l) {lops |> fun (op) {next (id) @ fun (r) {c (op)(id, l)(r)}}}
+           | next (id) @ c
+           }
+
+           this
+
+        | _    ->
+           fun this (c) {
+             next (id) |> fun (l) {lops |> fun (op) {this (op (c, l))}}
+           | next (id) @ c
+           }
+
+           this
+        esac
+    esac
+  }
+
+  inner (ops) (id)
+}
+
+initOstap ()

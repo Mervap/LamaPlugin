@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" width="16" height="16" viewBox="0, 0, 48, 88">
+  <circle cx="24" cy="44" r="44" fill="#f5f5f5"/>
+  <g id="Greek_Symbol" transform="translate(-233, -155.5)">
+    <text transform="matrix(1, 0, 0, 1, 247.396, 199.5)">
+      <tspan x="-14" y="26" font-family="serif" font-size="72" fill="black">λ</tspan>
+      <tspan x="16" y="-6" font-family="serif" font-size="42" fill="black">a</tspan>
+    </text>
+  </g>
+</svg>

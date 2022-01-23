@@ -1,0 +1,19 @@
+fun f (x) {
+
+  if   x == 2 then x + 1
+  elif x == 3 then ,,,;
+  elif x == 4 then x + 3
+  elif x == 5 then ,,,
+  elif x == 6 then x + 5
+  else ,,,
+  fi;
+
+  if   x == 2 then x + 1
+  elif x == 3 then x + 2
+  elif x == 4 then x + 3
+  elif x == 5 then x + 4
+  elif x == 6 then x + 5
+  else x + 6
+  fi
+
+}

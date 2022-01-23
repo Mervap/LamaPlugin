@@ -1,0 +1,7 @@
+fun array_to_list () {
+  ,,,43.3.53,4,5
+}
+
+fun array_to_list () {
+  a[a[5] - 5]
+}

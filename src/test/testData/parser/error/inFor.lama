@@ -1,0 +1,12 @@
+fun array_to_list () {
+
+  for 10; var a = 3, b, c do
+    e := 3
+  od;
+
+  a[a[5] - 5];
+
+  for a, b, c do
+    skip
+  od
+}

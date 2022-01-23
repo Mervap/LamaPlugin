@@ -1,0 +1,12 @@
+var x;
+
+fun f (x) {
+  case x of
+      A -> write (var a)
+    | B -> write (10)
+    | C -> write (15)
+    | _ -> write (var d)
+  esac;
+
+  4 + 2
+}

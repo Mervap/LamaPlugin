@@ -1,0 +1,15 @@
+package org.jetbrains.lama.psi
+
+import com.intellij.psi.tree.TokenSet
+import org.jetbrains.lama.parser.LamaElementTypes.*
+
+object LamaPsiUtil {
+
+  val RESERVED_WORDS = TokenSet.create(
+    LAMA_AFTER, LAMA_ARRAY, LAMA_AT, LAMA_BEFORE, LAMA_BOX, LAMA_CASE, LAMA_DO, LAMA_ELIF, LAMA_ELSE, LAMA_ESAC,
+    LAMA_ETA, LAMA_FALSE, LAMA_FI, LAMA_FOR, LAMA_FUN, LAMA_IF, LAMA_IMPORT, LAMA_INFIX, LAMA_INFIXL, LAMA_INFIXR,
+    LAMA_LAZY, LAMA_OD, LAMA_OF, LAMA_PUBLIC, LAMA_SEXP, LAMA_SKIP, LAMA_STR, LAMA_SYNTAX, LAMA_THEN, LAMA_TRUE,
+    LAMA_VAL, LAMA_VAR, LAMA_WHILE
+  )
+
+}

@@ -1,0 +1,199 @@
+{
+  parserClass="org.jetbrains.lama.parser.LamaParser"
+  implements="org.jetbrains.lama.psi.api.LamaPsiElement"
+  extends="org.jetbrains.lama.psi.impl.LamaElementImpl"
+
+  elementTypeHolderClass="org.jetbrains.lama.parser.LamaElementTypes"
+  elementTypePrefix="LAMA_"
+  elementTypeClass="org.jetbrains.lama.psi.LamaElementType"
+  tokenTypeClass="org.jetbrains.lama.psi.LamaElementType"
+
+  psiImplUtilClass="org.jetbrains.lama.psi.impl.LamaPsiImplUtil"
+
+  psiClassPrefix="Lama"
+  psiImplClassSuffix="Impl"
+  psiPackage="org.jetbrains.lama.psi.api"
+  psiImplPackage="org.jetbrains.lama.psi.impl"
+
+  tokens=[
+    SEMI=";"
+    COMMA=","
+    EQ="="
+    DOLLAR_LPAR="$("
+    LPAR="("
+    RPAR=")"
+    LBRACE="{"
+    RBRACE="}"
+    LBRACKET="["
+    RBRACKET="]"
+    ASSIGN=":="
+    LIST_CONS=":"
+    OR="!!"
+    AND="&&"
+    EQEQ="=="
+    NEQ="!="
+    LEQ="<="
+    LE="<"
+    GEQ=">="
+    GE=">"
+    PLUS="+"
+    MINUS="-"
+    MUL="*"
+    DIV="/"
+    MOD="%"
+    ARROW="->"
+    CASE_OR="|"
+    BOTTOM="_"
+    AT_SIGN="@"
+    SHARP="#"
+    DOT="."
+    QUEST="?"
+  ]
+
+  extends(".*statement|.*expression|.*literal")=expression
+  extends(".*pattern")=pattern
+  extends(".*_operator")=operator
+  implements("identifier_expression")="com.intellij.psi.PsiNamedElement"
+  implements("string_literal")="com.intellij.psi.PsiNamedElement"
+  implements("char_literal")="com.intellij.psi.PsiNamedElement"
+
+  generateTokenAccessors=false
+}
+
+root ::= import_statement* scope
+import_statement ::= recoverable_import_statement ";" { pin=1 }
+private recoverable_import_statement ::= IMPORT identifier_expression { pin=1; recoverWhile=semi_recover_rule }
+private semi_recover_rule ::= !";"
+
+scope ::= definition* [ expression_series ]
+private function_body_scope ::= scope { recoverWhile=function_body_scope_recover_rule   }
+private parenthesized_scope ::= scope { recoverWhile=parenthesized_scope_recover_rule   }
+private then_scope          ::= scope { recoverWhile=then_expression_scope_recover_rule }
+private else_scope          ::= scope { recoverWhile=else_expression_scope_recover_rule }
+private do_while_scope      ::= scope { recoverWhile=do_while_scope_recover_rule        }
+private do_scope            ::= scope { recoverWhile=do_scope_recover_rule              }
+private for_scope           ::= scope { recoverWhile=for_scope_recover_rule             }
+private case_branch_scope   ::= scope { recoverWhile=case_branch_recover_rule           }
+
+private function_body_scope_recover_rule   ::= !"}"
+private parenthesized_scope_recover_rule   ::= !")"
+private then_expression_scope_recover_rule ::= !(fi | else | elif)
+private else_expression_scope_recover_rule ::= !fi
+private do_while_scope_recover_rule        ::= !while
+private do_scope_recover_rule              ::= !od
+private for_scope_recover_rule             ::= !("," | do)
+private case_branch_recover_rule           ::= !("|" | esac)
+
+private definition ::= variable_definition_expression | function_definition | infix_operator_definition
+
+variable_definition_expression ::= (variable_definition_var_expression | variable_definition_public_expression) ";" { pin=1 }
+private variable_definition_var_expression    ::= var variable_definition_sequence      { pin=1; recoverWhile=semi_recover_rule }
+private variable_definition_public_expression ::= public variable_definition_sequence   {        recoverWhile=semi_recover_rule }
+private variable_definition_sequence ::= variable_definition ("," variable_definition)* { pin(".*")='","'; }
+variable_definition ::= identifier_expression [ variable_definition_default_value ]     { pin=1; }
+private variable_definition_default_value ::= "=" expression { pin = 1 }
+
+function_definition ::= [ public ] fun identifier_expression parameter_list function_body { pin=3 }
+parameter_list ::= "(" [ pattern_list ] ")"     { pin=1 }
+private pattern_list ::= pattern ("," pattern)* { pin(".*")='","' }
+function_body ::= "{" function_body_scope "}"   { pin=1; }
+
+infix_operator_definition ::= infix_head parameter_list function_body { pin=1 }
+private infix_head ::= [ public ] (infix | infixl | infixr) any_operator [ at | before | after ] any_operator
+
+private expression_series_list ::= expression_series ("," expression_series)* { pin(".*")='","' }
+private expression_series      ::= expression        (";" expression)*        { pin(".*")='";"' }
+
+expression ::=
+    if_statement    | while_statement | for_statement   | do_statement       | case_statement | function_expression | assignment_expression |
+    dot_expression  | eta_expression  | lazy_expression | syntax_expression  | infix_operator_expression |
+    skip_expression | or_expression   | and_expression  | compare_expression | plus_minus_expression | mul_div_mod_expression |
+    parenthesized_expression | array_expression  | list_expression | subscription_expression | list_cons_expression |
+    infix_expression | s_expression   | call_expression | primitive_expression { methods=[ getReference ] }
+
+private primitive_expression ::= numeric_literal | string_literal | char_literal | boolean_literal | identifier_expression
+
+fake    operator            ::= { methods=[ getName getReference ] }
+private any_operator        ::= predefined_operator | infix_operator
+private predefined_operator ::= assignment_operator | list_cons_operator  | or_operator | and_operator |
+                                compare_operator    | plus_minus_operator | mul_div_mod_operator
+
+assignment_operator  ::= ":="
+list_cons_operator   ::= ":"
+or_operator          ::= "!!"
+and_operator         ::= "&&"
+compare_operator     ::= "==" | "!=" | "<=" | "<" | ">=" | ">"
+plus_minus_operator  ::= "+" | "-"
+mul_div_mod_operator ::= "*" | "/" | "%"
+dot_operator         ::= "."
+infix_operator       ::= INFIX_OP | "@" | "#" | "->" | ("|" !(pattern "->")) { methods=[ setName ] }
+
+fake operator_expression ::= { methods=[ getOperator getLeftExpr getRightExpr ] }
+
+assignment_expression     ::= expression assignment_operator expression  { rightAssociative=true; elementType=operator_expression }
+list_cons_expression      ::= expression list_cons_operator expression   { rightAssociative=true; elementType=operator_expression }
+parenthesized_expression  ::= "(" parenthesized_scope ")"                { pin=1 }
+list_expression           ::= "{" [ expression_series_list ] "}"         { pin=1 }
+subscription_expression   ::= expression "[" [ expression_series ] "]"   { pin=2 }
+array_expression          ::= "[" [ expression_series_list ] "]"         { pin=1 }
+s_expression              ::= identifier_expression [ argument_list ]    { elementType=call_expression }
+call_expression           ::= expression argument_list
+argument_list             ::= "(" [ expression_series_list ] ")"         { pin=1 }
+or_expression             ::= expression or_operator expression          { elementType=operator_expression }
+and_expression            ::= expression and_operator expression         { elementType=operator_expression }
+compare_expression        ::= expression compare_operator expression     { elementType=operator_expression }
+plus_minus_expression     ::= expression plus_minus_operator expression  { elementType=operator_expression }
+mul_div_mod_expression    ::= expression mul_div_mod_operator expression { elementType=operator_expression }
+dot_expression            ::= expression dot_operator expression         { elementType=operator_expression }
+infix_operator_expression ::= expression infix_operator expression       { elementType=operator_expression }
+
+infix_expression ::= INFIX any_operator { pin=1 }
+eta_expression   ::= ETA   expression   { pin=1 }
+lazy_expression  ::= LAZY  expression   { pin=1 }
+
+syntax_expression   ::= SYNTAX "(" syntax_seqs ")"   { pin=1 }
+private syntax_seqs ::= syntax_seq ("|" syntax_seq)* { pin(".*")=1 }
+syntax_seq ::= syntax_binding+ [ syntax_seq_body ]   { pin=1 }
+private syntax_seq_body ::= "{" expression "}"       { pin=1 }
+syntax_binding ::= [ "-" ] [ pattern "=" ] syntax_primary ("*" | "+" | "?")*  { pin = 3}
+private syntax_primary ::= (identifier_expression syntax_primary_array*) | syntax_primary_parenthesized | syntax_primary_expression_from
+syntax_primary_array           ::= "[" [ expression_series_list ] "]" { pin=1 }
+syntax_primary_parenthesized   ::= "(" syntax_seqs ")"                { pin=1 }
+syntax_primary_expression_from ::= "$(" expression_series ")"         { pin=1 }
+
+numeric_literal ::= NUMBER | "-" NUMBER
+string_literal  ::= STRING { methods=[ getName setName ] }
+char_literal    ::= CHAR   { methods=[ getName setName ] }
+boolean_literal ::= TRUE | FALSE
+skip_expression ::= SKIP
+
+function_expression ::= FUN parameter_list function_body { pin=2 }
+if_statement        ::= IF expression_series then_branch elif_branch* [ else_branch ] FI     { pin=1 }
+while_statement ::= WHILE expression_series DO do_scope OD { pin=1 }
+do_statement    ::= DO do_while_scope WHILE expression_series OD { pin=1 }
+for_statement   ::= FOR for_scope "," expression_series "," expression_series DO do_scope OD { pin=1; methods=[ beforeAll="scope[0]" ] }
+case_statement  ::= CASE expression_series OF case_branch another_case_branch* ESAC          { pin=1 }
+
+fake if_branch ::= {}
+then_branch ::= then then_scope                        { elementType=if_branch; pin=1 }
+elif_branch ::= elif expression_series then then_scope { elementType=if_branch; pin=1 }
+else_branch ::= else else_scope                        { elementType=if_branch; pin=1 }
+
+case_branch ::= case_branch_impl
+another_case_branch ::= "|" case_branch_impl { elementType=case_branch; pin=1 }
+private case_branch_impl ::= pattern "->" case_branch_scope { pin=2 }
+
+pattern ::= simple_pattern (":" simple_pattern)* { pin(".*")='":"' }
+private simple_pattern ::= wildcard_pattern | s_or_at_pattern | array_pattern | list_pattern |
+                           numeric_literal | string_literal | char_literal |
+                           boolean_literal | sharp_pattern | pattern_parenthesized
+private pattern_parenthesized ::= "(" pattern ")" { pin=1 }
+wildcard_pattern ::= "_"
+s_or_at_pattern  ::= identifier_expression [ s_pattern_suffix | at_pattern_suffix ]
+private s_pattern_suffix  ::= "(" pattern_list ")" { pin=1 }
+private at_pattern_suffix ::= "@" pattern          { pin=1 }
+array_pattern ::= "[" [ pattern_list ] "]"         { pin=1 }
+list_pattern  ::= "{" [ pattern_list ] "}"         { pin=1 }
+sharp_pattern ::= "#" (BOX | VAL | STR | ARRAY | SEXP | FUN)
+
+identifier_expression ::= UINDENT | LINDENT { methods=[ getReference getName setName ] }

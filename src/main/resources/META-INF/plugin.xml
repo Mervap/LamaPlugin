@@ -1,0 +1,19 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>org.jebtains.lama</id>
+    <name>Lama</name>
+    <vendor>Mervap</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType name="Lama" implementationClass="org.jetbrains.lama.psi.LamaFileType" fieldName="INSTANCE" language="Lama" extensions="lama"/>
+        <lang.parserDefinition language="Lama" implementationClass="org.jetbrains.lama.parser.LamaParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="Lama"
+                                       implementationClass="org.jetbrains.lama.highlighting.LamaSyntaxHighlighterFactory"/>
+
+        <lang.braceMatcher language="Lama" implementationClass="org.jetbrains.lama.editor.LamaBraceMatcher"/>
+
+        <annotator language="Lama" implementationClass="org.jetbrains.lama.annotator.LamaAnnotator"/>
+    </extensions>
+</idea-plugin>
