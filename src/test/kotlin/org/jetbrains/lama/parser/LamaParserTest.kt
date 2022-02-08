@@ -13,7 +13,7 @@ class LamaParserTest : LamaBaseParserTest("parser/correct") {
   fun testComplexArgumentList() = doTest()
   fun testComplexExpression() = doTest()
   fun testDoWhile() = doTest()
-  fun testeta() = doTest()
+  fun testEta() = doTest()
   fun testFor() = doTest()
   fun testForSkip() = doTest()
   fun testFun() = doTest()

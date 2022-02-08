@@ -1,4 +1,4 @@
-LamaFile:eta.lama(0,58)
+LamaFile:Eta.lama(0,58)
   LAMA_SCOPE(0,58)
     LAMA_FUNCTION_DEFINITION(0,21)
       PsiElement(fun)('fun')(0,3)
