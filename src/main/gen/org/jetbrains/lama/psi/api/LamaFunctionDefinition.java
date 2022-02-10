@@ -34,4 +34,6 @@ public interface LamaFunctionDefinition extends LamaDefinition, PsiNameIdentifie
   @NotNull
   String getParameters();
 
+  boolean getIsTopLevel();
+
 }

@@ -64,6 +64,11 @@ public class LamaVariableDefinitionImpl extends LamaVariableDefinitionBase imple
   }
 
   @Override
+  public boolean getIsTopLevel() {
+    return LamaPsiImplUtil.getIsTopLevel(this);
+  }
+
+  @Override
   @Nullable
   public LamaExpression getDefaultValueExpression() {
     List<LamaExpression> p1 = getExpressionList();

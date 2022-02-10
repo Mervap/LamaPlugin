@@ -32,6 +32,8 @@ public interface LamaInfixOperatorDefinition extends LamaDefinition, PsiNamedEle
   @NotNull
   String getParameters();
 
+  boolean getIsTopLevel();
+
   @NotNull
   LamaOperator getNameOperator();
 

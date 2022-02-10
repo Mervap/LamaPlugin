@@ -4,7 +4,6 @@ package org.jetbrains.lama.psi.impl
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNamedElement
-import com.intellij.psi.PsiReference
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.intellij.util.IncorrectOperationException
@@ -163,5 +162,26 @@ internal object LamaPsiImplUtil {
       LamaElementTypes.LAMA_INFIXR -> LamaInfixAssociativity.INFIXR
       else -> LamaInfixAssociativity.INFIX
     }
+  }
+
+  @JvmStatic
+  fun getIsTopLevel(definition: LamaVariableDefinitionImpl): Boolean {
+    return definition.greenStub?.isTopLevel ?: getIsTopLevelImpl(definition)
+  }
+
+  @JvmStatic
+  fun getIsTopLevel(definition: LamaFunctionDefinitionImpl): Boolean {
+    return definition.greenStub?.isTopLevel ?: getIsTopLevelImpl(definition)
+  }
+
+  @JvmStatic
+  fun getIsTopLevel(definition: LamaInfixOperatorDefinitionImpl): Boolean {
+    return definition.greenStub?.isTopLevel ?: getIsTopLevelImpl(definition)
+  }
+
+  @JvmStatic
+  fun getIsTopLevelImpl(definition: LamaDefinition): Boolean {
+    val parentScope = PsiTreeUtil.getParentOfType(definition, LamaScope::class.java) ?: return true
+    return parentScope.parent is LamaFile
   }
 }

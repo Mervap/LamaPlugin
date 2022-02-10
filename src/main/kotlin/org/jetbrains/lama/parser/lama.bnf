@@ -99,7 +99,7 @@ private variable_definition_public_series ::= public variable_definition_sequenc
 private variable_definition_sequence ::= variable_definition ("," variable_definition)* { pin(".*")='","'; }
 variable_definition ::= identifier_expression [ variable_definition_default_value ]     {
   pin=1
-  methods=[getName setName getNameIdentifier getDefaultValue defaultValueExpression="expression[1]"]
+  methods=[getName setName getNameIdentifier getDefaultValue getIsTopLevel defaultValueExpression="expression[1]"]
   extends="org.jetbrains.lama.psi.impl.LamaVariableDefinitionBase"
   stubClass="org.jetbrains.lama.psi.stubs.LamaVariableDefinitionStub"
   implements="org.jetbrains.lama.psi.api.LamaDefinition"
@@ -108,7 +108,7 @@ private variable_definition_default_value ::= "=" expression { pin = 1 }
 
 function_definition ::= [ public ] fun identifier_expression parameter_list function_body {
   pin=3;
-  methods=[getName setName getNameIdentifier isPublic getParameters]
+  methods=[getName setName getNameIdentifier isPublic getParameters getIsTopLevel]
   extends="org.jetbrains.lama.psi.impl.LamaFunctionDefinitionBase"
   stubClass="org.jetbrains.lama.psi.stubs.LamaFunctionDefinitionStub"
   implements="org.jetbrains.lama.psi.api.LamaDefinition"
@@ -119,7 +119,7 @@ function_body ::= "{" function_body_scope "}"   { pin=1; }
 
 infix_operator_definition ::= infix_head parameter_list function_body {
   pin=1
-  methods=[getName setName getAssociativity getParameters nameOperator="operator[0]" levelOperator="operator[1]"]
+  methods=[getName setName getAssociativity getParameters getIsTopLevel nameOperator="operator[0]" levelOperator="operator[1]"]
   extends="org.jetbrains.lama.psi.impl.LamaInfixOperatorDefinitionBase"
   stubClass="org.jetbrains.lama.psi.stubs.LamaInfixOperatorDefinitionStub"
   implements="org.jetbrains.lama.psi.api.LamaDefinition"

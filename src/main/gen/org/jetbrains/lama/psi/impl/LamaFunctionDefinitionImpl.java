@@ -80,4 +80,9 @@ public class LamaFunctionDefinitionImpl extends LamaFunctionDefinitionBase imple
     return LamaPsiImplUtil.getParameters(this);
   }
 
+  @Override
+  public boolean getIsTopLevel() {
+    return LamaPsiImplUtil.getIsTopLevel(this);
+  }
+
 }

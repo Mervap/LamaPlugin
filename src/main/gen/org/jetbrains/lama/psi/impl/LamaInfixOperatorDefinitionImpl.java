@@ -76,6 +76,11 @@ public class LamaInfixOperatorDefinitionImpl extends LamaInfixOperatorDefinition
   }
 
   @Override
+  public boolean getIsTopLevel() {
+    return LamaPsiImplUtil.getIsTopLevel(this);
+  }
+
+  @Override
   @NotNull
   public LamaOperator getNameOperator() {
     List<LamaOperator> p1 = getOperatorList();

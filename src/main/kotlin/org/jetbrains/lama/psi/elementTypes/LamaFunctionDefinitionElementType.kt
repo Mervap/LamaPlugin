@@ -15,25 +15,27 @@ class LamaFunctionDefinitionElementType(debugName: String) :
   }
 
   override fun createStub(psi: LamaFunctionDefinition, parentStub: StubElement<*>?): LamaFunctionDefinitionStub {
-    return LamaFunctionDefinitionStubImpl(psi.name, psi.parameters, psi.isPublic, parentStub, this)
+    return LamaFunctionDefinitionStubImpl(psi.name, psi.parameters, psi.isPublic, psi.isTopLevel, parentStub, this)
   }
 
   override fun serialize(stub: LamaFunctionDefinitionStub, dataStream: StubOutputStream) {
     dataStream.writeName(stub.name)
     dataStream.writeName(stub.parameters)
     dataStream.writeBoolean(stub.isPublic)
+    dataStream.writeBoolean(stub.isTopLevel)
   }
 
   override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): LamaFunctionDefinitionStub {
     val name = StringRef.toString(dataStream.readName())
     val parameters = StringRef.toString(dataStream.readName())
     val isPublic = dataStream.readBoolean()
-    return LamaFunctionDefinitionStubImpl(name, parameters, isPublic, parentStub, this)
+    val isTopLevel = dataStream.readBoolean()
+    return LamaFunctionDefinitionStubImpl(name, parameters, isPublic, isTopLevel, parentStub, this)
   }
 
   override fun indexStub(stub: LamaFunctionDefinitionStub, sink: IndexSink) {
     val name = stub.name
-    if (name != null && stub.parentStub is PsiFileStub<*>) {
+    if (name != null && stub.isTopLevel) {
       LamaFunctionDefinitionNameIndex.sink(sink)
     }
   }

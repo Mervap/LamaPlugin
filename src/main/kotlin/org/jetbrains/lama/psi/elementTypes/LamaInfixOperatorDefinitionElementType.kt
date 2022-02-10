@@ -18,25 +18,27 @@ class LamaInfixOperatorDefinitionElementType(debugName: String) :
     psi: LamaInfixOperatorDefinition,
     parentStub: StubElement<*>?,
   ): LamaInfixOperatorDefinitionStub {
-    return LamaInfixOperatorDefinitionStubImpl(psi.name, psi.parameters, psi.associativity, parentStub, this)
+    return LamaInfixOperatorDefinitionStubImpl(psi.name, psi.parameters, psi.associativity, psi.isTopLevel, parentStub, this)
   }
 
   override fun serialize(stub: LamaInfixOperatorDefinitionStub, dataStream: StubOutputStream) {
     dataStream.writeName(stub.name)
     dataStream.writeName(stub.parameters)
     dataStream.writeInt(stub.associativity.ordinal)
+    dataStream.writeBoolean(stub.isTopLevel)
   }
 
   override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): LamaInfixOperatorDefinitionStub {
     val name = StringRef.toString(dataStream.readName())
     val parameters = StringRef.toString(dataStream.readName())
     val associativity = LamaInfixAssociativity.values()[dataStream.readInt()]
-    return LamaInfixOperatorDefinitionStubImpl(name, parameters, associativity, parentStub, this)
+    val isTopLevel = dataStream.readBoolean()
+    return LamaInfixOperatorDefinitionStubImpl(name, parameters, associativity, isTopLevel, parentStub, this)
   }
 
   override fun indexStub(stub: LamaInfixOperatorDefinitionStub, sink: IndexSink) {
     val name = stub.name
-    if (name != null && stub.parentStub is PsiFileStub<*>) {
+    if (name != null && stub.isTopLevel) {
       LamaInfixOperatorDefinitionNameIndex.sink(sink)
     }
   }

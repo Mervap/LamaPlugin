@@ -18,7 +18,7 @@ val LAMA_INFIX_ASSOCIATIVITY_TYPES = TokenSet.create(
   LamaElementTypes.LAMA_INFIXL, LamaElementTypes.LAMA_INFIXR, LamaElementTypes.LAMA_INFIX
 )
 
-interface LamaInfixOperatorDefinitionStub : NamedStub<LamaInfixOperatorDefinition> {
+interface LamaInfixOperatorDefinitionStub : LamaDefinitionStub<LamaInfixOperatorDefinition> {
   val parameters: String
   val associativity: LamaInfixAssociativity
 }
@@ -27,6 +27,7 @@ class LamaInfixOperatorDefinitionStubImpl(
   private val name: String,
   override val parameters: String,
   override val associativity: LamaInfixAssociativity,
+  override val isTopLevel: Boolean,
   parent: StubElement<*>?,
   stubElementType: IStubElementType<*, *>
 ) : StubBase<LamaInfixOperatorDefinition>(parent, stubElementType), LamaInfixOperatorDefinitionStub {

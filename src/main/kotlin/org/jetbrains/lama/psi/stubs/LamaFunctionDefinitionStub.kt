@@ -8,7 +8,7 @@ import org.jetbrains.lama.psi.api.LamaFunctionDefinition
 import org.jetbrains.lama.psi.api.LamaVariableDefinition
 
 
-interface LamaFunctionDefinitionStub : NamedStub<LamaFunctionDefinition> {
+interface LamaFunctionDefinitionStub : LamaDefinitionStub<LamaFunctionDefinition> {
   val parameters: String
   val isPublic: Boolean
 }
@@ -17,6 +17,7 @@ class LamaFunctionDefinitionStubImpl(
   private val name: String,
   override val parameters: String,
   override val isPublic: Boolean,
+  override val isTopLevel: Boolean,
   parent: StubElement<*>?,
   stubElementType: IStubElementType<*, *>
 ) : StubBase<LamaFunctionDefinition>(parent, stubElementType), LamaFunctionDefinitionStub {

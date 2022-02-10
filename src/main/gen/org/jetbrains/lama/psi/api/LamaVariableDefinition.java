@@ -26,6 +26,8 @@ public interface LamaVariableDefinition extends LamaDefinition, PsiNameIdentifie
   @Nullable
   String getDefaultValue();
 
+  boolean getIsTopLevel();
+
   @Nullable
   LamaExpression getDefaultValueExpression();
 
