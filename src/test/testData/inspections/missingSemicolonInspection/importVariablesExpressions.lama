@@ -1,0 +1,19 @@
+import A
+import B
+
+var a = 42
+var b = a + 10;
+
+c := a / 10
+foo(a, c)
+15
+-- DELIMITER --
+import A;
+import B;
+
+var a = 42;
+var b = a + 10;
+
+c := a / 10;
+foo(a, c);
+15

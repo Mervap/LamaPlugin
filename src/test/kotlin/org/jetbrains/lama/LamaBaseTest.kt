@@ -4,4 +4,8 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase
 
 abstract class LamaBaseTest : BasePlatformTestCase() {
   override fun getTestDataPath(): String = "src/test/testData"
+
+  companion object {
+    const val DELIMITER = "\n-- DELIMITER --\n"
+  }
 }

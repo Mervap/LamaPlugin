@@ -1,0 +1,5 @@
+var a = 42;
+
+c := foo(a, 50)<EOLError descr="';' required between two expression"></EOLError>
+d := foo(50, a)<EOLError descr="';' required between two expression"></EOLError>
+c + d

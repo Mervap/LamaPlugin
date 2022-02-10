@@ -1,0 +1,3 @@
+var a = 42<EOLError descr="';' required after variable definition"></EOLError>
+
+foo(a, 50)

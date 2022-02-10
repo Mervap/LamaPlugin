@@ -25,6 +25,7 @@ public interface LamaElementTypes {
   IElementType LAMA_DO_STATEMENT = new LamaElementType("LAMA_DO_STATEMENT");
   IElementType LAMA_ETA_EXPRESSION = new LamaElementType("LAMA_ETA_EXPRESSION");
   IElementType LAMA_EXPRESSION = new LamaElementType("LAMA_EXPRESSION");
+  IElementType LAMA_EXPRESSION_SERIES = new LamaElementType("LAMA_EXPRESSION_SERIES");
   IElementType LAMA_FOR_STATEMENT = new LamaElementType("LAMA_FOR_STATEMENT");
   IElementType LAMA_FUNCTION_BODY = new LamaElementType("LAMA_FUNCTION_BODY");
   IElementType LAMA_FUNCTION_DEFINITION = LamaElementTypeFactory.getElementTypeByName("LAMA_FUNCTION_DEFINITION");
@@ -181,6 +182,9 @@ public interface LamaElementTypes {
       }
       else if (type == LAMA_ETA_EXPRESSION) {
         return new LamaEtaExpressionImpl(node);
+      }
+      else if (type == LAMA_EXPRESSION_SERIES) {
+        return new LamaExpressionSeriesImpl(node);
       }
       else if (type == LAMA_FOR_STATEMENT) {
         return new LamaForStatementImpl(node);

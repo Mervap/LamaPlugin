@@ -1,0 +1,7 @@
+var a = 42
+var b = 34, c = a + b
+var kek = c / a
+-- DELIMITER --
+var a = 42;
+var b = 34, c = a + b;
+var kek = c / a;

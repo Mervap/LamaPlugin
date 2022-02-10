@@ -24,5 +24,10 @@
         <stubIndex implementation="org.jetbrains.lama.psi.stubs.indices.LamaVariableNameIndex"/>
         <stubIndex implementation="org.jetbrains.lama.psi.stubs.indices.LamaFunctionDefinitionNameIndex"/>
         <stubIndex implementation="org.jetbrains.lama.psi.stubs.indices.LamaInfixOperatorDefinitionNameIndex"/>
+
+        <localInspection shortName="LamaMissingSemicolonInspection" language="Lama" enabledByDefault="true" groupName="Lama"
+                         bundle="messages.LamaBundle" key="inspection.missing.semicolon.name"
+                         implementationClass="org.jetbrains.lama.inspections.MissingSemicolonInspection"/>
+
     </extensions>
 </idea-plugin>

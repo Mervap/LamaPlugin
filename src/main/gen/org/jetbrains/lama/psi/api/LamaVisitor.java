@@ -69,6 +69,10 @@ public class LamaVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitExpressionSeries(@NotNull LamaExpressionSeries o) {
+    visitPsiElement(o);
+  }
+
   public void visitForStatement(@NotNull LamaForStatement o) {
     visitExpression(o);
   }

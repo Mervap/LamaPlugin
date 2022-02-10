@@ -8,6 +8,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings
 import org.jetbrains.lama.LamaBaseTest
 import org.jetbrains.lama.psi.LamaLanguage
+import org.junit.Test
 import java.io.File
 import kotlin.reflect.KMutableProperty1
 
@@ -16,32 +17,32 @@ private typealias LamaSettings = LamaCodeStyleSettings
 
 class LamaFormatterTest : LamaBaseTest() {
 
-  fun testSpaceAroundAssign() = doCommonOptionTest(CommonSettings::SPACE_AROUND_ASSIGNMENT_OPERATORS)
-  fun testSpaceAroundCompare() = doCommonOptionTest(CommonSettings::SPACE_AROUND_RELATIONAL_OPERATORS)
-  fun testSpaceAroundPlusMinus() = doCommonOptionTest(CommonSettings::SPACE_AROUND_ADDITIVE_OPERATORS)
-  fun testSpaceAroundMulDiv() = doCommonOptionTest(CommonSettings::SPACE_AROUND_MULTIPLICATIVE_OPERATORS)
+  @Test fun testSpaceAroundAssign() = doCommonOptionTest(CommonSettings::SPACE_AROUND_ASSIGNMENT_OPERATORS)
+  @Test fun testSpaceAroundCompare() = doCommonOptionTest(CommonSettings::SPACE_AROUND_RELATIONAL_OPERATORS)
+  @Test fun testSpaceAroundPlusMinus() = doCommonOptionTest(CommonSettings::SPACE_AROUND_ADDITIVE_OPERATORS)
+  @Test fun testSpaceAroundMulDiv() = doCommonOptionTest(CommonSettings::SPACE_AROUND_MULTIPLICATIVE_OPERATORS)
 
-  fun testSpaceAroundOr() = doCustomOptionTest(LamaSettings::SPACE_AROUND_DISJUNCTION_OPERATORS)
-  fun testSpaceAroundAnd() = doCustomOptionTest(LamaSettings::SPACE_AROUND_CONJUNCTION_OPERATORS)
-  fun testSpaceAroundCustomOperator() = doCustomOptionTest(LamaSettings::SPACE_AROUND_INFIX_OPERATOR)
-  fun testSpaceAroundListCons() = doCustomOptionTest(LamaSettings::SPACE_AROUND_LIST_CONS_OPERATOR)
-  fun testSpaceAroundDot() = doCustomOptionTest(LamaSettings::SPACE_AROUND_DOT_OPERATOR)
+  @Test fun testSpaceAroundOr() = doCustomOptionTest(LamaSettings::SPACE_AROUND_DISJUNCTION_OPERATORS)
+  @Test fun testSpaceAroundAnd() = doCustomOptionTest(LamaSettings::SPACE_AROUND_CONJUNCTION_OPERATORS)
+  @Test fun testSpaceAroundCustomOperator() = doCustomOptionTest(LamaSettings::SPACE_AROUND_INFIX_OPERATOR)
+  @Test fun testSpaceAroundListCons() = doCustomOptionTest(LamaSettings::SPACE_AROUND_LIST_CONS_OPERATOR)
+  @Test fun testSpaceAroundDot() = doCustomOptionTest(LamaSettings::SPACE_AROUND_DOT_OPERATOR)
 
-  fun testSpaceWithinArgumentList() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_METHOD_CALL_PARENTHESES)
-  fun testSpaceWithinEmptyArgumentList() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_EMPTY_METHOD_CALL_PARENTHESES)
-  fun testSpaceWithinParameterList() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_METHOD_PARENTHESES)
-  fun testSpaceWithinEmptyParameterList() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_EMPTY_METHOD_PARENTHESES)
-  fun testSpaceWithinParenthesis() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_PARENTHESES)
-  fun testSpaceWithinBrackets() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_BRACKETS)
-  fun testSpaceWithinBraces() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_BRACES)
+  @Test fun testSpaceWithinArgumentList() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_METHOD_CALL_PARENTHESES)
+  @Test fun testSpaceWithinEmptyArgumentList() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_EMPTY_METHOD_CALL_PARENTHESES)
+  @Test fun testSpaceWithinParameterList() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_METHOD_PARENTHESES)
+  @Test fun testSpaceWithinEmptyParameterList() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_EMPTY_METHOD_PARENTHESES)
+  @Test fun testSpaceWithinParenthesis() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_PARENTHESES)
+  @Test fun testSpaceWithinBrackets() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_BRACKETS)
+  @Test fun testSpaceWithinBraces() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_BRACES)
 
-  fun testSpaceBeforeArgumentList() = doCommonOptionTest(CommonSettings::SPACE_BEFORE_METHOD_CALL_PARENTHESES)
-  fun testSpaceBeforeParameterList() = doCommonOptionTest(CommonSettings::SPACE_BEFORE_METHOD_PARENTHESES)
-  fun testSpaceBeforeComma() = doCommonOptionTest(CommonSettings::SPACE_BEFORE_COMMA)
+  @Test fun testSpaceBeforeArgumentList() = doCommonOptionTest(CommonSettings::SPACE_BEFORE_METHOD_CALL_PARENTHESES)
+  @Test fun testSpaceBeforeParameterList() = doCommonOptionTest(CommonSettings::SPACE_BEFORE_METHOD_PARENTHESES)
+  @Test fun testSpaceBeforeComma() = doCommonOptionTest(CommonSettings::SPACE_BEFORE_COMMA)
 
-  fun testSpaceAfterComma() = doCommonOptionTest(CommonSettings::SPACE_AFTER_COMMA)
+  @Test fun testSpaceAfterComma() = doCommonOptionTest(CommonSettings::SPACE_AFTER_COMMA)
 
-  fun testScopes() = doTest()
+  @Test fun testScopes() = doTest()
 
   private fun doCommonOptionTest(option: KMutableProperty1<CommonSettings, Boolean>) {
     return doOptionTest { option.set(getCommonSettings(LamaLanguage), it) }
@@ -88,9 +89,5 @@ class LamaFormatterTest : LamaBaseTest() {
     finally {
       CodeStyleSettingsManager.getInstance(project).dropTemporarySettings()
     }
-  }
-
-  companion object {
-    const val DELIMITER = "\n-- DELIMITER --\n"
   }
 }
