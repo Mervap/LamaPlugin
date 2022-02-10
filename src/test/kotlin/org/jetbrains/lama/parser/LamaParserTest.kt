@@ -1,5 +1,7 @@
 package org.jetbrains.lama.parser
 
+import org.junit.Test
+
 class LamaParserTest : LamaBaseParserTest("parser/correct") {
 
   fun testALotOfSubtractions() = doTest()
@@ -30,6 +32,8 @@ class LamaParserTest : LamaBaseParserTest("parser/correct") {
   fun testMatch() = doTest()
   fun testNestedFun() = doTest()
   fun testNestedIf() = doTest()
+  @Test
+  fun testNoSemiRequired() = doTest()
   fun testOperatorsInCall() = doTest()
   fun testParenthesisScope() = doTest()
   fun testParenthesisScopeFun() = doTest()

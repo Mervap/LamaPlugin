@@ -1,0 +1,13 @@
+public fun initArray (n, f) {
+    var a = makeArray (n), i;
+    for i := 0, i < n, i := i + 1 do
+        a [i] := f (i)
+    od;
+    a
+}
+
+var kek = 10
+
+42 + 10
+
+kek + initArray([], 10)
