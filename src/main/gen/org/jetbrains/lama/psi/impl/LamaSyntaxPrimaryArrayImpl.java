@@ -27,9 +27,9 @@ public class LamaSyntaxPrimaryArrayImpl extends LamaElementImpl implements LamaS
   }
 
   @Override
-  @Nullable
-  public LamaExpressionSeries getExpressionSeries() {
-    return PsiTreeUtil.getChildOfType(this, LamaExpressionSeries.class);
+  @NotNull
+  public List<LamaExpressionSeries> getExpressionSeriesList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaExpressionSeries.class);
   }
 
 }

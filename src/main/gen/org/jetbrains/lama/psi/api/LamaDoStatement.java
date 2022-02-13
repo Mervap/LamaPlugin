@@ -7,10 +7,10 @@ import com.intellij.psi.PsiElement;
 
 public interface LamaDoStatement extends LamaExpression {
 
-  @NotNull
-  List<LamaExpression> getExpressionList();
+  @Nullable
+  LamaExpressionSeries getCondition();
 
   @Nullable
-  LamaScope getScope();
+  LamaScope getBody();
 
 }

@@ -29,8 +29,14 @@ public class LamaSubscriptionExpressionImpl extends LamaExpressionImpl implement
 
   @Override
   @NotNull
-  public List<LamaExpression> getExpressionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaExpression.class);
+  public LamaExpression getExpression() {
+    return notNullChild(PsiTreeUtil.getChildOfType(this, LamaExpression.class));
+  }
+
+  @Override
+  @Nullable
+  public LamaExpressionSeries getExpressionSeries() {
+    return PsiTreeUtil.getChildOfType(this, LamaExpressionSeries.class);
   }
 
 }

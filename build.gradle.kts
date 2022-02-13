@@ -20,6 +20,10 @@ repositories {
 
 sourceSets["main"].java.srcDirs("src/main/gen")
 
+dependencies {
+  implementation("io.lacuna:bifurcan:0.2.0-alpha6")
+}
+
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
   pluginName.set(properties("pluginName"))
@@ -52,6 +56,7 @@ tasks {
     }
     withType<KotlinCompile> {
       kotlinOptions.jvmTarget = it
+      kotlinOptions.freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn")
     }
   }
 

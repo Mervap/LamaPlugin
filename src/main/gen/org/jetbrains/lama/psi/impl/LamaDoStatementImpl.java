@@ -28,14 +28,14 @@ public class LamaDoStatementImpl extends LamaExpressionImpl implements LamaDoSta
   }
 
   @Override
-  @NotNull
-  public List<LamaExpression> getExpressionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaExpression.class);
+  @Nullable
+  public LamaExpressionSeries getCondition() {
+    return PsiTreeUtil.getChildOfType(this, LamaExpressionSeries.class);
   }
 
   @Override
   @Nullable
-  public LamaScope getScope() {
+  public LamaScope getBody() {
     return PsiTreeUtil.getChildOfType(this, LamaScope.class);
   }
 

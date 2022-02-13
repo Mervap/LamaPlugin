@@ -9,11 +9,17 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.jetbrains.lama.parser.LamaElementTypes.*;
 import org.jetbrains.lama.psi.api.*;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.psi.stubs.IStubElementType;
 
-public class LamaScopeImpl extends LamaElementImpl implements LamaScope {
+public class LamaScopeImpl extends LamaControlFlowHolderImpl implements LamaScope {
 
   public LamaScopeImpl(@NotNull ASTNode node) {
     super(node);
+  }
+
+  public LamaScopeImpl(@NotNull StubElement<?> stub, @NotNull IStubElementType<?, ?> type) {
+    super(stub, type);
   }
 
   public void accept(@NotNull LamaVisitor visitor) {
@@ -27,9 +33,9 @@ public class LamaScopeImpl extends LamaElementImpl implements LamaScope {
   }
 
   @Override
-  @NotNull
-  public List<LamaExpression> getExpressionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaExpression.class);
+  @Nullable
+  public LamaExpressionSeries getExpressionSeries() {
+    return PsiTreeUtil.getChildOfType(this, LamaExpressionSeries.class);
   }
 
   @Override

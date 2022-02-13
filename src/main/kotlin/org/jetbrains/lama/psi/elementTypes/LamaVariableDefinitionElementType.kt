@@ -1,6 +1,9 @@
 package org.jetbrains.lama.psi.elementTypes
 
-import com.intellij.psi.stubs.*
+import com.intellij.psi.stubs.IndexSink
+import com.intellij.psi.stubs.StubElement
+import com.intellij.psi.stubs.StubInputStream
+import com.intellij.psi.stubs.StubOutputStream
 import com.intellij.util.io.StringRef
 import org.jetbrains.lama.psi.api.LamaVariableDefinition
 import org.jetbrains.lama.psi.impl.LamaVariableDefinitionImpl

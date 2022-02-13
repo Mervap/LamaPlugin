@@ -9,14 +9,19 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.jetbrains.lama.parser.LamaElementTypes.*;
 import org.jetbrains.lama.psi.api.*;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.psi.stubs.IStubElementType;
 
-public class LamaFunctionExpressionImpl extends LamaExpressionImpl implements LamaFunctionExpression {
+public class LamaFunctionExpressionImpl extends LamaControlFlowHolderImpl implements LamaFunctionExpression {
 
   public LamaFunctionExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
+  public LamaFunctionExpressionImpl(@NotNull StubElement<?> stub, @NotNull IStubElementType<?, ?> type) {
+    super(stub, type);
+  }
+
   public void accept(@NotNull LamaVisitor visitor) {
     visitor.visitFunctionExpression(this);
   }
@@ -30,13 +35,13 @@ public class LamaFunctionExpressionImpl extends LamaExpressionImpl implements La
   @Override
   @Nullable
   public LamaFunctionBody getFunctionBody() {
-    return PsiTreeUtil.getChildOfType(this, LamaFunctionBody.class);
+    return LamaPsiImplUtil.getFunctionBody(this);
   }
 
   @Override
   @NotNull
   public LamaParameterList getParameterList() {
-    return notNullChild(PsiTreeUtil.getChildOfType(this, LamaParameterList.class));
+    return LamaPsiImplUtil.getParameterList(this);
   }
 
 }

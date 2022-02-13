@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface LamaArrayExpression extends LamaExpression {
 
-  @Nullable
-  LamaExpressionSeries getExpressionSeries();
+  @NotNull
+  List<LamaExpressionSeries> getExpressionSeriesList();
 
 }

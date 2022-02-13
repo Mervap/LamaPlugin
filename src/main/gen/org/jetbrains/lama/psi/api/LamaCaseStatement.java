@@ -10,7 +10,7 @@ public interface LamaCaseStatement extends LamaExpression {
   @NotNull
   List<LamaCaseBranch> getCaseBranchList();
 
-  @NotNull
-  List<LamaExpression> getExpressionList();
+  @Nullable
+  LamaExpressionSeries getExpressionSeries();
 
 }

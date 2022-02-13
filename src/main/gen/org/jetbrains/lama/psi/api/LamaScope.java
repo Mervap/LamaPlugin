@@ -5,10 +5,10 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface LamaScope extends LamaPsiElement {
+public interface LamaScope extends LamaControlFlowHolder {
 
-  @NotNull
-  List<LamaExpression> getExpressionList();
+  @Nullable
+  LamaExpressionSeries getExpressionSeries();
 
   @NotNull
   List<LamaFunctionDefinition> getFunctionDefinitionList();

@@ -19,8 +19,10 @@ class LamaAnnotator : Annotator {
 
 class LamaAnnotatorVisitor(private val holder: AnnotationHolder) : LamaVisitor() {
 
-  override fun visitCallExpression(o: LamaCallExpression) {
-    highlight(o.expression, FUNCTION_CALL)
+  override fun visitSOrCallExpression(o: LamaSOrCallExpression) {
+    if (o.expression.text.firstOrNull()?.isLowerCase() == true) {
+      highlight(o.expression, FUNCTION_CALL)
+    }
   }
 
   override fun visitVariableDefinition(o: LamaVariableDefinition) {

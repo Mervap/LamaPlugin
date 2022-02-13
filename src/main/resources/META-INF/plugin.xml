@@ -21,6 +21,8 @@
 
         <completion.contributor language="Lama" implementationClass="org.jetbrains.lama.editor.completion.LamaCompletionContributor"/>
 
+        <controlFlowProvider implementation="org.jetbrains.lama.psi.controlFlow.LamaControlFlowProvider"/>
+
         <stubIndex implementation="org.jetbrains.lama.psi.stubs.indices.LamaVariableNameIndex"/>
         <stubIndex implementation="org.jetbrains.lama.psi.stubs.indices.LamaFunctionDefinitionNameIndex"/>
         <stubIndex implementation="org.jetbrains.lama.psi.stubs.indices.LamaInfixOperatorDefinitionNameIndex"/>

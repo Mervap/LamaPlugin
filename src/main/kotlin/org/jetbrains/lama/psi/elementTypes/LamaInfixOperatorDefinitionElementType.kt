@@ -1,10 +1,16 @@
 package org.jetbrains.lama.psi.elementTypes
 
-import com.intellij.psi.stubs.*
+import com.intellij.psi.stubs.IndexSink
+import com.intellij.psi.stubs.StubElement
+import com.intellij.psi.stubs.StubInputStream
+import com.intellij.psi.stubs.StubOutputStream
 import com.intellij.util.io.StringRef
 import org.jetbrains.lama.psi.api.LamaInfixOperatorDefinition
 import org.jetbrains.lama.psi.impl.LamaInfixOperatorDefinitionImpl
-import org.jetbrains.lama.psi.stubs.*
+import org.jetbrains.lama.psi.stubs.LamaInfixAssociativity
+import org.jetbrains.lama.psi.stubs.LamaInfixOperatorDefinitionStub
+import org.jetbrains.lama.psi.stubs.LamaInfixOperatorDefinitionStubImpl
+import org.jetbrains.lama.psi.stubs.LamaStubElementType
 import org.jetbrains.lama.psi.stubs.indices.LamaInfixOperatorDefinitionNameIndex
 
 class LamaInfixOperatorDefinitionElementType(debugName: String) :

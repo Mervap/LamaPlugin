@@ -28,9 +28,9 @@ public class LamaListExpressionImpl extends LamaExpressionImpl implements LamaLi
   }
 
   @Override
-  @Nullable
-  public LamaExpressionSeries getExpressionSeries() {
-    return PsiTreeUtil.getChildOfType(this, LamaExpressionSeries.class);
+  @NotNull
+  public List<LamaExpressionSeries> getExpressionSeriesList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaExpressionSeries.class);
   }
 
 }

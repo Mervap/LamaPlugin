@@ -3,13 +3,12 @@
 package org.jetbrains.lama.psi.impl
 
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.intellij.util.IncorrectOperationException
 import org.jetbrains.lama.parser.LamaElementTypes
-import org.jetbrains.lama.psi.elementTypes.LamaElementFactory
 import org.jetbrains.lama.psi.api.*
+import org.jetbrains.lama.psi.elementTypes.LamaElementFactory
 import org.jetbrains.lama.psi.references.LamaReferenceBase
 import org.jetbrains.lama.psi.stubs.LAMA_INFIX_ASSOCIATIVITY_TYPES
 import org.jetbrains.lama.psi.stubs.LamaInfixAssociativity
@@ -91,8 +90,8 @@ internal object LamaPsiImplUtil {
   }
 
   @JvmStatic
-  fun getNameIdentifier(assignment: LamaVariableDefinition): PsiNamedElement? {
-    return assignment.firstChild as? PsiNamedElement
+  fun getNameIdentifier(assignment: LamaVariableDefinition): LamaIdentifierExpression? {
+    return assignment.firstChild as? LamaIdentifierExpression
   }
 
   @JvmStatic
@@ -108,7 +107,7 @@ internal object LamaPsiImplUtil {
   }
 
   @JvmStatic
-  fun getNameIdentifier(assignment: LamaFunctionDefinition): PsiNamedElement? {
+  fun getNameIdentifier(assignment: LamaFunctionDefinition): LamaIdentifierExpression? {
     return PsiTreeUtil.getChildOfType(assignment, LamaIdentifierExpression::class.java)
   }
 
@@ -183,5 +182,54 @@ internal object LamaPsiImplUtil {
   fun getIsTopLevelImpl(definition: LamaDefinition): Boolean {
     val parentScope = PsiTreeUtil.getParentOfType(definition, LamaScope::class.java) ?: return true
     return parentScope.parent is LamaFile
+  }
+
+  @JvmStatic
+  fun getCondition(branch: LamaIfBranch): LamaExpressionSeries? {
+    if (branch.firstChild.elementType == LamaElementTypes.LAMA_THEN) {
+      return (branch.parent as? LamaIfStatement)?.expressionSeries
+    }
+    return PsiTreeUtil.getChildOfType(branch, LamaExpressionSeries::class.java)
+  }
+
+  @JvmStatic
+  fun getScope(branch: LamaIfBranch): LamaScope? {
+    return PsiTreeUtil.getChildOfType(branch, LamaScope::class.java)
+  }
+
+  @JvmStatic
+  fun getExpression(sOrCall: LamaSOrCallExpression): LamaExpression {
+    return requireNotNull(PsiTreeUtil.getChildOfType(sOrCall, LamaExpression::class.java))
+  }
+
+  @JvmStatic
+  fun getArgumentList(sOrCall: LamaSOrCallExpression): LamaArgumentList? {
+    return PsiTreeUtil.getChildOfType(sOrCall, LamaArgumentList::class.java)
+  }
+
+  @JvmStatic
+  fun getOperator(expr: LamaAssignmentExpression): LamaAssignmentOperator? {
+    return PsiTreeUtil.getChildOfType(expr, LamaAssignmentOperator::class.java)
+  }
+
+  @JvmStatic
+  fun getAssignee(expr: LamaAssignmentExpression): LamaExpression {
+    return requireNotNull(PsiTreeUtil.getChildOfType(expr, LamaExpression::class.java))
+  }
+
+  @JvmStatic
+  fun getAssignment(expr: LamaAssignmentExpression): LamaExpression? {
+    val expressions = PsiTreeUtil.getChildrenOfType(expr, LamaExpression::class.java)
+    return if (expressions == null || expressions.size != 2) null else expressions[1]
+  }
+
+  @JvmStatic
+  fun getFunctionBody(expr: LamaFunctionExpression): LamaFunctionBody? {
+    return PsiTreeUtil.getChildOfType(expr, LamaFunctionBody::class.java)
+  }
+
+  @JvmStatic
+  fun getParameterList(expr: LamaFunctionExpression): LamaParameterList {
+    return requireNotNull(PsiTreeUtil.getChildOfType(expr, LamaParameterList::class.java))
   }
 }

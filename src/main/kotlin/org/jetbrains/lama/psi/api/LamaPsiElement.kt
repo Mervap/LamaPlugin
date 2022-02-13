@@ -1,5 +1,5 @@
 package org.jetbrains.lama.psi.api
 
-import com.intellij.psi.PsiElement
+import com.intellij.psi.NavigatablePsiElement
 
-interface LamaPsiElement : PsiElement
+interface LamaPsiElement : NavigatablePsiElement

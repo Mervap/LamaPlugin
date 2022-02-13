@@ -7,7 +7,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.StubBasedPsiElement;
 import org.jetbrains.lama.psi.stubs.LamaVariableDefinitionStub;
-import com.intellij.psi.PsiNamedElement;
 
 public interface LamaVariableDefinition extends LamaDefinition, PsiNameIdentifierOwner, StubBasedPsiElement<LamaVariableDefinitionStub> {
 
@@ -21,7 +20,7 @@ public interface LamaVariableDefinition extends LamaDefinition, PsiNameIdentifie
   PsiElement setName(@NotNull String name);
 
   @Nullable
-  PsiNamedElement getNameIdentifier();
+  LamaIdentifierExpression getNameIdentifier();
 
   @Nullable
   String getDefaultValue();

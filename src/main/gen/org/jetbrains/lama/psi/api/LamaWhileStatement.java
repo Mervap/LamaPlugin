@@ -8,9 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface LamaWhileStatement extends LamaExpression {
 
   @NotNull
-  List<LamaExpression> getExpressionList();
+  List<LamaExpression> getCondition();
 
   @Nullable
-  LamaScope getScope();
+  LamaScope getBody();
 
 }

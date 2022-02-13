@@ -8,6 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface LamaSubscriptionExpression extends LamaExpression {
 
   @NotNull
-  List<LamaExpression> getExpressionList();
+  LamaExpression getExpression();
+
+  @Nullable
+  LamaExpressionSeries getExpressionSeries();
 
 }

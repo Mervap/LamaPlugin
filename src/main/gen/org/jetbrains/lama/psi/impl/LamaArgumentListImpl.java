@@ -27,9 +27,9 @@ public class LamaArgumentListImpl extends LamaElementImpl implements LamaArgumen
   }
 
   @Override
-  @Nullable
-  public LamaExpressionSeries getExpressionSeries() {
-    return PsiTreeUtil.getChildOfType(this, LamaExpressionSeries.class);
+  @NotNull
+  public List<LamaExpressionSeries> getExpressionSeriesList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaExpressionSeries.class);
   }
 
 }

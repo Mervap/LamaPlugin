@@ -7,4 +7,10 @@ import com.intellij.psi.PsiElement;
 
 public interface LamaIfBranch extends LamaPsiElement {
 
+  @Nullable
+  LamaExpressionSeries getCondition();
+
+  @Nullable
+  LamaScope getScope();
+
 }

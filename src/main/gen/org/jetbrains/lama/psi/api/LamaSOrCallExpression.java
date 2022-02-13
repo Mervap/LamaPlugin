@@ -5,12 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface LamaCallExpression extends LamaExpression {
-
-  @NotNull
-  LamaArgumentList getArgumentList();
+public interface LamaSOrCallExpression extends LamaExpression {
 
   @NotNull
   LamaExpression getExpression();
+
+  @Nullable
+  LamaArgumentList getArgumentList();
 
 }

@@ -2,8 +2,6 @@ package org.jetbrains.lama.psi.references
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
-import com.intellij.psi.ResolveResult
-import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.util.IncorrectOperationException
 import org.jetbrains.lama.psi.api.LamaPsiElement
 

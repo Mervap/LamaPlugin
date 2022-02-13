@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface LamaFunctionExpression extends LamaExpression {
+public interface LamaFunctionExpression extends LamaControlFlowHolder, LamaExpression {
 
   @Nullable
   LamaFunctionBody getFunctionBody();

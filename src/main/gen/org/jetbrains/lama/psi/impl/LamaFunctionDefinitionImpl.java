@@ -9,7 +9,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.jetbrains.lama.parser.LamaElementTypes.*;
 import org.jetbrains.lama.psi.api.*;
-import com.intellij.psi.PsiNamedElement;
 import org.jetbrains.lama.psi.stubs.LamaFunctionDefinitionStub;
 import com.intellij.psi.stubs.IStubElementType;
 
@@ -65,7 +64,7 @@ public class LamaFunctionDefinitionImpl extends LamaFunctionDefinitionBase imple
 
   @Override
   @Nullable
-  public PsiNamedElement getNameIdentifier() {
+  public LamaIdentifierExpression getNameIdentifier() {
     return LamaPsiImplUtil.getNameIdentifier(this);
   }
 

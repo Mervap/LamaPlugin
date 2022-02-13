@@ -1,10 +1,15 @@
 package org.jetbrains.lama.psi.elementTypes
 
-import com.intellij.psi.stubs.*
+import com.intellij.psi.stubs.IndexSink
+import com.intellij.psi.stubs.StubElement
+import com.intellij.psi.stubs.StubInputStream
+import com.intellij.psi.stubs.StubOutputStream
 import com.intellij.util.io.StringRef
 import org.jetbrains.lama.psi.api.LamaFunctionDefinition
 import org.jetbrains.lama.psi.impl.LamaFunctionDefinitionImpl
-import org.jetbrains.lama.psi.stubs.*
+import org.jetbrains.lama.psi.stubs.LamaFunctionDefinitionStub
+import org.jetbrains.lama.psi.stubs.LamaFunctionDefinitionStubImpl
+import org.jetbrains.lama.psi.stubs.LamaStubElementType
 import org.jetbrains.lama.psi.stubs.indices.LamaFunctionDefinitionNameIndex
 
 class LamaFunctionDefinitionElementType(debugName: String) :

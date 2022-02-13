@@ -1,15 +1,12 @@
 package org.jetbrains.lama.psi.stubs.indices
 
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.IndexSink
-import com.intellij.psi.stubs.StringStubIndexExtension
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.stubs.StubIndexKey
 import com.intellij.util.Processor
 import org.jetbrains.lama.psi.api.LamaPsiElement
-import org.jetbrains.lama.psi.api.LamaVariableDefinition
 import kotlin.reflect.KClass
 
 abstract class LamaCompletionIndex<T : LamaPsiElement>(name: String, selfKClass: KClass<T>) {

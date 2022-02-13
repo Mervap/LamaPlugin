@@ -14,9 +14,9 @@ public interface LamaElementTypes {
   IElementType LAMA_ARGUMENT_LIST = new LamaElementType("LAMA_ARGUMENT_LIST");
   IElementType LAMA_ARRAY_EXPRESSION = new LamaElementType("LAMA_ARRAY_EXPRESSION");
   IElementType LAMA_ARRAY_PATTERN = new LamaElementType("LAMA_ARRAY_PATTERN");
+  IElementType LAMA_ASSIGNMENT_EXPRESSION = new LamaElementType("LAMA_ASSIGNMENT_EXPRESSION");
   IElementType LAMA_ASSIGNMENT_OPERATOR = new LamaElementType("LAMA_ASSIGNMENT_OPERATOR");
   IElementType LAMA_BOOLEAN_LITERAL = new LamaElementType("LAMA_BOOLEAN_LITERAL");
-  IElementType LAMA_CALL_EXPRESSION = new LamaElementType("LAMA_CALL_EXPRESSION");
   IElementType LAMA_CASE_BRANCH = new LamaElementType("LAMA_CASE_BRANCH");
   IElementType LAMA_CASE_STATEMENT = new LamaElementType("LAMA_CASE_STATEMENT");
   IElementType LAMA_CHAR_LITERAL = new LamaElementType("LAMA_CHAR_LITERAL");
@@ -61,6 +61,7 @@ public interface LamaElementTypes {
   IElementType LAMA_SYNTAX_PRIMARY_PARENTHESIZED = new LamaElementType("LAMA_SYNTAX_PRIMARY_PARENTHESIZED");
   IElementType LAMA_SYNTAX_SEQ = new LamaElementType("LAMA_SYNTAX_SEQ");
   IElementType LAMA_S_OR_AT_PATTERN = new LamaElementType("LAMA_S_OR_AT_PATTERN");
+  IElementType LAMA_S_OR_CALL_EXPRESSION = new LamaElementType("LAMA_S_OR_CALL_EXPRESSION");
   IElementType LAMA_VARIABLE_DEFINITION = LamaElementTypeFactory.getElementTypeByName("LAMA_VARIABLE_DEFINITION");
   IElementType LAMA_VARIABLE_DEFINITION_SERIES = new LamaElementType("LAMA_VARIABLE_DEFINITION_SERIES");
   IElementType LAMA_WHILE_STATEMENT = new LamaElementType("LAMA_WHILE_STATEMENT");
@@ -153,14 +154,14 @@ public interface LamaElementTypes {
       else if (type == LAMA_ARRAY_PATTERN) {
         return new LamaArrayPatternImpl(node);
       }
+      else if (type == LAMA_ASSIGNMENT_EXPRESSION) {
+        return new LamaAssignmentExpressionImpl(node);
+      }
       else if (type == LAMA_ASSIGNMENT_OPERATOR) {
         return new LamaAssignmentOperatorImpl(node);
       }
       else if (type == LAMA_BOOLEAN_LITERAL) {
         return new LamaBooleanLiteralImpl(node);
-      }
-      else if (type == LAMA_CALL_EXPRESSION) {
-        return new LamaCallExpressionImpl(node);
       }
       else if (type == LAMA_CASE_BRANCH) {
         return new LamaCaseBranchImpl(node);
@@ -290,6 +291,9 @@ public interface LamaElementTypes {
       }
       else if (type == LAMA_S_OR_AT_PATTERN) {
         return new LamaSOrAtPatternImpl(node);
+      }
+      else if (type == LAMA_S_OR_CALL_EXPRESSION) {
+        return new LamaSOrCallExpressionImpl(node);
       }
       else if (type == LAMA_VARIABLE_DEFINITION) {
         return new LamaVariableDefinitionImpl(node);

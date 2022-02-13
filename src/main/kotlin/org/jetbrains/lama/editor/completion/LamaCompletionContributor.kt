@@ -9,6 +9,7 @@ import com.intellij.psi.filters.ElementFilter
 import com.intellij.psi.filters.NotFilter
 import com.intellij.psi.filters.position.FilterPattern
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.refactoring.suggested.endOffset
 import com.intellij.refactoring.suggested.startOffset
 import org.jetbrains.lama.psi.LamaLanguage
 import org.jetbrains.lama.psi.api.LamaExpression
@@ -17,9 +18,9 @@ import org.jetbrains.lama.psi.api.LamaIdentifierExpression
 
 class LamaCompletionContributor : CompletionContributor() {
   init {
-    addIdentifierCompletion()
     addKeywordCompletion()
     addImportListCompletion()
+    addIdentifierCompletion()
   }
 
   private fun addIdentifierCompletion() {
@@ -48,8 +49,8 @@ class LamaCompletionContributor : CompletionContributor() {
 }
 
 object LamaElementFilters {
-  val IDENTIFIER_FILTER = FilterPattern(AndFilter(NotFilter(ImportListFilter()), IdentifierFilter()))
-  val IMPORT_LIST_FILTER = FilterPattern(ImportListFilter())
+  val IDENTIFIER_FILTER = FilterPattern(AndFilter(NotFilter(ImportListFilter(true)), IdentifierFilter()))
+  val IMPORT_LIST_FILTER = FilterPattern(ImportListFilter(false))
 }
 
 private class IdentifierFilter : ElementFilter {
@@ -62,7 +63,7 @@ private class IdentifierFilter : ElementFilter {
   override fun isClassAcceptable(hintClass: Class<*>?) = true
 }
 
-private class ImportListFilter : ElementFilter {
+private class ImportListFilter(private val strict: Boolean) : ElementFilter {
   override fun isAcceptable(element: Any?, context: PsiElement?): Boolean {
     return context?.beforeEndOfImportList() ?: false
   }
@@ -70,7 +71,8 @@ private class ImportListFilter : ElementFilter {
   override fun isClassAcceptable(hintClass: Class<*>?) = true
 
   private fun PsiElement.beforeEndOfImportList(): Boolean {
-    val scopeStartOffset = (containingFile as LamaFile).scope().startOffset
-    return startOffset <= scopeStartOffset
+    val scopeStartOffset = (containingFile as LamaFile).scope.startOffset
+    val offset = if (strict) endOffset else startOffset
+    return offset <= scopeStartOffset
   }
 }

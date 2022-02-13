@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static org.jetbrains.lama.parser.LamaElementTypes.*;
 import org.jetbrains.lama.psi.api.*;
 
-public class LamaCallExpressionImpl extends LamaExpressionImpl implements LamaCallExpression {
+public class LamaSOrCallExpressionImpl extends LamaExpressionImpl implements LamaSOrCallExpression {
 
-  public LamaCallExpressionImpl(@NotNull ASTNode node) {
+  public LamaSOrCallExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull LamaVisitor visitor) {
-    visitor.visitCallExpression(this);
+    visitor.visitSOrCallExpression(this);
   }
 
   @Override
@@ -29,14 +29,14 @@ public class LamaCallExpressionImpl extends LamaExpressionImpl implements LamaCa
 
   @Override
   @NotNull
-  public LamaArgumentList getArgumentList() {
-    return notNullChild(PsiTreeUtil.getChildOfType(this, LamaArgumentList.class));
+  public LamaExpression getExpression() {
+    return LamaPsiImplUtil.getExpression(this);
   }
 
   @Override
-  @NotNull
-  public LamaExpression getExpression() {
-    return notNullChild(PsiTreeUtil.getChildOfType(this, LamaExpression.class));
+  @Nullable
+  public LamaArgumentList getArgumentList() {
+    return LamaPsiImplUtil.getArgumentList(this);
   }
 
 }

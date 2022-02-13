@@ -26,4 +26,16 @@ public class LamaIfBranchImpl extends LamaElementImpl implements LamaIfBranch {
     else super.accept(visitor);
   }
 
+  @Override
+  @Nullable
+  public LamaExpressionSeries getCondition() {
+    return LamaPsiImplUtil.getCondition(this);
+  }
+
+  @Override
+  @Nullable
+  public LamaScope getScope() {
+    return LamaPsiImplUtil.getScope(this);
+  }
+
 }

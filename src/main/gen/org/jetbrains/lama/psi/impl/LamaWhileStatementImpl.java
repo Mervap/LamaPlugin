@@ -29,13 +29,13 @@ public class LamaWhileStatementImpl extends LamaExpressionImpl implements LamaWh
 
   @Override
   @NotNull
-  public List<LamaExpression> getExpressionList() {
+  public List<LamaExpression> getCondition() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaExpression.class);
   }
 
   @Override
   @Nullable
-  public LamaScope getScope() {
+  public LamaScope getBody() {
     return PsiTreeUtil.getChildOfType(this, LamaScope.class);
   }
 

@@ -29,12 +29,6 @@ public class LamaForStatementImpl extends LamaExpressionImpl implements LamaForS
 
   @Override
   @NotNull
-  public List<LamaExpression> getExpressionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaExpression.class);
-  }
-
-  @Override
-  @NotNull
   public List<LamaScope> getScopeList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaScope.class);
   }
@@ -44,6 +38,25 @@ public class LamaForStatementImpl extends LamaExpressionImpl implements LamaForS
   public LamaScope getBeforeAll() {
     List<LamaScope> p1 = getScopeList();
     return p1.size() < 1 ? null : p1.get(0);
+  }
+
+  @Override
+  @Nullable
+  public LamaExpressionSeries getBeforeEach() {
+    return PsiTreeUtil.getChildOfType(this, LamaExpressionSeries.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LamaExpression> getAfterEach() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaExpression.class);
+  }
+
+  @Override
+  @Nullable
+  public LamaScope getBody() {
+    List<LamaScope> p1 = getScopeList();
+    return p1.size() < 2 ? null : p1.get(1);
   }
 
 }

@@ -1,9 +1,44 @@
 package org.jetbrains.lama.psi
 
 import com.intellij.psi.tree.TokenSet
+import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.lama.parser.LamaElementTypes.*
+import org.jetbrains.lama.psi.api.*
 
 object LamaPsiUtil {
+
+  val LamaPsiElement.controlFlowContainer: LamaControlFlowHolder?
+    get() = PsiTreeUtil.getParentOfType(this, LamaControlFlowHolder::class.java)
+
+  fun LamaIdentifierExpression.isNotIdentifierReference(): Boolean = !isIdentifierReference()
+
+  fun LamaIdentifierExpression.isIdentifierReference(): Boolean = isAssignee() || isDefinitionIdentifier()
+
+  fun LamaIdentifierExpression.isAssignee(): Boolean {
+    val parent = parent
+    return parent is LamaAssignmentExpression && parent.assignee == this
+  }
+
+  fun LamaIdentifierExpression.isDefinitionIdentifier(): Boolean {
+    return isVariableDefinitionIdentifier() || isFunctionDefinitionIdentifier()
+  }
+
+  fun LamaIdentifierExpression.isVariableDefinitionIdentifier(): Boolean {
+    val parent = parent
+    return parent is LamaVariableDefinition && parent.nameIdentifier == this
+  }
+
+  fun LamaIdentifierExpression.isFunctionDefinitionIdentifier(): Boolean {
+    val parent = parent
+    return parent is LamaFunctionDefinition && parent.nameIdentifier == this
+  }
+
+  fun LamaOperator.isNotDefinitionOperator(): Boolean = !isDefinitionOperator()
+
+  fun LamaOperator.isDefinitionOperator(): Boolean {
+    val parent = parent
+    return parent is LamaInfixOperatorDefinition && parent.nameOperator == this
+  }
 
   val RESERVED_WORDS = TokenSet.create(
     LAMA_AFTER, LAMA_ARRAY, LAMA_AT, LAMA_BEFORE, LAMA_BOX, LAMA_CASE, LAMA_DO, LAMA_ELIF, LAMA_ELSE, LAMA_ESAC,

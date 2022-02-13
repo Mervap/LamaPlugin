@@ -8,5 +8,5 @@
 - Parser/lexer
 - Formatter
 - Indexing
-- Completion
+- Completion of Global and Local symbols
 - GitHub CI/CD

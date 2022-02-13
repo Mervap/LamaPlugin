@@ -1,12 +1,11 @@
 package org.jetbrains.lama.editor.completion
 
-import com.intellij.codeInsight.completion.*
-import com.intellij.psi.PsiElement
-import com.intellij.psi.tree.IElementType
-import com.intellij.refactoring.suggested.startOffset
+import com.intellij.codeInsight.completion.CompletionParameters
+import com.intellij.codeInsight.completion.CompletionProvider
+import com.intellij.codeInsight.completion.CompletionResultSet
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
-import org.jetbrains.lama.parser.LamaElementTypes.*
-import org.jetbrains.lama.psi.api.LamaFile
+import org.jetbrains.lama.psi.api.LamaImportStatement
 
 class ImportListCompletionProvider : CompletionProvider<CompletionParameters>() {
   override fun addCompletions(
@@ -22,6 +21,37 @@ class ImportListCompletionProvider : CompletionProvider<CompletionParameters>() 
       )
     )
 
-    // todo: modules completion
+    if (PsiTreeUtil.getParentOfType(parameters.position, LamaImportStatement::class.java) != null) {
+      for (module in MODULES) {
+        result.addElement(
+          LamaLookupElementFactory.createLookupElementWithGrouping(
+            LamaLookupElement(module, true),
+            { _, _ -> },
+            GLOBAL_GROUPING
+          )
+        )
+      }
+    }
+  }
+
+  companion object {
+    private val MODULES =
+      arrayOf(
+        "Array",
+        "Collection",
+        "Data1",
+        "Lazy",
+        "Matcher",
+        "Random",
+        "STM",
+        "Buffer",
+        "Data",
+        "Fun",
+        "List",
+        "Ostap",
+        "Ref",
+        "Timer"
+      )
   }
 }
+

@@ -9,7 +9,7 @@ import com.intellij.psi.StubBasedPsiElement;
 import org.jetbrains.lama.psi.stubs.LamaInfixOperatorDefinitionStub;
 import org.jetbrains.lama.psi.stubs.LamaInfixAssociativity;
 
-public interface LamaInfixOperatorDefinition extends LamaDefinition, PsiNamedElement, StubBasedPsiElement<LamaInfixOperatorDefinitionStub> {
+public interface LamaInfixOperatorDefinition extends LamaControlFlowHolder, LamaDefinition, PsiNamedElement, StubBasedPsiElement<LamaInfixOperatorDefinitionStub> {
 
   @Nullable
   LamaFunctionBody getFunctionBody();

@@ -24,15 +24,15 @@ public class LamaVisitor extends PsiElementVisitor {
     visitPattern(o);
   }
 
+  public void visitAssignmentExpression(@NotNull LamaAssignmentExpression o) {
+    visitExpression(o);
+  }
+
   public void visitAssignmentOperator(@NotNull LamaAssignmentOperator o) {
     visitOperator(o);
   }
 
   public void visitBooleanLiteral(@NotNull LamaBooleanLiteral o) {
-    visitExpression(o);
-  }
-
-  public void visitCallExpression(@NotNull LamaCallExpression o) {
     visitExpression(o);
   }
 
@@ -82,12 +82,14 @@ public class LamaVisitor extends PsiElementVisitor {
   }
 
   public void visitFunctionDefinition(@NotNull LamaFunctionDefinition o) {
-    visitDefinition(o);
+    visitControlFlowHolder(o);
+    // visitDefinition(o);
     // visitPsiNameIdentifierOwner(o);
   }
 
   public void visitFunctionExpression(@NotNull LamaFunctionExpression o) {
-    visitExpression(o);
+    visitControlFlowHolder(o);
+    // visitExpression(o);
   }
 
   public void visitIdentifierExpression(@NotNull LamaIdentifierExpression o) {
@@ -116,7 +118,8 @@ public class LamaVisitor extends PsiElementVisitor {
   }
 
   public void visitInfixOperatorDefinition(@NotNull LamaInfixOperatorDefinition o) {
-    visitDefinition(o);
+    visitControlFlowHolder(o);
+    // visitDefinition(o);
     // visitPsiNamedElement(o);
   }
 
@@ -176,8 +179,12 @@ public class LamaVisitor extends PsiElementVisitor {
     visitPattern(o);
   }
 
+  public void visitSOrCallExpression(@NotNull LamaSOrCallExpression o) {
+    visitExpression(o);
+  }
+
   public void visitScope(@NotNull LamaScope o) {
-    visitPsiElement(o);
+    visitControlFlowHolder(o);
   }
 
   public void visitSharpPattern(@NotNull LamaSharpPattern o) {
@@ -236,6 +243,10 @@ public class LamaVisitor extends PsiElementVisitor {
 
   public void visitWildcardPattern(@NotNull LamaWildcardPattern o) {
     visitPattern(o);
+  }
+
+  public void visitControlFlowHolder(@NotNull LamaControlFlowHolder o) {
+    visitPsiElement(o);
   }
 
   public void visitDefinition(@NotNull LamaDefinition o) {

@@ -11,8 +11,8 @@ import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
 import org.jetbrains.lama.lexer.LamaLexer
-import org.jetbrains.lama.psi.elementTypes.LamaElementType
 import org.jetbrains.lama.psi.api.LamaFile
+import org.jetbrains.lama.psi.elementTypes.LamaElementType
 import org.jetbrains.lama.psi.elementTypes.LamaFileElementType
 import org.jetbrains.lama.psi.impl.LamaFileImpl
 

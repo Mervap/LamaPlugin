@@ -1,6 +1,8 @@
 package org.jetbrains.lama.editor.completion
 
-import com.intellij.codeInsight.completion.*
+import com.intellij.codeInsight.completion.CompletionParameters
+import com.intellij.codeInsight.completion.CompletionProvider
+import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -10,7 +12,10 @@ import com.intellij.psi.util.prevLeaf
 import com.intellij.refactoring.suggested.startOffset
 import com.intellij.util.ProcessingContext
 import com.intellij.util.Processor
+import org.jetbrains.lama.psi.LamaPsiUtil.controlFlowContainer
 import org.jetbrains.lama.psi.api.*
+import org.jetbrains.lama.psi.controlFlow.IdentifierSymbolInfo
+import org.jetbrains.lama.psi.controlFlow.OperatorSymbolInfo
 import org.jetbrains.lama.psi.references.LamaSearchScope
 import org.jetbrains.lama.psi.stubs.indices.LamaFunctionDefinitionNameIndex
 import org.jetbrains.lama.psi.stubs.indices.LamaInfixOperatorDefinitionNameIndex
@@ -53,7 +58,47 @@ class IdentifierCompletionProvider : CompletionProvider<CompletionParameters>() 
     val shownNames = HashSet<String>()
     val project = position.project
     val originalFile = parameters.originalFile
+
+    addCompletionFromLocals(position, shownNames, result)
     addCompletionFromIndices(project, LamaSearchScope.getScope(originalFile), shownNames, result, isOperator)
+  }
+}
+
+private fun addCompletionFromLocals(
+  position: LamaPsiElement,
+  shownNames: HashSet<String>,
+  result: CompletionResultSet,
+) {
+  position.controlFlowContainer?.getLocalSymbolInfo(position)?.symbolInfos?.sortedBy { it.name }?.forEach { info ->
+    val name = info.name
+    if (!shownNames.add(name)) {
+      return@forEach
+    }
+    val element = when (info) {
+      is OperatorSymbolInfo -> {
+        val definition = info.definition.parent as? LamaInfixOperatorDefinition
+        if (definition == null) {
+          LamaLookupElementFactory.createLocalInfixLookupElement(info.name)
+        }
+        else {
+          LamaLookupElementFactory.createLocalInfixLookupElement(definition)
+        }
+      }
+      is IdentifierSymbolInfo -> {
+        when (val definition = info.definition.parent) {
+          is LamaVariableDefinition -> {
+            LamaLookupElementFactory.createLocalVariableLookupElement(definition)
+          }
+          is LamaFunctionDefinition -> {
+            LamaLookupElementFactory.createLocalFunctionLookupElement(definition)
+          }
+          else -> {
+            LamaLookupElementFactory.createLocalVariableLookupElement(info.name)
+          }
+        }
+      }
+    }
+    result.consume(element)
   }
 }
 

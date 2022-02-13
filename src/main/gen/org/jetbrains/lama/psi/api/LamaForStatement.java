@@ -8,12 +8,18 @@ import com.intellij.psi.PsiElement;
 public interface LamaForStatement extends LamaExpression {
 
   @NotNull
-  List<LamaExpression> getExpressionList();
-
-  @NotNull
   List<LamaScope> getScopeList();
 
   @Nullable
   LamaScope getBeforeAll();
+
+  @Nullable
+  LamaExpressionSeries getBeforeEach();
+
+  @NotNull
+  List<LamaExpression> getAfterEach();
+
+  @Nullable
+  LamaScope getBody();
 
 }

@@ -16,6 +16,8 @@ class LamaFileImpl(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, L
     visitor.visitFile(this)
   }
 
-  override fun importStatements(): List<LamaImportStatement> = children.filterIsInstance<LamaImportStatement>()
-  override fun scope(): LamaScope = children.filterIsInstance<LamaScope>().single()
+  override val importStatements: List<LamaImportStatement>
+    get() = children.filterIsInstance<LamaImportStatement>()
+  override val scope: LamaScope
+    get() = children.filterIsInstance<LamaScope>().single()
 }

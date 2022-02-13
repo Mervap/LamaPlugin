@@ -7,8 +7,8 @@ import com.intellij.psi.PsiElement;
 
 public interface LamaIfStatement extends LamaExpression {
 
-  @NotNull
-  List<LamaExpression> getExpressionList();
+  @Nullable
+  LamaExpressionSeries getExpressionSeries();
 
   @NotNull
   List<LamaIfBranch> getIfBranchList();

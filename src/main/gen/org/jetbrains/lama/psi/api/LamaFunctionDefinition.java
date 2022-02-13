@@ -7,9 +7,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.StubBasedPsiElement;
 import org.jetbrains.lama.psi.stubs.LamaFunctionDefinitionStub;
-import com.intellij.psi.PsiNamedElement;
 
-public interface LamaFunctionDefinition extends LamaDefinition, PsiNameIdentifierOwner, StubBasedPsiElement<LamaFunctionDefinitionStub> {
+public interface LamaFunctionDefinition extends LamaControlFlowHolder, LamaDefinition, PsiNameIdentifierOwner, StubBasedPsiElement<LamaFunctionDefinitionStub> {
 
   @Nullable
   LamaFunctionBody getFunctionBody();
@@ -27,7 +26,7 @@ public interface LamaFunctionDefinition extends LamaDefinition, PsiNameIdentifie
   PsiElement setName(@NotNull String name);
 
   @Nullable
-  PsiNamedElement getNameIdentifier();
+  LamaIdentifierExpression getNameIdentifier();
 
   boolean isPublic();
 

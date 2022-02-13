@@ -1,14 +1,15 @@
 package org.jetbrains.lama.editor.completion
 
-import com.intellij.codeInsight.completion.*
+import com.intellij.codeInsight.completion.CompletionParameters
+import com.intellij.codeInsight.completion.CompletionProvider
+import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.refactoring.suggested.endOffset
 import com.intellij.refactoring.suggested.startOffset
 import com.intellij.util.ProcessingContext
 import org.jetbrains.lama.parser.LamaElementTypes.*
-import org.jetbrains.lama.psi.api.LamaDefinition
-import org.jetbrains.lama.psi.api.LamaExpression
 import org.jetbrains.lama.psi.api.LamaScope
 
 class KeywordCompletionProvider : CompletionProvider<CompletionParameters>() {
@@ -63,8 +64,9 @@ class KeywordCompletionProvider : CompletionProvider<CompletionParameters>() {
 
     private fun beforeEndOfDefinitionList(psi: PsiElement): Boolean {
       val parentScope = PsiTreeUtil.getParentOfType(psi, LamaScope::class.java) ?: return true
-      val firstExpression = parentScope.expressionList.firstOrNull() ?: return true
-      return psi.startOffset <= firstExpression.startOffset
+      val firstExpression = parentScope.expressionSeries?.expressionList?.firstOrNull() ?: return true
+      val firstLeaf = PsiTreeUtil.getDeepestVisibleFirst(firstExpression) ?: return true
+      return psi.startOffset <= firstLeaf.endOffset
     }
   }
 }
