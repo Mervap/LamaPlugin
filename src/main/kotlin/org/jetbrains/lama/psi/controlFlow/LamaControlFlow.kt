@@ -12,7 +12,7 @@ class LamaControlFlow(instructions: Array<Instruction>): ControlFlowImpl(instruc
 
   init {
     ControlFlowUtil.process(this.instructions, 0) { instruction ->
-      reachable.set(instruction.num());
+      reachable.set(instruction.num())
       true
     }
   }

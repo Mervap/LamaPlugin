@@ -76,8 +76,13 @@ public class LamaInfixOperatorDefinitionImpl extends LamaInfixOperatorDefinition
   }
 
   @Override
-  public boolean getIsTopLevel() {
-    return LamaPsiImplUtil.getIsTopLevel(this);
+  public boolean isPublic() {
+    return LamaPsiImplUtil.isPublic(this);
+  }
+
+  @Override
+  public boolean isTopLevel() {
+    return LamaPsiImplUtil.isTopLevel(this);
   }
 
   @Override

@@ -80,7 +80,7 @@ internal object LamaPsiImplUtil {
   @JvmStatic
   fun setName(definition: LamaVariableDefinition, name: String): PsiElement {
     val nameIdentifier = definition.nameIdentifier ?: throw IncorrectOperationException("Empty name: $this")
-    nameIdentifier.setName(name)
+    nameIdentifier.name = name
     return definition
   }
 
@@ -97,7 +97,7 @@ internal object LamaPsiImplUtil {
   @JvmStatic
   fun setName(definition: LamaFunctionDefinition, name: String): PsiElement {
     val nameIdentifier = definition.nameIdentifier ?: throw IncorrectOperationException("Empty name: $this")
-    nameIdentifier.setName(name)
+    nameIdentifier.name = name
     return definition
   }
 
@@ -121,7 +121,7 @@ internal object LamaPsiImplUtil {
 
   @JvmStatic
   fun getName(definition: LamaInfixOperatorDefinitionImpl): String {
-    return definition.greenStub?.name ?: definition.nameOperator.name ?: "<unnamed>"
+    return definition.greenStub?.name ?: definition.nameOperator.name
   }
 
   @JvmStatic
@@ -134,8 +134,23 @@ internal object LamaPsiImplUtil {
   }
 
   @JvmStatic
+  fun isPublic(variable: LamaVariableDefinitionImpl): Boolean {
+    return variable.greenStub?.isPublic ?: isFirstChildPublicKeyword(variable.parent)
+  }
+
+  @JvmStatic
   fun isPublic(function: LamaFunctionDefinitionImpl): Boolean {
-    return function.greenStub?.isPublic ?: (function.firstChild?.elementType == LamaElementTypes.LAMA_PUBLIC)
+    return function.greenStub?.isPublic ?: isFirstChildPublicKeyword(function)
+  }
+
+  @JvmStatic
+  fun isPublic(infix: LamaInfixOperatorDefinitionImpl): Boolean {
+    return infix.greenStub?.isPublic ?: isFirstChildPublicKeyword(infix)
+  }
+
+  @JvmStatic
+  private fun isFirstChildPublicKeyword(definition: PsiElement): Boolean {
+    return definition.firstChild?.elementType == LamaElementTypes.LAMA_PUBLIC
   }
 
   @JvmStatic
@@ -164,17 +179,17 @@ internal object LamaPsiImplUtil {
   }
 
   @JvmStatic
-  fun getIsTopLevel(definition: LamaVariableDefinitionImpl): Boolean {
+  fun isTopLevel(definition: LamaVariableDefinitionImpl): Boolean {
     return definition.greenStub?.isTopLevel ?: getIsTopLevelImpl(definition)
   }
 
   @JvmStatic
-  fun getIsTopLevel(definition: LamaFunctionDefinitionImpl): Boolean {
+  fun isTopLevel(definition: LamaFunctionDefinitionImpl): Boolean {
     return definition.greenStub?.isTopLevel ?: getIsTopLevelImpl(definition)
   }
 
   @JvmStatic
-  fun getIsTopLevel(definition: LamaInfixOperatorDefinitionImpl): Boolean {
+  fun isTopLevel(definition: LamaInfixOperatorDefinitionImpl): Boolean {
     return definition.greenStub?.isTopLevel ?: getIsTopLevelImpl(definition)
   }
 

@@ -1,0 +1,5 @@
+import B;
+
+public fun xxxx_c() {}
+
+xxxx<caret>

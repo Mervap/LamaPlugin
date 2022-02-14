@@ -10,7 +10,8 @@ import org.jetbrains.lama.psi.impl.LamaFunctionDefinitionImpl
 import org.jetbrains.lama.psi.stubs.LamaFunctionDefinitionStub
 import org.jetbrains.lama.psi.stubs.LamaFunctionDefinitionStubImpl
 import org.jetbrains.lama.psi.stubs.LamaStubElementType
-import org.jetbrains.lama.psi.stubs.indices.LamaFunctionDefinitionNameIndex
+import org.jetbrains.lama.psi.stubs.indices.LamaIdentifierCompletionIndex
+import org.jetbrains.lama.psi.stubs.indices.LamaIdentifierNameIndex
 
 class LamaFunctionDefinitionElementType(debugName: String) :
   LamaStubElementType<LamaFunctionDefinitionStub, LamaFunctionDefinition>(debugName) {
@@ -41,7 +42,8 @@ class LamaFunctionDefinitionElementType(debugName: String) :
   override fun indexStub(stub: LamaFunctionDefinitionStub, sink: IndexSink) {
     val name = stub.name
     if (name != null && stub.isTopLevel) {
-      LamaFunctionDefinitionNameIndex.sink(sink)
+      LamaIdentifierCompletionIndex.sink(sink)
+      LamaIdentifierNameIndex.sink(name, sink)
     }
   }
 }

@@ -8,7 +8,6 @@ import org.jetbrains.lama.psi.api.LamaFunctionDefinition
 
 interface LamaFunctionDefinitionStub : LamaDefinitionStub<LamaFunctionDefinition> {
   val parameters: String
-  val isPublic: Boolean
 }
 
 class LamaFunctionDefinitionStubImpl(

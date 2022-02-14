@@ -11,7 +11,8 @@ import org.jetbrains.lama.psi.stubs.LamaInfixAssociativity
 import org.jetbrains.lama.psi.stubs.LamaInfixOperatorDefinitionStub
 import org.jetbrains.lama.psi.stubs.LamaInfixOperatorDefinitionStubImpl
 import org.jetbrains.lama.psi.stubs.LamaStubElementType
-import org.jetbrains.lama.psi.stubs.indices.LamaInfixOperatorDefinitionNameIndex
+import org.jetbrains.lama.psi.stubs.indices.LamaOperatorCompletionIndex
+import org.jetbrains.lama.psi.stubs.indices.LamaOperatorNameIndex
 
 class LamaInfixOperatorDefinitionElementType(debugName: String) :
   LamaStubElementType<LamaInfixOperatorDefinitionStub, LamaInfixOperatorDefinition>(debugName) {
@@ -24,13 +25,14 @@ class LamaInfixOperatorDefinitionElementType(debugName: String) :
     psi: LamaInfixOperatorDefinition,
     parentStub: StubElement<*>?,
   ): LamaInfixOperatorDefinitionStub {
-    return LamaInfixOperatorDefinitionStubImpl(psi.name, psi.parameters, psi.associativity, psi.isTopLevel, parentStub, this)
+    return LamaInfixOperatorDefinitionStubImpl(psi.name, psi.parameters, psi.associativity,  psi.isPublic, psi.isTopLevel, parentStub, this)
   }
 
   override fun serialize(stub: LamaInfixOperatorDefinitionStub, dataStream: StubOutputStream) {
     dataStream.writeName(stub.name)
     dataStream.writeName(stub.parameters)
     dataStream.writeInt(stub.associativity.ordinal)
+    dataStream.writeBoolean(stub.isPublic)
     dataStream.writeBoolean(stub.isTopLevel)
   }
 
@@ -38,14 +40,16 @@ class LamaInfixOperatorDefinitionElementType(debugName: String) :
     val name = StringRef.toString(dataStream.readName())
     val parameters = StringRef.toString(dataStream.readName())
     val associativity = LamaInfixAssociativity.values()[dataStream.readInt()]
+    val isPublic = dataStream.readBoolean()
     val isTopLevel = dataStream.readBoolean()
-    return LamaInfixOperatorDefinitionStubImpl(name, parameters, associativity, isTopLevel, parentStub, this)
+    return LamaInfixOperatorDefinitionStubImpl(name, parameters, associativity, isPublic, isTopLevel, parentStub, this)
   }
 
   override fun indexStub(stub: LamaInfixOperatorDefinitionStub, sink: IndexSink) {
     val name = stub.name
     if (name != null && stub.isTopLevel) {
-      LamaInfixOperatorDefinitionNameIndex.sink(sink)
+      LamaOperatorCompletionIndex.sink(sink)
+      LamaOperatorNameIndex.sink(name, sink)
     }
   }
 }

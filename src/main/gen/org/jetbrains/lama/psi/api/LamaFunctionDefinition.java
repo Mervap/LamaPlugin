@@ -28,11 +28,11 @@ public interface LamaFunctionDefinition extends LamaControlFlowHolder, LamaDefin
   @Nullable
   LamaIdentifierExpression getNameIdentifier();
 
-  boolean isPublic();
-
   @NotNull
   String getParameters();
 
-  boolean getIsTopLevel();
+  boolean isPublic();
+
+  boolean isTopLevel();
 
 }

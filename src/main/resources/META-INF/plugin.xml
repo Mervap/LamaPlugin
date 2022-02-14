@@ -23,9 +23,11 @@
 
         <controlFlowProvider implementation="org.jetbrains.lama.psi.controlFlow.LamaControlFlowProvider"/>
 
-        <stubIndex implementation="org.jetbrains.lama.psi.stubs.indices.LamaVariableNameIndex"/>
-        <stubIndex implementation="org.jetbrains.lama.psi.stubs.indices.LamaFunctionDefinitionNameIndex"/>
-        <stubIndex implementation="org.jetbrains.lama.psi.stubs.indices.LamaInfixOperatorDefinitionNameIndex"/>
+        <stubIndex implementation="org.jetbrains.lama.psi.stubs.indices.LamaIdentifierCompletionIndex"/>
+        <stubIndex implementation="org.jetbrains.lama.psi.stubs.indices.LamaOperatorCompletionIndex"/>
+
+        <stubIndex implementation="org.jetbrains.lama.psi.stubs.indices.LamaIdentifierNameIndex"/>
+        <stubIndex implementation="org.jetbrains.lama.psi.stubs.indices.LamaOperatorNameIndex"/>
 
         <localInspection shortName="LamaMissingSemicolonInspection" language="Lama" enabledByDefault="true" groupName="Lama"
                          bundle="messages.LamaBundle" key="inspection.missing.semicolon.name"

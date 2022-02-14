@@ -1,11 +1,7 @@
 package org.jetbrains.lama.editor.completion
 
-import com.intellij.codeInsight.lookup.Lookup
-import com.intellij.codeInsight.lookup.LookupElement
-import com.intellij.testFramework.UsefulTestCase
 import org.jetbrains.lama.LamaBaseTest
 import org.junit.Test
-import kotlin.test.assertContains
 
 class LamaIdentifierCompletionTest : LamaBaseTest() {
 
@@ -130,7 +126,7 @@ class LamaIdentifierCompletionTest : LamaBaseTest() {
       xxxx<caret2>
     """.trimIndent()
 
-    doTest(text.preserveSingleCaret(1), "xxxx_a", "xxxx_c", "xxxx_d", "xxxx_e", "xxxx_b")
+    doTest(text.preserveSingleCaret(1), "xxxx_a", "xxxx_c", "xxxx_d", "xxxx_e")
     doTest(text.preserveSingleCaret(2), "xxxx_a", "xxxx_b")
   }
 
@@ -179,41 +175,15 @@ class LamaIdentifierCompletionTest : LamaBaseTest() {
   }
 
   private fun doWrongVariantsTest(text: String, vararg variants: String) {
-    val result = complete(text)
-    val lookupStrings = result.map { it.lookupString }
-    UsefulTestCase.assertDoesntContain(lookupStrings, *variants)
+    doWrongCompletionVariantsTest(*variants) { myFixture.configureByText("lama.lama", text) }
   }
 
-
   private fun doTest(text: String, vararg variants: String, strict: Boolean = true) {
-    val result = complete(text)
-    val lookupStrings = result.map { it.lookupString }
-    if (strict) {
-      assertOrderedEquals(lookupStrings, *variants)
-    }
-    else {
-      assertContainsOrdered(lookupStrings, *variants)
-    }
+    doCompletionTest(*variants, strict = strict) { myFixture.configureByText("lama.lama", text) }
   }
 
   private fun doApplyCompletionTest(text: String, expected: String, lookupString: String) {
-    val result = complete(text)
-    assertContains(result.map { it.lookupString }, lookupString)
-    val element = result.first { it.lookupString == lookupString }
-
-    myFixture.lookup.currentItem = element
-    myFixture.finishLookup(Lookup.NORMAL_SELECT_CHAR)
-
-    val caretPosition = myFixture.caretOffset
-    val newText = myFixture.file.text
-    assertEquals(expected, "${newText.substring(0, caretPosition)}<caret>${newText.substring(caretPosition)}")
-  }
-
-  private fun complete(text: String): Array<out LookupElement> {
-    myFixture.configureByText("lama.lama", text)
-    val result = myFixture.completeBasic()
-    assertNotNull(result)
-    return result
+    doApplyCompletionTest(expected, lookupString) { myFixture.configureByText("lama.lama", text) }
   }
 
   private fun String.preserveSingleCaret(ind: Int): String {

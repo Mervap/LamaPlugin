@@ -1,11 +1,23 @@
 package org.jetbrains.lama.psi
 
+import com.intellij.openapi.util.io.FileUtilRt
+import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.lama.parser.LamaElementTypes.*
 import org.jetbrains.lama.psi.api.*
 
+@Suppress("MemberVisibilityCanBePrivate")
 object LamaPsiUtil {
+
+  val PsiFile.unitName: String
+    get() = FileUtilRt.getNameWithoutExtension(containingFile.name)
+
+  val PsiFile.importedUnits: List<String>
+    get() {
+      if (this !is LamaFile) return emptyList()
+      return importStatements.mapNotNull { it.identifierExpression?.name }
+    }
 
   val LamaPsiElement.controlFlowContainer: LamaControlFlowHolder?
     get() = PsiTreeUtil.getParentOfType(this, LamaControlFlowHolder::class.java)

@@ -32,7 +32,9 @@ public interface LamaInfixOperatorDefinition extends LamaControlFlowHolder, Lama
   @NotNull
   String getParameters();
 
-  boolean getIsTopLevel();
+  boolean isPublic();
+
+  boolean isTopLevel();
 
   @NotNull
   LamaOperator getNameOperator();

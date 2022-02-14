@@ -5,7 +5,10 @@ import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
+import org.jetbrains.lama.psi.LamaPsiUtil.importedUnits
+import org.jetbrains.lama.psi.api.LamaFile
 import org.jetbrains.lama.psi.api.LamaImportStatement
+import org.jetbrains.lama.psi.stubs.indices.LamaUnitsIndex
 
 class ImportListCompletionProvider : CompletionProvider<CompletionParameters>() {
   override fun addCompletions(
@@ -13,33 +16,38 @@ class ImportListCompletionProvider : CompletionProvider<CompletionParameters>() 
     context: ProcessingContext,
     result: CompletionResultSet,
   ) {
-    result.addElement(
-      LamaLookupElementFactory.createLookupElementWithGrouping(
-        LamaLookupElement("import", true),
-        { _, _ -> },
-        GLOBAL_GROUPING
-      )
-    )
-
     if (PsiTreeUtil.getParentOfType(parameters.position, LamaImportStatement::class.java) != null) {
-      for (module in MODULES) {
-        result.addElement(
-          LamaLookupElementFactory.createLookupElementWithGrouping(
-            LamaLookupElement(module, true),
-            { _, _ -> },
-            GLOBAL_GROUPING
-          )
+      for (unit in STDLIB_UNITS) {
+        result.addElement(LamaLookupElementFactory.createUnitLookupElement(unit))
+      }
+      completeUnitsFromIndex(parameters.position.containingFile as LamaFile, result)
+    }
+    else {
+      result.addElement(
+        LamaLookupElementFactory.createLookupElementWithGrouping(
+          LamaLookupElement("import", true),
+          { _, _ -> },
+          GLOBAL_GROUPING
         )
+      )
+    }
+  }
+
+  private fun completeUnitsFromIndex(containingFile: LamaFile, result: CompletionResultSet) {
+    val imported = containingFile.importedUnits
+    val variants = LamaUnitsIndex.findAllUnitNames(containingFile.project)
+    for (variant in variants) {
+      if (variant !in STDLIB_UNITS && variant !in imported) {
+        result.addElement(LamaLookupElementFactory.createUnitLookupElement(variant))
       }
     }
   }
 
   companion object {
-    private val MODULES =
+    private val STDLIB_UNITS =
       arrayOf(
         "Array",
         "Collection",
-        "Data1",
         "Lazy",
         "Matcher",
         "Random",

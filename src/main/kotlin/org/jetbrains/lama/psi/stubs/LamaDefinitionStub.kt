@@ -5,4 +5,5 @@ import com.intellij.psi.stubs.NamedStub
 
 interface LamaDefinitionStub<T : PsiNamedElement> : NamedStub<T> {
   val isTopLevel: Boolean
+  val isPublic: Boolean
 }

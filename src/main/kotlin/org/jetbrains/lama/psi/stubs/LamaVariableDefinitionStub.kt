@@ -13,6 +13,7 @@ interface LamaVariableDefinitionStub : LamaDefinitionStub<LamaVariableDefinition
 class LamaVariableDefinitionStubImpl(
   private val name: String,
   override val defaultValue: String?,
+  override val isPublic: Boolean,
   override val isTopLevel: Boolean,
   parent: StubElement<*>?,
   stubElementType: IStubElementType<*, *>,

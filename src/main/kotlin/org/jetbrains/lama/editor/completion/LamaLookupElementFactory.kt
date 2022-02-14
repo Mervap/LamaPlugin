@@ -10,6 +10,7 @@ import org.jetbrains.lama.psi.api.*
 import javax.swing.Icon
 
 const val LOCAL_GROUPING = 50
+const val IMPORTS_GROUPING = 25
 const val GLOBAL_GROUPING = 0
 
 data class LamaLookupElement(
@@ -60,11 +61,16 @@ object LamaLookupElementFactory {
     return createInfixLookupElement(infix, LOCAL_GROUPING)
   }
 
+  fun createUnitLookupElement(unit: String): LookupElement {
+    val icon = AllIcons.Nodes.Module
+    return createLookupElementWithGrouping(LamaLookupElement(unit, false, icon), { _, _ -> }, GLOBAL_GROUPING)
+  }
+
   fun createLocalInfixLookupElement(name: String): LookupElement {
     return createInfixLookupElement(name, null, null, LOCAL_GROUPING)
   }
 
-  private fun createVariableLookupElement(variable: LamaVariableDefinition, grouping: Int): LookupElement {
+  fun createVariableLookupElement(variable: LamaVariableDefinition, grouping: Int): LookupElement {
     return createVariableLookupElement(variable.name, variable.containingScopePresentation, grouping)
   }
 
@@ -73,7 +79,7 @@ object LamaLookupElementFactory {
     return createLookupElementWithGrouping(LamaLookupElement(name, false, icon, postline), { _, _ -> }, grouping)
   }
 
-  private fun createFunctionLookupElement(function: LamaFunctionDefinition, grouping: Int): LookupElement {
+  fun createFunctionLookupElement(function: LamaFunctionDefinition, grouping: Int): LookupElement {
     val icon = AllIcons.Nodes.Function
     return createLookupElementWithGrouping(
       LamaLookupElement(function.name, false, icon, function.containingScopePresentation, function.parameters),
@@ -81,7 +87,7 @@ object LamaLookupElementFactory {
     )
   }
 
-  private fun createInfixLookupElement(infix: LamaInfixOperatorDefinition, grouping: Int): LookupElement {
+  fun createInfixLookupElement(infix: LamaInfixOperatorDefinition, grouping: Int): LookupElement {
     return createInfixLookupElement(infix.name, infix.containingScopePresentation, infix.parameters, grouping)
   }
 

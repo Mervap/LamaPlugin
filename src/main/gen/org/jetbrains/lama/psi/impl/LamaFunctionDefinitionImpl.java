@@ -69,19 +69,19 @@ public class LamaFunctionDefinitionImpl extends LamaFunctionDefinitionBase imple
   }
 
   @Override
-  public boolean isPublic() {
-    return LamaPsiImplUtil.isPublic(this);
-  }
-
-  @Override
   @NotNull
   public String getParameters() {
     return LamaPsiImplUtil.getParameters(this);
   }
 
   @Override
-  public boolean getIsTopLevel() {
-    return LamaPsiImplUtil.getIsTopLevel(this);
+  public boolean isPublic() {
+    return LamaPsiImplUtil.isPublic(this);
+  }
+
+  @Override
+  public boolean isTopLevel() {
+    return LamaPsiImplUtil.isTopLevel(this);
   }
 
 }

@@ -26,6 +26,7 @@ class LamaInfixOperatorDefinitionStubImpl(
   private val name: String,
   override val parameters: String,
   override val associativity: LamaInfixAssociativity,
+  override val isPublic: Boolean,
   override val isTopLevel: Boolean,
   parent: StubElement<*>?,
   stubElementType: IStubElementType<*, *>

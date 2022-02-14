@@ -17,9 +17,8 @@ import org.jetbrains.lama.psi.api.*
 import org.jetbrains.lama.psi.controlFlow.IdentifierSymbolInfo
 import org.jetbrains.lama.psi.controlFlow.OperatorSymbolInfo
 import org.jetbrains.lama.psi.references.LamaSearchScope
-import org.jetbrains.lama.psi.stubs.indices.LamaFunctionDefinitionNameIndex
-import org.jetbrains.lama.psi.stubs.indices.LamaInfixOperatorDefinitionNameIndex
-import org.jetbrains.lama.psi.stubs.indices.LamaVariableNameIndex
+import org.jetbrains.lama.psi.stubs.indices.LamaIdentifierCompletionIndex
+import org.jetbrains.lama.psi.stubs.indices.LamaOperatorCompletionIndex
 
 class IdentifierCompletionProvider : CompletionProvider<CompletionParameters>() {
 
@@ -43,9 +42,8 @@ class IdentifierCompletionProvider : CompletionProvider<CompletionParameters>() 
       Triple(prev!!, probableResult.withPrefixMatcher(prev!!.name), true)
     }
     else {
-      val id = probableIdentifier ?:
-          PsiTreeUtil.getParentOfType(startPosition, LamaPsiElement::class.java, false) ?:
-          return
+      val id =
+        probableIdentifier ?: PsiTreeUtil.getParentOfType(startPosition, LamaPsiElement::class.java, false) ?: return
       Triple(id, probableResult, false)
     }
 
@@ -57,10 +55,9 @@ class IdentifierCompletionProvider : CompletionProvider<CompletionParameters>() 
 
     val shownNames = HashSet<String>()
     val project = position.project
-    val originalFile = parameters.originalFile
 
     addCompletionFromLocals(position, shownNames, result)
-    addCompletionFromIndices(project, LamaSearchScope.getScope(originalFile), shownNames, result, isOperator)
+    addCompletionFromIndices(project, position, shownNames, result, isOperator)
   }
 }
 
@@ -104,12 +101,15 @@ private fun addCompletionFromLocals(
 
 private fun addCompletionFromIndices(
   project: Project,
-  scope: GlobalSearchScope,
+  element: LamaPsiElement,
   shownNames: HashSet<String>,
   result: CompletionResultSet,
   isOperator: Boolean,
 ) {
-  processElementsFromIndex(project, scope, isOperator) { it, _ ->
+  processElementsFromIndex(project, LamaSearchScope.getScope(element), isOperator, IMPORTS_GROUPING) { it, _ ->
+    if (shownNames.add(it.lookupString)) result.consume(it)
+  }
+  processElementsFromIndex(project, GlobalSearchScope.allScope(project), isOperator, GLOBAL_GROUPING) { it, _ ->
     if (shownNames.add(it.lookupString)) result.consume(it)
   }
 }
@@ -118,30 +118,27 @@ private fun processElementsFromIndex(
   project: Project,
   scope: GlobalSearchScope,
   isOperator: Boolean,
+  grouping: Int,
   consumer: (LookupElement, VirtualFile) -> Unit,
 ) {
-  LamaVariableNameIndex.process(project, scope, Processor { definition ->
-    consumer(
-      LamaLookupElementFactory.createGlobalVariableLookupElement(definition),
-      definition.containingFile.virtualFile
-    )
-    return@Processor true
-  })
-  LamaFunctionDefinitionNameIndex.process(project, scope, Processor { definition ->
-    consumer(
-      LamaLookupElementFactory.createGlobalFunctionLookupElement(definition),
-      definition.containingFile.virtualFile
-    )
+  LamaIdentifierCompletionIndex.process(project, scope, Processor { definition ->
+    if (!definition.isPublic) return@Processor true
+    val element = when (definition) {
+      is LamaVariableDefinition -> LamaLookupElementFactory.createVariableLookupElement(definition, grouping)
+      is LamaFunctionDefinition -> LamaLookupElementFactory.createFunctionLookupElement(definition, grouping)
+      else -> error("Unknown definition type")
+    }
+    consumer(element, definition.containingFile.virtualFile)
     return@Processor true
   })
 
-  if (isOperator) {
-    LamaInfixOperatorDefinitionNameIndex.process(project, scope, Processor { definition ->
-      consumer(
-        LamaLookupElementFactory.createGlobalInfixLookupElement(definition),
-        definition.containingFile.virtualFile
-      )
-      return@Processor true
-    })
-  }
+  if (!isOperator) return
+  LamaOperatorCompletionIndex.process(project, scope, Processor { definition ->
+    if (!definition.isPublic) return@Processor true
+    consumer(
+      LamaLookupElementFactory.createInfixLookupElement(definition, grouping),
+      definition.containingFile.virtualFile
+    )
+    return@Processor true
+  })
 }
