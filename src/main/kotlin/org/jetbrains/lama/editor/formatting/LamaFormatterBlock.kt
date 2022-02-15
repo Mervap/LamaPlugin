@@ -25,7 +25,10 @@ class LamaFormatterBlock(private val context: LamaFormattingContext, node: ASTNo
 
   override fun getChildIndent(): Indent = context.computeNewChildIndent(node)
 
-//  override fun isIncomplete(): Boolean = context.isIncomplete(node)
+  override fun isIncomplete(): Boolean {
+    if (context.isIncomplete(node)) return true
+    return super.isIncomplete()
+  }
 
   override fun isLeaf(): Boolean = node.firstChildNode == null
 

@@ -1,0 +1,6 @@
+case i of<caret>
+  1 ->
+-- DELIMITER --
+case i of
+  <caret>
+  1 ->

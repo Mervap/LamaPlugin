@@ -1,0 +1,8 @@
+if i > 0
+  then 5
+  elif i < -10<caret>
+-- DELIMITER --
+if i > 0
+  then 5
+  elif i < -10
+    <caret>

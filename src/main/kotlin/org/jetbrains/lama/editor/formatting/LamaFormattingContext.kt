@@ -2,6 +2,7 @@ package org.jetbrains.lama.editor.formatting
 
 import com.intellij.formatting.*
 import com.intellij.lang.ASTNode
+import com.intellij.psi.TokenType
 import com.intellij.psi.codeStyle.CodeStyleSettings
 import com.intellij.psi.tree.TokenSet
 import com.intellij.util.containers.FactoryMap
@@ -77,10 +78,6 @@ class LamaFormattingContext(private val settings: CodeStyleSettings) {
     return when {
       common.ALIGN_MULTILINE_PARAMETERS && parentElementType in PATTERN_LIST_PARENTS && nodePsi is LamaPattern -> childIndentAlignments[parent]
       common.ALIGN_MULTILINE_PARAMETERS_IN_CALLS && parentElementType in EXPRESSION_SERIES_LIST_PARENTS && node.firstChildNode != null -> childIndentAlignments[parent]
-      settings.lamaSettings().ALIGN_MULTILINE_FOR && parentElementType == LAMA_FOR_STATEMENT && (
-          nodePsi is LamaExpression ||
-              (nodePsi.parent as LamaForStatement).beforeAll == nodePsi
-          ) -> childIndentAlignments[parent]
       else -> null
     }
   }
@@ -89,18 +86,42 @@ class LamaFormattingContext(private val settings: CodeStyleSettings) {
     return spacingBuilder.getSpacing(parent, child1, child2)
   }
 
+  fun isIncomplete(node: ASTNode): Boolean {
+    val psi = node.psi
+    return when {
+      psi is LamaCaseBranch && psi.scope == null -> true
+      psi is LamaIfBranch && psi.scope == null -> true
+      psi is LamaVariableDefinitionSeries -> node.nextNonWsNode?.elementType != LAMA_SEMI
+      psi is LamaExpression -> node.nextNonWsNode?.elementType != LAMA_SEMI
+      else -> false
+    }
+  }
+
+  private val ASTNode.nextNonWsNode: ASTNode?
+    get() {
+      var next = treeNext
+      while (next?.elementType == TokenType.WHITE_SPACE) {
+        next = next.treeNext
+      }
+      return next
+    }
+
   fun computeNewChildIndent(node: ASTNode): Indent {
-    return when (node.psi) {
-      is LamaFile -> Indent.getNoneIndent()
-      is LamaScope -> Indent.getNormalIndent()
-      is LamaParenthesizedExpression -> Indent.getNormalIndent()
-      is LamaArrayPattern -> Indent.getContinuationIndent()
-      is LamaArrayExpression -> Indent.getContinuationIndent()
-      is LamaListPattern -> Indent.getContinuationIndent()
-      is LamaListExpression -> Indent.getContinuationIndent()
-      is LamaExpression -> Indent.getContinuationIndent()
-      is LamaArgumentList -> Indent.getContinuationIndent()
-      is LamaParameterList -> Indent.getContinuationIndent()
+    val psi = node.psi
+    val parent = psi.parent
+    return when {
+      psi is LamaFile || parent is LamaFile -> Indent.getNoneIndent()
+      psi is LamaScope || psi is LamaFunctionBody -> Indent.getNormalIndent()
+      psi is LamaForStatement || psi is LamaDoStatement || psi is LamaWhileStatement -> Indent.getNormalIndent()
+      psi is LamaIfStatement || psi is LamaCaseStatement-> Indent.getNormalIndent()
+      psi is LamaCaseBranch || psi is LamaIfBranch -> Indent.getNormalIndent()
+      psi is LamaArrayPattern -> Indent.getContinuationIndent()
+      psi is LamaArrayExpression -> Indent.getContinuationIndent()
+      psi is LamaListPattern -> Indent.getContinuationIndent()
+      psi is LamaListExpression -> Indent.getContinuationIndent()
+      psi is LamaExpression -> Indent.getContinuationIndent()
+      psi is LamaArgumentList -> Indent.getContinuationIndent()
+      psi is LamaParameterList -> Indent.getContinuationIndent()
       else -> Indent.getNoneIndent()
     }
   }

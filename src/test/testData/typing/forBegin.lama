@@ -1,0 +1,8 @@
+for i := 0, i < 10, i := i + 1 do<caret>
+  var a = 43;
+od
+-- DELIMITER --
+for i := 0, i < 10, i := i + 1 do
+  <caret>
+  var a = 43;
+od

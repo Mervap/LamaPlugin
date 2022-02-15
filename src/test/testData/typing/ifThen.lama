@@ -1,0 +1,8 @@
+if i > 0
+  then<caret>
+fi
+-- DELIMITER --
+if i > 0
+  then
+    <caret>
+fi

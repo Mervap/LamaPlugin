@@ -1,0 +1,5 @@
+{
+-- DELIMITER --
+fun a() <caret>
+-- DELIMITER --
+fun a() {<caret>}

@@ -14,7 +14,6 @@ class LamaCodeStyleSettings(container: CodeStyleSettings) : CustomCodeStyleSetti
   @JvmField var SPACE_AROUND_LIST_CONS_OPERATOR: Boolean = false
   @JvmField var SPACE_AROUND_DOT_OPERATOR: Boolean = false
   @JvmField var USE_INDENT_BEFORE_BRANCHES: Boolean = true
-  @JvmField var ALIGN_MULTILINE_FOR: Boolean = true
 }
 
 fun CodeStyleSettings.lamaSettings(): LamaCodeStyleSettings {

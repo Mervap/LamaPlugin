@@ -109,12 +109,6 @@ class LamaCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() {
           Common::ALIGN_MULTILINE_PARAMETERS.name,
           Common::ALIGN_MULTILINE_PARAMETERS_IN_CALLS.name
         )
-        consumer.showCustomOption(
-          LamaCodeStyleSettings::class.java,
-          LamaCodeStyleSettings::ALIGN_MULTILINE_FOR.name,
-          LamaBundle.message("code.style.align.multiline.for"),
-          null
-        )
       }
       else -> {} // do nothing
     }

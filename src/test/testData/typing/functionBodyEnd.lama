@@ -1,0 +1,8 @@
+fun a() {
+  4 + 4;<caret>
+}
+-- DELIMITER --
+fun a() {
+  4 + 4;
+  <caret>
+}

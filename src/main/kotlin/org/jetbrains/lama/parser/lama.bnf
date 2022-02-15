@@ -78,14 +78,17 @@ scope        ::= definition* [ expression_series ] {
   extends="org.jetbrains.lama.psi.impl.LamaControlFlowHolderImpl"
   implements="org.jetbrains.lama.psi.api.LamaControlFlowHolder"
 }
-private function_body_scope ::= scope        { recoverWhile=function_body_scope_recover_rule   }
-private parenthesized_scope ::= scope        { recoverWhile=parenthesized_scope_recover_rule   }
-private then_scope          ::= scope        { recoverWhile=then_expression_scope_recover_rule }
-private else_scope          ::= scope        { recoverWhile=else_expression_scope_recover_rule }
-private do_while_scope      ::= strict_scope { recoverWhile=do_while_scope_recover_rule        }
-private do_scope            ::= scope        { recoverWhile=do_scope_recover_rule              }
-private for_scope           ::= scope        { recoverWhile=for_scope_recover_rule             }
-private case_branch_scope   ::= scope        { recoverWhile=case_branch_recover_rule           }
+non_empty_scope ::=
+    ( definition+ [ expression_series ] ) |
+    ( definition*   expression_series   )        { elementType=scope name="scope" }
+private function_body_scope ::= scope            { recoverWhile=function_body_scope_recover_rule   }
+private parenthesized_scope ::= scope            { recoverWhile=parenthesized_scope_recover_rule   }
+private then_scope          ::= non_empty_scope? { recoverWhile=then_expression_scope_recover_rule }
+private else_scope          ::= non_empty_scope? { recoverWhile=else_expression_scope_recover_rule }
+private do_while_scope      ::= strict_scope     { recoverWhile=do_while_scope_recover_rule        }
+private do_scope            ::= scope            { recoverWhile=do_scope_recover_rule              }
+private for_scope           ::= scope            { recoverWhile=for_scope_recover_rule             }
+private case_branch_scope   ::= non_empty_scope? { recoverWhile=case_branch_recover_rule           }
 
 private function_body_scope_recover_rule   ::= !"}"
 private parenthesized_scope_recover_rule   ::= !")"

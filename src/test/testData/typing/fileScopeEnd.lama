@@ -1,0 +1,10 @@
+import A;
+
+2 + 2;
+4 + 4;<caret>
+-- DELIMITER --
+import A;
+
+2 + 2;
+4 + 4;
+<caret>

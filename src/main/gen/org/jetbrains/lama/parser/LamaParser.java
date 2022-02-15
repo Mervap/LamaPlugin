@@ -202,14 +202,13 @@ public class LamaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // scope
+  // non_empty_scope?
   static boolean case_branch_scope(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "case_branch_scope")) return false;
-    boolean r;
     Marker m = enter_section_(b, l, _NONE_);
-    r = scope(b, l + 1);
-    exit_section_(b, l, m, r, false, LamaParser::case_branch_recover_rule);
-    return r;
+    non_empty_scope(b, l + 1);
+    exit_section_(b, l, m, true, false, LamaParser::case_branch_recover_rule);
+    return true;
   }
 
   /* ********************************************************** */
@@ -337,14 +336,13 @@ public class LamaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // scope
+  // non_empty_scope?
   static boolean else_scope(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "else_scope")) return false;
-    boolean r;
     Marker m = enter_section_(b, l, _NONE_);
-    r = scope(b, l + 1);
-    exit_section_(b, l, m, r, false, LamaParser::else_expression_scope_recover_rule);
-    return r;
+    non_empty_scope(b, l + 1);
+    exit_section_(b, l, m, true, false, LamaParser::else_expression_scope_recover_rule);
+    return true;
   }
 
   /* ********************************************************** */
@@ -693,6 +691,74 @@ public class LamaParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, LAMA_MOD);
     exit_section_(b, l, m, r, false, null);
     return r;
+  }
+
+  /* ********************************************************** */
+  // ( definition+ [ expression_series ] ) |
+  //     ( definition*   expression_series   )
+  public static boolean non_empty_scope(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "non_empty_scope")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, LAMA_SCOPE, "<scope>");
+    r = non_empty_scope_0(b, l + 1);
+    if (!r) r = non_empty_scope_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // definition+ [ expression_series ]
+  private static boolean non_empty_scope_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "non_empty_scope_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = non_empty_scope_0_0(b, l + 1);
+    r = r && non_empty_scope_0_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // definition+
+  private static boolean non_empty_scope_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "non_empty_scope_0_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = definition(b, l + 1);
+    while (r) {
+      int c = current_position_(b);
+      if (!definition(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "non_empty_scope_0_0", c)) break;
+    }
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // [ expression_series ]
+  private static boolean non_empty_scope_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "non_empty_scope_0_1")) return false;
+    expression_series(b, l + 1);
+    return true;
+  }
+
+  // definition*   expression_series
+  private static boolean non_empty_scope_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "non_empty_scope_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = non_empty_scope_1_0(b, l + 1);
+    r = r && expression_series(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // definition*
+  private static boolean non_empty_scope_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "non_empty_scope_1_0")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!definition(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "non_empty_scope_1_0", c)) break;
+    }
+    return true;
   }
 
   /* ********************************************************** */
@@ -1378,14 +1444,13 @@ public class LamaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // scope
+  // non_empty_scope?
   static boolean then_scope(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "then_scope")) return false;
-    boolean r;
     Marker m = enter_section_(b, l, _NONE_);
-    r = scope(b, l + 1);
-    exit_section_(b, l, m, r, false, LamaParser::then_expression_scope_recover_rule);
-    return r;
+    non_empty_scope(b, l + 1);
+    exit_section_(b, l, m, true, false, LamaParser::then_expression_scope_recover_rule);
+    return true;
   }
 
   /* ********************************************************** */
