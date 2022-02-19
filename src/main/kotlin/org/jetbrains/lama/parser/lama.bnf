@@ -57,14 +57,13 @@
   extends(".*statement|.*expression|.*literal")=expression
   extends(".*pattern")=pattern
   extends(".*_operator")=operator
-  implements(".*_definition")="org.jetbrains.lama.psi.api.LamaDefinition"
+  implements("variable_definition")="org.jetbrains.lama.psi.api.LamaIdentifierOwnerDefinition"
+  implements("function_definition")="org.jetbrains.lama.psi.api.LamaIdentifierOwnerDefinition"
+  implements("infix_operator_definition")="org.jetbrains.lama.psi.api.LamaDefinition"
   implements("function_expression")="org.jetbrains.lama.psi.api.LamaExpression"
   implements("identifier_expression")="com.intellij.psi.PsiNamedElement"
   implements("string_literal")="com.intellij.psi.PsiNamedElement"
   implements("char_literal")="com.intellij.psi.PsiNamedElement"
-  implements("variable_definition")="com.intellij.psi.PsiNameIdentifierOwner"
-  implements("function_definition")="com.intellij.psi.PsiNameIdentifierOwner"
-  implements("infix_operator_definition")="com.intellij.psi.PsiNamedElement"
   generateTokenAccessors=false
 }
 

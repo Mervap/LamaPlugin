@@ -9,6 +9,7 @@ private typealias Colors = DefaultLanguageHighlighterColors
 private val descriptors = ArrayList<AttributesDescriptor>()
 
 val COMMENT = create("LAMA_LINE_COMMENT", Colors.LINE_COMMENT, "Line Comment")
+val DOC_COMMENT = create("LAMA_DOCUMENT_COMMENT", Colors.DOC_COMMENT, "Document Comment")
 val KEYWORD = create("LAMA_KEYWORD", Colors.KEYWORD, "Keyword")
 val NUMBER = create("LAMA_NUMBER", Colors.NUMBER, "Number")
 val STRING = create("LAMA_STRING", Colors.STRING, "String")

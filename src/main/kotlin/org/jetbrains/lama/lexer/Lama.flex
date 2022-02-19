@@ -1,5 +1,6 @@
 package org.jetbrains.lama.lexer;
 
+import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 
@@ -16,7 +17,7 @@ import static org.jetbrains.lama.parser.LamaParserDefinition.*;
 
 WHITE_SPACE_CHAR = [\ \n\r\t\f]
 END_OF_LINE_COMMENT = "--" [^\r\n\f]*
-BLOCK_COMMENT = "(*" *? "*)"
+BLOCK_COMMENT = "(*" ~"*)"
 
 DIGIT = [0-9]
 LETTER = [:letter:]

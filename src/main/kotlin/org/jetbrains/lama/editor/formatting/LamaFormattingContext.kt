@@ -168,7 +168,7 @@ private fun createSpacingBuilder(settings: CodeStyleSettings): SpacingBuilder {
 
   return SpacingBuilder(settings, LamaLanguage)
     // Comments
-    .before(TokenSet.create(LamaParserDefinition.END_OF_LINE_COMMENT, LamaParserDefinition.BLOCK_COMMENT))
+    .before(LamaParserDefinition().commentTokens)
     .spacing(1, Int.MAX_VALUE, 0, true, common.KEEP_BLANK_LINES_IN_CODE)
 
     // Binary operators

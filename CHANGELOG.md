@@ -6,6 +6,7 @@
 ### Added
 - Init project
 - Parser/lexer
+- Commenter
 - Formatter
 - Indexing
 - Completion of Global and Local symbols

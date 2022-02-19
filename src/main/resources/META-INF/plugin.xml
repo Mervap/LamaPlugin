@@ -41,5 +41,7 @@
                                  key="lama.settings"/>
 
         <additionalLibraryRootsProvider implementation="org.jetbrains.lama.util.LamaStdlibRootProvider"/>
+
+        <lang.commenter language="Lama" implementationClass="org.jetbrains.lama.editor.LamaCommenter"/>
     </extensions>
 </idea-plugin>
