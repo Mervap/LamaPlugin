@@ -9,11 +9,54 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
     outputs:
       version: ${{ steps.properties.outputs.version }}
       changelog: ${{ steps.properties.outputs.changelog }}
     steps:
+      - name: Install Lima
+        shell: bash
+        if: ${{ matrix.os == 'macos-latest' }}
+        run: |
+          brew install lima
+          limactl start
+      - name: Lima Alias
+        shell: bash
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: |
+          mkdir ~/.lima
+          
+          touch ~/.lima/lima
+          echo '#!/bin/bash' >> ~/.lima/lima
+          echo 'bash "$2"' >> ~/.lima/lima
+          
+          chmod +x ~/.lima/lima
+          echo "$HOME/.lima" >> $GITHUB_PATH
+      - name: Install Lama
+        shell: lima bash {0}
+        run: |
+          sudo add-apt-repository ppa:avsm/ppa -y
+          sudo apt update -y
+          sudo apt install build-essential -y
+          sudo apt install gcc-multilib -y
+          sudo apt install opam -y
+          sudo apt install bzip2 -y
+          
+          opam init -y
+          opam switch create lama ocaml-variants.4.11.2+fp+flambda
+          eval $(opam env --switch=lama)
+          
+          opam pin add Lama 'https://github.com/JetBrains-Research/Lama.git#1.10' --no-action -y
+          opam install opam-depext -y
+          opam depext Lama --yes
+          opam install Lama --yes
+          
+          which lamac
+
       - name: Check out
         uses: actions/checkout@v2.4.0
 
@@ -73,10 +116,12 @@ jobs:
           path: ${{ github.workspace }}/build/reports/pluginVerifier
 
       - name: Qodana - Code Inspection
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: JetBrains/qodana-action@v4.2.5
 
       - name: Prepare Plugin Artifact
         id: artifact
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         shell: bash
         run: |
           cd ${{ github.workspace }}/build/distributions
@@ -86,6 +131,7 @@ jobs:
           echo "::set-output name=filename::${FILENAME:0:-4}"
 
       - name: Upload artifact
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: actions/upload-artifact@v2.2.4
         with:
           name: ${{ steps.artifact.outputs.filename }}

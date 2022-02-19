@@ -33,5 +33,13 @@
                          bundle="messages.LamaBundle" key="inspection.missing.semicolon.name"
                          implementationClass="org.jetbrains.lama.inspections.MissingSemicolonInspection"/>
 
+
+        <applicationConfigurable parentId="language"
+                                 instance="org.jetbrains.lama.settings.LamaSettingsConfigurable"
+                                 id="org.jetbrains.lama.settings.LamaSettingsConfigurable"
+                                 bundle="messages.LamaBundle"
+                                 key="lama.settings"/>
+
+        <additionalLibraryRootsProvider implementation="org.jetbrains.lama.util.LamaStdlibRootProvider"/>
     </extensions>
 </idea-plugin>

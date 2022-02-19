@@ -5,6 +5,11 @@ import org.junit.Test
 
 class LamaIdentifierCompletionTest : LamaBaseTest() {
 
+  override fun setUp() {
+    super.setUp()
+    addStdlib()
+  }
+
   @Test
   fun testVariable() = doTest("""
     var xxxx_a = 3, xxxx_b = 5;
@@ -172,6 +177,19 @@ class LamaIdentifierCompletionTest : LamaBaseTest() {
       
       xxxx_a(<caret>)
     """.trimIndent(), "xxxx_a")
+  }
+
+  @Test
+  fun testFromStdlib() = doTest(
+    "arra<caret>",
+    "arrayList", "foldlArray", "foldrArray", "initArray", "iterArray", "iteriArray", "listArray", "mapArray",
+    strict = false
+  )
+
+  @Test
+  fun testImportedStdlibHigher() {
+    doTest("import Buffer; co<caret>", "concatBuffer", "compareOf", "getCol", strict = false)
+    doTest("import Collection; co<caret>", "compareOf", "concatBuffer", "getCol", strict = false)
   }
 
   private fun doWrongVariantsTest(text: String, vararg variants: String) {

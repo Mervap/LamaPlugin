@@ -15,11 +15,11 @@ import org.jetbrains.lama.psi.stubs.indices.LamaUnitsIndex
 
 object LamaSearchScope {
 
-  fun getGlobalScope(element: PsiElement): GlobalSearchScope {
+  fun allScope(element: PsiElement): GlobalSearchScope {
     return GlobalSearchScope.allScope(element.project)
   }
 
-  fun getScope(element: PsiElement): GlobalSearchScope {
+  fun importsScope(element: PsiElement): GlobalSearchScope {
     val project = element.project
     val containingFile = element.containingFile
     return CachedValuesManager.getManager(project).getCachedValue(containingFile) {
