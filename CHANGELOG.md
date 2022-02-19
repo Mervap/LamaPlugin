@@ -15,4 +15,5 @@
    - Units
    - Some keywords
 - Go To Declaration & Find Usages 
+- Parameter Info
 - GitHub CI/CD

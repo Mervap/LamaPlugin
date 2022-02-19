@@ -44,5 +44,6 @@
         <additionalLibraryRootsProvider implementation="org.jetbrains.lama.util.LamaStdlibRootProvider"/>
 
         <lang.commenter language="Lama" implementationClass="org.jetbrains.lama.editor.LamaCommenter"/>
+        <codeInsight.parameterInfo language="Lama" implementationClass="org.jetbrains.lama.hints.LamaParameterInfoHandler"/>
     </extensions>
 </idea-plugin>
