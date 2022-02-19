@@ -1,0 +1,224 @@
+-- A variable which holds an array of command-line arguments of the application
+-- (including the name of the executable itself).
+public sysargs;
+
+-- Convert n, treated as ASCII code, into the code of the same symbol in upper case.
+public fun uppercase (n) {
+  (* Compiled code *)
+}
+
+-- Convert n, treated as ASCII code, into the code of the same symbol in lower case.
+public fun lowercase (n) {
+  (* Compiled code *)
+}
+
+-- Asserts that n is non-zero; otherwise raises failure with a corresponding error message.
+public fun assert (n, s, _) {
+  (* Compiled code *)
+}
+
+-- Converts x into its string representation.
+public fun string (x) {
+  (* Compiled code *)
+}
+
+-- Returns the number of immediate subvalues for a reference value x; in particular,
+-- for strings and arrays returns their lengths.
+public fun length (x) {
+  (* Compiled code *)
+}
+
+-- Converts a string representation of a signed decimal number into integer.
+public fun stringInt (s) {
+  (* Compiled code *)
+}
+
+-- Reads an integer value from the standard input, printing a prompt ”>”.
+public fun read () {
+  (* Compiled code *)
+}
+
+-- Writes an integer value to the standard output.
+public fun write (int) {
+  (* Compiled code *)
+}
+
+-- Creates a fresh array of a given length. The elements of the array are left uninitialized.
+public fun makeArray (size) {
+  (* Compiled code *)
+}
+
+-- Creates a fresh string of a given length. The elements of the string are left uninitialized.
+public fun makeString (size) {
+  (* Compiled code *)
+}
+
+-- Takes a list of strings and returns the concatenates all its elements.
+public fun stringcat (list) {
+  (* Compiled code *)
+}
+
+-- Takes two strings ”subj” and ”patt” and integer position ”pos” and
+-- checks if a substring of ”subj” starting at position ”pos” is equal to ”patt”;
+-- returns integer value, treated as a boolean.
+public fun matchSubString (subj, patt, pos) {
+  (* Compiled code *)
+}
+
+-- Takes a format string (as per GNU C Library [5]) and a variable number of arguments and returns a string,
+-- acquired via processing these arguments according to the format string.
+-- Note: indexed arguments are not supported.
+public fun sprintf (fmt, _) {
+  (* Compiled code *)
+}
+
+-- Takes a string, an integer position and length, and returns a substring of requested length of
+-- given string starting from given position.
+-- Raises an error if the original string is shorter then pos+len−1.
+public fun substring (string, pos, len) {
+  (* Compiled code *)
+}
+
+-- String concatenation infix operator.
+infix ++ at + (str1, str2) {
+  (* Compiled code *)
+}
+
+-- Performs a shallow cloning of the argument value.
+public fun clone (value) {
+  (* Compiled code *)
+}
+
+-- Returns integer hash for the argument value; also works for cyclic data structures.
+public fun hash (value) {
+  (* Compiled code *)
+}
+
+-- Returns an integer value for a hash of tag, represented by string s.
+public fun tagHash (s) {
+  (* Compiled code *)
+}
+
+-- Performs a structural deep comparison of two values. Determines a linear order relation for every pairs of values.
+-- Returns 0 if the values are structurally equal, negative or positive integers otherwise.
+-- May not work for cyclic data structures.
+-- Performs a shallow comparison of two values. The result is similar to that for compare.
+public fun compare (value1, value2) {
+  (* Compiled code *)
+}
+
+-- Performs a shallow comparison of two values. The result is similar to that for compare.
+public fun flatCompare (x, y) {
+  (* Compiled code *)
+}
+
+-- Returns the first subvalue for a given boxed value.
+public fun fst (value) {
+  (* Compiled code *)
+}
+
+-- Returns the second subvalue for a given boxed value.
+public fun snd (value) {
+  (* Compiled code *)
+}
+
+-- Returns the head of a given list.
+public fun hd (value) {
+  (* Compiled code *)
+}
+
+-- Return the tail of a given list.
+public fun tl (value) {
+  (* Compiled code *)
+}
+
+-- Reads a line from the standard input and returns it as a string.
+-- Return '0' if end of standard input was encountered.
+public fun readLine () {
+  (* Compiled code *)
+}
+
+-- Takes a format string (as per GNU C Library [5] and a variable number of
+-- arguments and prints these arguments on the standard output, according
+-- to the format string.
+public fun printf (fmt, _) {
+  (* Compiled code *)
+}
+
+-- Opens a file of given name in a given mode. Both arguments are strings,
+-- the return value is an external pointer to file structure.
+public fun fopen (fname, mode) {
+  (* Compiled code *)
+}
+
+-- Closes a file. The file argument should be that acquired by ”fopen” public function.
+public fun fclose (file) {
+  (* Compiled code *)
+}
+
+-- Reads a file content and returns it as a string. The argument is a file name
+-- as a string, the file is automatically open and closed within the call.
+public fun fread (fname) {
+  (* Compiled code *)
+}
+
+-- Writes a file. The arguments are file name and the contents to write as
+-- strings. The file is automatically created and closed within the call.
+public fun fwrite (fname, contents) {
+  (* Compiled code *)
+}
+
+-- Checks if a file exists. The argument is the file name.
+public fun fexists (fname) {
+  (* Compiled code *)
+}
+
+-- Same as ”printf”, but outputs to a given file. The file argument should
+-- be that acquired by fopen public function.
+public fun fprintf (file, fmt, _) {
+  (* Compiled code *)
+}
+
+-- Compiles a string representation of a regular expression
+-- (as per GNULib’s regexp [6]) into an internal representation.
+-- The return value is a external pointer to the internal representation.
+public fun regexp (string) {
+  (* Compiled code *)
+}
+
+-- Matches a string ”subj”, starting from the position ”pos”, against a pattern ”pattern”.
+-- The pattern is an external pointer to a compiled representation, returned by the public function ”regexp”.
+-- The return value is the number of matched characters.
+public fun regexpMatch (pattern, subj, pos) {
+  (* Compiled code *)
+}
+
+-- Takes a format string (as per GNU C Library [5], and a variable number of
+-- parameters, prints these parameters according to the format string on the
+-- standard error and exits. Note: indexed arguments are not supported.)
+public fun failure (fmt, _) {
+  (* Compiled code *)
+}
+
+-- Executes a command in a shell. The argument is a string representing a command.
+public fun system (cmd) {
+  (* Compiled code *)
+}
+
+-- Returns a value for an environment variable ”name”. The argument is a
+-- string, the return value is either ”0” (if not environment variable with
+-- given name is set), or a string value.
+public fun getEnv (name) {
+  (* Compiled code *)
+}
+
+-- Returns a pseudo-random number in the interval 0..n − 1.
+-- The seed is auto-initialized by current time at program start time.
+public fun random (n) {
+  (* Compiled code *)
+}
+
+-- Returns the elapsed time from program start in microseconds.
+public fun time () {
+  (* Compiled code *)
+}

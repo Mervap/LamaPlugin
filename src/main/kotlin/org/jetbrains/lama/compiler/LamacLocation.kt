@@ -16,10 +16,13 @@ import com.intellij.util.io.createDirectories
 import com.intellij.util.io.delete
 import com.intellij.util.io.exists
 import org.jetbrains.lama.messages.LamaBundle
+import org.jetbrains.lama.util.LamaStdUnitUtil.addStdUnitStubToDirectory
 import org.jetbrains.lama.util.PathUtil.safePath
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.io.path.createTempDirectory
+import kotlin.io.path.notExists
+import kotlin.io.path.listDirectoryEntries
 
 interface LamacLocation {
   val userHome: Path?
@@ -45,7 +48,11 @@ interface LamacLocation {
 private object HostLocation : LamacLocation {
   override val userHome: Path? = SystemProperties.getUserHome().safePath()
   override fun fileExists(path: Path): Boolean = path.exists()
-  override fun stdlibSourcesRoot(project: Project): Path? = LamacManager.compilerHomePath?.stdlibRoot()
+  override fun stdlibSourcesRoot(project: Project): Path? {
+    val stdlibRoot = LamacManager.compilerHomePath?.stdlibRoot() ?: return null
+    javaClass.addStdUnitStubToDirectory(stdlibRoot)
+    return stdlibRoot
+  }
 }
 
 /**
@@ -53,7 +60,7 @@ private object HostLocation : LamacLocation {
  */
 // TODO: change to SSH/RemoteFs instead of command line?
 private object LimaLocation : LamacLocation {
-  private val copyTaskStarted = AtomicBoolean(false)
+  private val copyTaskInProgress = AtomicBoolean(false)
 
   override val userHome: Path?
     get() = runSynchronouslyIfNeeded {
@@ -69,11 +76,11 @@ private object LimaLocation : LamacLocation {
 
   override fun stdlibSourcesRoot(project: Project): Path? {
     val expected = Path.of(PathManager.getHomePath(), "lamacStdlib")
-    if (expected.exists()) {
+    if (expected.exists() && expected.listDirectoryEntries().size == 14) {
       return expected
     }
     expected.createDirectories()
-    if (!copyTaskStarted.compareAndSet(false, true)) {
+    if (!copyTaskInProgress.compareAndSet(false, true)) {
       return expected
     }
 
@@ -93,9 +100,11 @@ private object LimaLocation : LamacLocation {
               """.trimIndent())
             }
             tmpDir.toFile().copyRecursively(expected.toFile(), true)
+            javaClass.addStdUnitStubToDirectory(expected)
           }
           finally {
             tmpDir.delete(true)
+            copyTaskInProgress.compareAndSet(true, false)
           }
         }
       }

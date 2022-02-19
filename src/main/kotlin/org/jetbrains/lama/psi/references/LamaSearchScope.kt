@@ -12,6 +12,7 @@ import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.PsiUtilBase
 import org.jetbrains.lama.psi.LamaPsiUtil.importedUnits
 import org.jetbrains.lama.psi.stubs.indices.LamaUnitsIndex
+import org.jetbrains.lama.util.LamaStdUnitUtil
 
 object LamaSearchScope {
 
@@ -42,7 +43,7 @@ object LamaSearchScope {
         if (file == PsiUtilBase.getVirtualFile(containingFile)) {
           return true
         }
-        return file in imports
+        return file.name == LamaStdUnitUtil.UNIT_NAME_WITH_EXT || file in imports
       }
     }
   }

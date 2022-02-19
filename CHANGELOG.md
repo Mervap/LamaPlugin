@@ -9,5 +9,9 @@
 - Commenter
 - Formatter
 - Indexing
-- Completion of Global and Local symbols
+- Completion 
+   - Stdlib symbols 
+   - Global and Local user symbols
+   - Units
+   - Some keywords
 - GitHub CI/CD

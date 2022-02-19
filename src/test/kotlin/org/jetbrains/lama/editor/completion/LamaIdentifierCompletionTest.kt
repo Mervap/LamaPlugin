@@ -192,6 +192,11 @@ class LamaIdentifierCompletionTest : LamaBaseTest() {
     doTest("import Collection; co<caret>", "compareOf", "concatBuffer", "getCol", strict = false)
   }
 
+  @Test
+  fun testStdUnit() {
+    doTest("print<caret>", "printf", "fprintf", "sprintf")
+  }
+
   private fun doWrongVariantsTest(text: String, vararg variants: String) {
     doWrongCompletionVariantsTest(*variants) { myFixture.configureByText("lama.lama", text) }
   }

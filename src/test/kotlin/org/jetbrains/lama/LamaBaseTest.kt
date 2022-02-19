@@ -11,6 +11,7 @@ import com.intellij.util.indexing.FileBasedIndex
 import com.intellij.util.indexing.FileBasedIndexImpl
 import com.intellij.util.indexing.UnindexedFilesUpdater
 import org.jetbrains.lama.compiler.LamacLocation
+import org.jetbrains.lama.util.LamaStdUnitUtil
 import org.jetbrains.lama.compiler.LamacManager
 import org.jetbrains.lama.util.ProjectRootUtil.invalidateProjectRoots
 import java.io.File
@@ -20,14 +21,13 @@ abstract class LamaBaseTest : BasePlatformTestCase() {
   override fun getTestDataPath(): String = "src/test/testData"
 
   fun addStdlib() {
-    LamacManager.limaEnabled = SystemInfo.isMac
     val stdlibRoot = LamacLocation.stdlibSourcesRoot(myFixture.project)?.toFile() ?: error("Stdlib not found")
     var tryes = 0
-    while (stdlibRoot.list()?.isNotEmpty() != true) {
+    while (stdlibRoot.list()?.contains(LamaStdUnitUtil.UNIT_NAME_WITH_EXT) != true) {
       if (tryes > 100) {
         error("Stdlib not fetched")
       }
-      Thread.sleep(30)
+      Thread.sleep(100)
       ++tryes
     }
 

@@ -1,6 +1,7 @@
 package org.jetbrains.lama.compiler
 
 import com.intellij.ide.util.PropertiesComponent
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.util.SystemInfo
 import org.jetbrains.lama.util.PathUtil.safePath
@@ -13,6 +14,7 @@ object LamacManager {
   var limaEnabled: Boolean
     get() {
       if (!SystemInfo.isMac) return false
+      if (ApplicationManager.getApplication().isUnitTestMode) return true
       return PropertiesComponent.getInstance().getBoolean("lama.lima.enabled", false)
     }
     set(value) {
