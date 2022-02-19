@@ -7,9 +7,13 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.intellij.util.IncorrectOperationException
 import org.jetbrains.lama.parser.LamaElementTypes
+import org.jetbrains.lama.psi.LamaPsiUtil.isImportIdentifier
 import org.jetbrains.lama.psi.api.*
 import org.jetbrains.lama.psi.elementTypes.LamaElementFactory
+import org.jetbrains.lama.psi.references.LamaIdentifierReference
+import org.jetbrains.lama.psi.references.LamaOperatorReference
 import org.jetbrains.lama.psi.references.LamaReferenceBase
+import org.jetbrains.lama.psi.references.LamaUnitReference
 import org.jetbrains.lama.psi.stubs.LAMA_INFIX_ASSOCIATIVITY_TYPES
 import org.jetbrains.lama.psi.stubs.LamaInfixAssociativity
 
@@ -49,7 +53,16 @@ internal object LamaPsiImplUtil {
   fun getReference(expression: LamaExpression): LamaReferenceBase<*>? = null
 
   @JvmStatic
-  fun getReference(operator: LamaOperator): LamaReferenceBase<*>? = null
+  fun getReference(identifier: LamaIdentifierExpression): LamaReferenceBase<*> {
+    return if (identifier.isImportIdentifier()) {
+      LamaUnitReference(identifier)
+    } else {
+      LamaIdentifierReference(identifier)
+    }
+  }
+
+  @JvmStatic
+  fun getReference(operator: LamaOperator): LamaReferenceBase<*> = LamaOperatorReference(operator)
 
   @JvmStatic
   fun getName(operator: LamaOperator): String = operator.text

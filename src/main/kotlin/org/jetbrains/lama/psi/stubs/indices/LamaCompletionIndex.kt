@@ -7,17 +7,17 @@ import com.intellij.psi.stubs.StringStubIndexExtension
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.stubs.StubIndexKey
 import com.intellij.util.Processor
-import org.jetbrains.lama.psi.api.LamaDefinition
+import org.jetbrains.lama.psi.api.LamaIdentifierOwnerDefinition
 import org.jetbrains.lama.psi.api.LamaInfixOperatorDefinition
 import org.jetbrains.lama.psi.api.LamaPsiElement
 import kotlin.reflect.KClass
 
-class LamaIdentifierCompletionIndex : StringStubIndexExtension<LamaDefinition>() {
-  override fun getKey(): StubIndexKey<String, LamaDefinition> = KEY
+class LamaIdentifierCompletionIndex : StringStubIndexExtension<LamaIdentifierOwnerDefinition>() {
+  override fun getKey(): StubIndexKey<String, LamaIdentifierOwnerDefinition> = KEY
 
-  companion object : LamaCompletionIndex<LamaDefinition>(
+  companion object : LamaCompletionIndex<LamaIdentifierOwnerDefinition>(
     "lama.completion.definition.identifier",
-    LamaDefinition::class
+    LamaIdentifierOwnerDefinition::class
   )
 }
 

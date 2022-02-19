@@ -2,19 +2,15 @@ package org.jetbrains.lama
 
 import com.intellij.codeInsight.lookup.Lookup
 import com.intellij.openapi.application.runWriteAction
-import com.intellij.openapi.project.DumbServiceImpl
-import com.intellij.openapi.util.SystemInfo
 import com.intellij.openapi.vfs.VfsUtil
+import com.intellij.psi.PsiElementResolveResult
+import com.intellij.psi.PsiPolyVariantReference
+import com.intellij.psi.ResolveResult
 import com.intellij.testFramework.UsefulTestCase
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import com.intellij.util.indexing.FileBasedIndex
-import com.intellij.util.indexing.FileBasedIndexImpl
-import com.intellij.util.indexing.UnindexedFilesUpdater
 import org.jetbrains.lama.compiler.LamacLocation
 import org.jetbrains.lama.util.LamaStdUnitUtil
-import org.jetbrains.lama.compiler.LamacManager
 import org.jetbrains.lama.util.ProjectRootUtil.invalidateProjectRoots
-import java.io.File
 import kotlin.test.assertContains
 
 abstract class LamaBaseTest : BasePlatformTestCase() {
@@ -65,6 +61,17 @@ abstract class LamaBaseTest : BasePlatformTestCase() {
     val caretPosition = myFixture.caretOffset
     val newText = myFixture.file.text
     assertEquals(expected, "${newText.substring(0, caretPosition)}<caret>${newText.substring(caretPosition)}")
+  }
+
+  protected fun resolve(): Array<ResolveResult> {
+    val reference = myFixture.file.findReferenceAt(myFixture.caretOffset) ?: return emptyArray()
+    return if (reference is PsiPolyVariantReference) {
+      reference.multiResolve(false)
+    }
+    else {
+      val result = reference.resolve() ?: return emptyArray()
+      arrayOf(PsiElementResolveResult(result))
+    }
   }
 
   companion object {

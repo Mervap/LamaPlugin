@@ -14,4 +14,5 @@
    - Global and Local user symbols
    - Units
    - Some keywords
+- Go To Declaration & Find Usages 
 - GitHub CI/CD

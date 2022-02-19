@@ -19,6 +19,7 @@
         <langCodeStyleSettingsProvider implementation="org.jetbrains.lama.editor.formatting.LamaCodeStyleSettingsProvider"/>
         <lang.formatter language="Lama" implementationClass="org.jetbrains.lama.editor.formatting.LamaFormattingModelBuilder"/>
 
+        <lang.findUsagesProvider implementationClass="org.jetbrains.lama.psi.references.LamaFindUsagesProvider" language="Lama"/>
         <completion.contributor language="Lama" implementationClass="org.jetbrains.lama.editor.completion.LamaCompletionContributor"/>
 
         <controlFlowProvider implementation="org.jetbrains.lama.psi.controlFlow.LamaControlFlowProvider"/>

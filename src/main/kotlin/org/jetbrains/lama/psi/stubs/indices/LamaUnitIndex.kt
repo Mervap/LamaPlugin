@@ -11,6 +11,10 @@ object LamaUnitsIndex {
     return FilenameIndex.getAllFilesByExt(project, LamaFileType.defaultExtension).map { it.nameWithoutExtension }
   }
 
+  fun findUnitsByName(name: String, project: Project): Collection<VirtualFile> {
+    return findUnitsByName(name, GlobalSearchScope.allScope(project))
+  }
+
   fun findUnitsByName(name: String, searchScope: GlobalSearchScope): Collection<VirtualFile> {
     return FilenameIndex.getVirtualFilesByName("$name.lama", searchScope)
   }

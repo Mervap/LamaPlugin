@@ -4,11 +4,10 @@ package org.jetbrains.lama.psi.api;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.StubBasedPsiElement;
 import org.jetbrains.lama.psi.stubs.LamaVariableDefinitionStub;
 
-public interface LamaVariableDefinition extends LamaDefinition, PsiNameIdentifierOwner, StubBasedPsiElement<LamaVariableDefinitionStub> {
+public interface LamaVariableDefinition extends LamaIdentifierOwnerDefinition, StubBasedPsiElement<LamaVariableDefinitionStub> {
 
   @NotNull
   List<LamaExpression> getExpressionList();

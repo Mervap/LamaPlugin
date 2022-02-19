@@ -13,6 +13,7 @@ import com.intellij.refactoring.suggested.startOffset
 import com.intellij.util.ProcessingContext
 import com.intellij.util.Processor
 import org.jetbrains.lama.psi.LamaPsiUtil.controlFlowContainer
+import org.jetbrains.lama.psi.LamaPsiUtil.isDefinitionIdentifier
 import org.jetbrains.lama.psi.api.*
 import org.jetbrains.lama.psi.controlFlow.IdentifierSymbolInfo
 import org.jetbrains.lama.psi.controlFlow.OperatorSymbolInfo
@@ -47,9 +48,8 @@ class IdentifierCompletionProvider : CompletionProvider<CompletionParameters>() 
       Triple(id, probableResult, false)
     }
 
-    // don't complete parameters name
-    val parent = position.parent
-    if (parent is LamaSOrAtPattern && parent.parent is LamaParameterList) {
+    // don't complete variable, parameters and functions name
+    if (position is LamaIdentifierExpression && position.isDefinitionIdentifier()) {
       return
     }
 

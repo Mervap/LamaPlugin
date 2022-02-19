@@ -1,0 +1,4 @@
+import A;
+import B;
+
+1 =<caret>== 2

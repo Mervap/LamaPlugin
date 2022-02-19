@@ -1,0 +1,4 @@
+import A;
+import B;
+
+xxxx<caret>_a()

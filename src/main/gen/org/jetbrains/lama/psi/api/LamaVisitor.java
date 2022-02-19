@@ -4,7 +4,6 @@ package org.jetbrains.lama.psi.api;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.PsiNameIdentifierOwner;
 
 public class LamaVisitor extends PsiElementVisitor {
 
@@ -83,8 +82,7 @@ public class LamaVisitor extends PsiElementVisitor {
 
   public void visitFunctionDefinition(@NotNull LamaFunctionDefinition o) {
     visitControlFlowHolder(o);
-    // visitDefinition(o);
-    // visitPsiNameIdentifierOwner(o);
+    // visitIdentifierOwnerDefinition(o);
   }
 
   public void visitFunctionExpression(@NotNull LamaFunctionExpression o) {
@@ -120,7 +118,6 @@ public class LamaVisitor extends PsiElementVisitor {
   public void visitInfixOperatorDefinition(@NotNull LamaInfixOperatorDefinition o) {
     visitControlFlowHolder(o);
     // visitDefinition(o);
-    // visitPsiNamedElement(o);
   }
 
   public void visitLazyExpression(@NotNull LamaLazyExpression o) {
@@ -229,8 +226,7 @@ public class LamaVisitor extends PsiElementVisitor {
   }
 
   public void visitVariableDefinition(@NotNull LamaVariableDefinition o) {
-    visitDefinition(o);
-    // visitPsiNameIdentifierOwner(o);
+    visitIdentifierOwnerDefinition(o);
   }
 
   public void visitVariableDefinitionSeries(@NotNull LamaVariableDefinitionSeries o) {
@@ -249,7 +245,7 @@ public class LamaVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitDefinition(@NotNull LamaDefinition o) {
+  public void visitIdentifierOwnerDefinition(@NotNull LamaIdentifierOwnerDefinition o) {
     visitPsiElement(o);
   }
 

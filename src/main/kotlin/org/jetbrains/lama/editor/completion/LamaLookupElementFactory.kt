@@ -143,7 +143,7 @@ object LamaLookupElementFactory {
       val parent = PsiTreeUtil.getParentOfType(
         this,
         LamaFunctionDefinition::class.java, LamaInfixOperatorDefinition::class.java
-      ) as LamaDefinition?
+      ) as LamaIdentifierOwnerDefinition?
       return if (parent == null) containingFile?.name
       else parent.name
     }
