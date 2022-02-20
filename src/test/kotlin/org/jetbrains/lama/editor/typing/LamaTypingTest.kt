@@ -20,12 +20,16 @@ class LamaTypingTest : LamaBaseTest() {
 
   override fun getTestDataPath(): String = super.getTestDataPath() + "/typing"
 
+  @Test fun testArray() = doNlTest()
+  @Test fun testArrayEnd() = doNlTest()
   @Test fun testCase() = doNlTest()
   @Test fun testCaseBegin() = doNlTest()
   @Test fun testCaseNoScopes() = doNlTest()
   @Test fun testCaseNoScopesFirst() = doNlTest()
   @Test fun testCaseNoScopesLast() = doNlTest()
   @Test fun testEmptyFunctionBody() = doNlTest()
+  @Test fun testExpression() = doNlTest()
+  @Test fun testExpressionEnd() = doNlTest()
   @Test fun testFileScope() = doNlTest()
   @Test fun testFileScopeBefore() = doNlTest()
   @Test fun testFileScopeEnd() = doNlTest()
@@ -41,15 +45,11 @@ class LamaTypingTest : LamaBaseTest() {
   @Test fun testIfNoScopesLast() = doNlTest()
   @Test fun testIfThen() = doNlTest()
   @Test fun testImport() = doNlTest()
-  @Test fun testExpression() = doNlTest()
-  @Test fun testMiddleExpression() = doNlTest()
-  @Test fun testExpressionEnd() = doNlTest()
   @Test fun testIncompleteExpression() = doNlTest()
+  @Test fun testMiddleExpression() = doNlTest()
   @Test fun testParenthesis() = doNlTest()
   @Test fun testParenthesisBegin() = doNlTest()
   @Test fun testParenthesisEnd() = doNlTest()
-  @Test fun testArray() = doNlTest()
-  @Test fun testArrayEnd() = doNlTest()
 
   @Test fun testSingleQuote() = doTest()
   @Test fun testDoubleQuote() = doTest()

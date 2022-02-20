@@ -19,26 +19,26 @@ class LamaFormatterTest : LamaBaseTest() {
 
   @Test fun testSpaceAroundAssign() = doCommonOptionTest(CommonSettings::SPACE_AROUND_ASSIGNMENT_OPERATORS)
   @Test fun testSpaceAroundCompare() = doCommonOptionTest(CommonSettings::SPACE_AROUND_RELATIONAL_OPERATORS)
-  @Test fun testSpaceAroundPlusMinus() = doCommonOptionTest(CommonSettings::SPACE_AROUND_ADDITIVE_OPERATORS)
   @Test fun testSpaceAroundMulDiv() = doCommonOptionTest(CommonSettings::SPACE_AROUND_MULTIPLICATIVE_OPERATORS)
+  @Test fun testSpaceAroundPlusMinus() = doCommonOptionTest(CommonSettings::SPACE_AROUND_ADDITIVE_OPERATORS)
 
-  @Test fun testSpaceAroundOr() = doCustomOptionTest(LamaSettings::SPACE_AROUND_DISJUNCTION_OPERATORS)
   @Test fun testSpaceAroundAnd() = doCustomOptionTest(LamaSettings::SPACE_AROUND_CONJUNCTION_OPERATORS)
   @Test fun testSpaceAroundCustomOperator() = doCustomOptionTest(LamaSettings::SPACE_AROUND_INFIX_OPERATOR)
-  @Test fun testSpaceAroundListCons() = doCustomOptionTest(LamaSettings::SPACE_AROUND_LIST_CONS_OPERATOR)
   @Test fun testSpaceAroundDot() = doCustomOptionTest(LamaSettings::SPACE_AROUND_DOT_OPERATOR)
+  @Test fun testSpaceAroundListCons() = doCustomOptionTest(LamaSettings::SPACE_AROUND_LIST_CONS_OPERATOR)
+  @Test fun testSpaceAroundOr() = doCustomOptionTest(LamaSettings::SPACE_AROUND_DISJUNCTION_OPERATORS)
 
   @Test fun testSpaceWithinArgumentList() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_METHOD_CALL_PARENTHESES)
-  @Test fun testSpaceWithinEmptyArgumentList() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_EMPTY_METHOD_CALL_PARENTHESES)
-  @Test fun testSpaceWithinParameterList() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_METHOD_PARENTHESES)
-  @Test fun testSpaceWithinEmptyParameterList() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_EMPTY_METHOD_PARENTHESES)
-  @Test fun testSpaceWithinParenthesis() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_PARENTHESES)
-  @Test fun testSpaceWithinBrackets() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_BRACKETS)
   @Test fun testSpaceWithinBraces() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_BRACES)
+  @Test fun testSpaceWithinBrackets() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_BRACKETS)
+  @Test fun testSpaceWithinEmptyArgumentList() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_EMPTY_METHOD_CALL_PARENTHESES)
+  @Test fun testSpaceWithinEmptyParameterList() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_EMPTY_METHOD_PARENTHESES)
+  @Test fun testSpaceWithinParameterList() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_METHOD_PARENTHESES)
+  @Test fun testSpaceWithinParenthesis() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_PARENTHESES)
 
   @Test fun testSpaceBeforeArgumentList() = doCommonOptionTest(CommonSettings::SPACE_BEFORE_METHOD_CALL_PARENTHESES)
-  @Test fun testSpaceBeforeParameterList() = doCommonOptionTest(CommonSettings::SPACE_BEFORE_METHOD_PARENTHESES)
   @Test fun testSpaceBeforeComma() = doCommonOptionTest(CommonSettings::SPACE_BEFORE_COMMA)
+  @Test fun testSpaceBeforeParameterList() = doCommonOptionTest(CommonSettings::SPACE_BEFORE_METHOD_PARENTHESES)
 
   @Test fun testSpaceAfterComma() = doCommonOptionTest(CommonSettings::SPACE_AFTER_COMMA)
 
