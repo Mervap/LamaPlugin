@@ -1,0 +1,4 @@
+42 + 42<caret>
+-- DELIMITER --
+42 + 42
+<caret>

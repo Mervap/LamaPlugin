@@ -2,6 +2,8 @@ package org.jetbrains.lama.editor.formatting
 
 import com.intellij.formatting.*
 import com.intellij.lang.ASTNode
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.TokenType
 import com.intellij.psi.codeStyle.CodeStyleSettings
 import com.intellij.psi.tree.TokenSet
@@ -106,7 +108,7 @@ class LamaFormattingContext(private val settings: CodeStyleSettings) {
       return next
     }
 
-  fun computeNewChildIndent(node: ASTNode): Indent {
+  fun computeNewChildIndent(node: ASTNode, isLastChild: Boolean = false): Indent {
     val psi = node.psi
     val parent = psi.parent
     return when {
@@ -115,13 +117,13 @@ class LamaFormattingContext(private val settings: CodeStyleSettings) {
       psi is LamaForStatement || psi is LamaDoStatement || psi is LamaWhileStatement -> Indent.getNormalIndent()
       psi is LamaIfStatement || psi is LamaCaseStatement-> Indent.getNormalIndent()
       psi is LamaCaseBranch || psi is LamaIfBranch -> Indent.getNormalIndent()
-      psi is LamaArrayPattern -> Indent.getContinuationIndent()
-      psi is LamaArrayExpression -> Indent.getContinuationIndent()
-      psi is LamaListPattern -> Indent.getContinuationIndent()
-      psi is LamaListExpression -> Indent.getContinuationIndent()
-      psi is LamaExpression -> Indent.getContinuationIndent()
       psi is LamaArgumentList -> Indent.getContinuationIndent()
       psi is LamaParameterList -> Indent.getContinuationIndent()
+      psi is LamaPattern -> getContinuationIndentIfNoError(psi, isLastChild)
+      psi is LamaArrayExpression -> getContinuationIndentIfNoError(psi, isLastChild)
+      psi is LamaListExpression -> getContinuationIndentIfNoError(psi, isLastChild)
+      psi is LamaParenthesizedExpression -> getContinuationIndentIfNoError(psi, isLastChild)
+      psi is LamaExpression -> getContinuationIndentIfNoError(psi, isLastChild)
       else -> Indent.getNoneIndent()
     }
   }
@@ -232,3 +234,14 @@ private fun createSpacingBuilder(settings: CodeStyleSettings): SpacingBuilder {
 private fun getNoneIndent(relativeToDirectParent: Boolean): Indent {
   return Indent.getIndent(Indent.Type.NONE, relativeToDirectParent, false)
 }
+
+private fun getContinuationIndentIfNoError(psi: PsiElement, isLastChild: Boolean): Indent {
+  return if (!isLastChild || psi.lastChild is PsiErrorElement) {
+    Indent.getContinuationIndent()
+  }
+  else {
+    Indent.getNoneIndent()
+  }
+}
+
+

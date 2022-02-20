@@ -4,10 +4,10 @@
 
 ## [Unreleased]
 ### Added
-Quote typing helper
+- Quote typing helper
 
 ### Fixed
-
+- No continuation indent on enter in end of expression
 
 ## [0.1.1]
 ### Fixed

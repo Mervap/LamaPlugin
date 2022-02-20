@@ -1,9 +1,6 @@
 package org.jetbrains.lama.editor.formatting
 
-import com.intellij.formatting.Block
-import com.intellij.formatting.BlockEx
-import com.intellij.formatting.Indent
-import com.intellij.formatting.Spacing
+import com.intellij.formatting.*
 import com.intellij.lang.ASTNode
 import com.intellij.lang.Language
 import com.intellij.psi.formatter.FormatterUtil.isWhitespaceOrEmpty
@@ -25,6 +22,11 @@ class LamaFormatterBlock(private val context: LamaFormattingContext, node: ASTNo
 
   override fun getChildIndent(): Indent = context.computeNewChildIndent(node)
 
+  override fun getChildAttributes(newChildIndex: Int): ChildAttributes {
+    val indent = context.computeNewChildIndent(node, subBlocks.size == newChildIndex)
+    return ChildAttributes(indent, getFirstChildAlignment())
+  }
+
   override fun isIncomplete(): Boolean {
     if (context.isIncomplete(node)) return true
     return super.isIncomplete()
@@ -33,4 +35,11 @@ class LamaFormatterBlock(private val context: LamaFormattingContext, node: ASTNo
   override fun isLeaf(): Boolean = node.firstChildNode == null
 
   override fun getLanguage(): Language = LamaLanguage
+
+  private fun getFirstChildAlignment(): Alignment? {
+    for (subBlock in subBlocks) {
+      subBlock.alignment?.let { return it }
+    }
+    return null
+  }
 }
