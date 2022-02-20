@@ -6,6 +6,8 @@ import kotlin.io.path.notExists
 
 object LamaStdUnitUtil {
   fun Class<*>.addStdUnitStubToDirectory(stdlibRoot: Path) {
+    if (stdlibRoot.notExists()) return
+
     val stdUnitPath = stdlibRoot.resolve(UNIT_NAME_WITH_EXT)
     if (stdUnitPath.notExists()) {
       val stdUnitText = getResource("/stubs/$UNIT_NAME_WITH_EXT")?.readText()

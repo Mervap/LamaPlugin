@@ -3,6 +3,8 @@
 # LamaPlugin Changelog
 
 ## [Unreleased]
+### Fixed
+- Errors during compiler fetch
 
 ## [0.1.0]
 ### Added
