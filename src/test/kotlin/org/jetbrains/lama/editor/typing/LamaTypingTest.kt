@@ -46,7 +46,11 @@ class LamaTypingTest : LamaBaseTest() {
   @Test fun testParenthesisBegin() = doNlTest()
   @Test fun testParenthesisEnd() = doNlTest()
 
-  @Test fun testFunctionBodyLBracket() = doTest {
+  @Test fun testSingleQuote() = doTest()
+  @Test fun testDoubleQuote() = doTest()
+
+  @Test
+  fun testFunctionBodyLBracket() = doTest {
     while (BraceMatchingUtil.getBraceMatcher(LamaFileType, LamaLanguage) !is PairedBraceMatcherAdapter) {
       Thread.sleep(30) // Wtf, I don't know why this test flaky
     }
@@ -59,6 +63,7 @@ class LamaTypingTest : LamaBaseTest() {
 
   private fun doTest(wait: () -> Unit = {}) {
     val (insert, before, after) = testData
+    wait()
     doTest(before, after) { myFixture.type(insert) }
   }
 

@@ -3,6 +3,11 @@
 # LamaPlugin Changelog
 
 ## [Unreleased]
+### Added
+Quote typing helper
+
+### Fixed
+
 
 ## [0.1.1]
 ### Fixed

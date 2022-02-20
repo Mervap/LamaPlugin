@@ -45,5 +45,6 @@
 
         <lang.commenter language="Lama" implementationClass="org.jetbrains.lama.editor.LamaCommenter"/>
         <codeInsight.parameterInfo language="Lama" implementationClass="org.jetbrains.lama.hints.LamaParameterInfoHandler"/>
+        <quoteHandler className="org.jetbrains.lama.editor.LamaQuoteHandler" fileType="Lama"/>
     </extensions>
 </idea-plugin>
