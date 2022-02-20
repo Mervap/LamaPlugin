@@ -18,12 +18,25 @@ jobs:
       version: ${{ steps.properties.outputs.version }}
       changelog: ${{ steps.properties.outputs.changelog }}
     steps:
+      - name: Check out
+        uses: actions/checkout@v2.4.0
+
+      - name: Download Lama Cache
+        uses: actions/cache@v2
+        id: opam-cache
+        with:
+          path: |
+            ~/.opam
+            ~/opam_cache.tar.xz
+          key: ${{ runner.os }}-opam-cache
+
       - name: Install Lima
         shell: bash
         if: ${{ matrix.os == 'macos-latest' }}
         run: |
           brew install lima
           limactl start
+
       - name: Lima Alias
         shell: bash
         if: ${{ matrix.os == 'ubuntu-latest' }}
@@ -36,6 +49,24 @@ jobs:
           
           chmod +x ~/.lima/lima
           echo "$HOME/.lima" >> $GITHUB_PATH
+
+      - name: Copy Lama Cache to Lima
+        shell: bash
+        if: ${{ matrix.os == 'macos-latest' && steps.opam-cache.outputs.cache-hit == 'true' }}
+        run: |
+          limactl copy ~/opam_cache.tar.xz default:~/opam_cache.tar.xz
+
+      - name: Unpack Lama Cache
+        shell: lima bash {0}
+        if: ${{ matrix.os == 'macos-latest' && steps.opam-cache.outputs.cache-hit == 'true' }}
+        run: |
+          sudo apt update -y
+          sudo apt install bzip2 -y
+
+          echo "Unpacking..."
+          sudo tar -xf ~/opam_cache.tar.xz -C ~
+          ls -al ~
+
       - name: Install Lama
         shell: lima bash {0}
         run: |
@@ -54,11 +85,20 @@ jobs:
           opam install opam-depext -y
           opam depext Lama --yes
           opam install Lama --yes
-          
+
           which lamac
 
-      - name: Check out
-        uses: actions/checkout@v2.4.0
+      - name: Pack Lama Cache
+        shell: lima bash {0}
+        if: ${{ matrix.os == 'macos-latest' && steps.opam-cache.outputs.cache-hit != 'true' }}
+        run: |
+          sudo tar -cjf ~/opam_cache.tar.xz -C ~ .opam
+
+      - name: Copy Cache from Lima
+        shell: bash
+        if: ${{ matrix.os == 'macos-latest' && steps.opam-cache.outputs.cache-hit != 'true' }}
+        run: |
+          limactl copy default:~/opam_cache.tar.xz ~/opam_cache.tar.xz
 
       - name: Gradle Wrapper Validation
         uses: gradle/wrapper-validation-action@v1.0.4
