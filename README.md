@@ -3,6 +3,8 @@
 ![Build](https://github.com/Mervap/LamaPlugin/workflows/Build/badge.svg)
 [![Version](https://img.shields.io/jetbrains/plugin/v/18577-lama.svg)](https://plugins.jetbrains.com/plugin/18577-lama)
 
+[//]: # ([![Downloads]&#40;https://img.shields.io/jetbrains/plugin/d/18577-lama.svg&#41;]&#40;https://plugins.jetbrains.com/plugin/18577-lama&#41;)
+
 <!-- Plugin description -->
 Plugin for [Lama](https://github.com/JetBrains-Research/Lama) language
 <!-- Plugin description end -->
