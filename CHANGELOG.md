@@ -3,6 +3,8 @@
 # LamaPlugin Changelog
 
 ## [Unreleased]
+
+## [0.1.1]
 ### Fixed
 - Errors during compiler fetch
 
@@ -21,4 +23,3 @@
 - Go To Declaration & Find Usages
 - Parameter Info
 - GitHub CI/CD
-
