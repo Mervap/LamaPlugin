@@ -3,6 +3,8 @@
 # LamaPlugin Changelog
 
 ## [Unreleased]
+
+## [0.1.0]
 ### Added
 - Init project
 - Parser/lexer
@@ -10,10 +12,11 @@
 - Formatter
 - Indexing
 - Completion 
-   - Stdlib symbols 
+   - Stdlib symbols
    - Global and Local user symbols
    - Units
    - Some keywords
-- Go To Declaration & Find Usages 
+- Go To Declaration & Find Usages
 - Parameter Info
 - GitHub CI/CD
+
