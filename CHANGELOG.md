@@ -3,11 +3,13 @@
 # LamaPlugin Changelog
 
 ## [Unreleased]
+
+## [0.1.2]
 ### Added
 - Quote typing helper
 
 ### Fixed
-- No continuation indent on enter in end of expression
+- No continuation indent on enter at the end of the expression
 
 ## [0.1.1]
 ### Fixed
