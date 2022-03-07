@@ -34,6 +34,10 @@
                          bundle="messages.LamaBundle" key="inspection.missing.semicolon.name"
                          implementationClass="org.jetbrains.lama.inspections.MissingSemicolonInspection"/>
 
+        <localInspection shortName="LamaWrongArgumentCountInspection" language="Lama" enabledByDefault="true" groupName="Lama"
+                         bundle="messages.LamaBundle" key="inspection.wrong.argument.count.name"
+                         implementationClass="org.jetbrains.lama.inspections.WrongArgumentCountInspection"/>
+
 
         <applicationConfigurable parentId="language"
                                  instance="org.jetbrains.lama.settings.LamaSettingsConfigurable"
