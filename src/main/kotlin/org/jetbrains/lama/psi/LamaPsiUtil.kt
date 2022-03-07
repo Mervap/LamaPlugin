@@ -12,8 +12,10 @@ object LamaPsiUtil {
   val PsiFile.importedUnits: List<String>
     get() {
       if (this !is LamaFile) return emptyList()
-      return importStatements.mapNotNull { it.identifierExpression?.name }
+      return importStatements.mapNotNull { it.identifierExpression?.name } + "Std"
     }
+
+  val PsiFile.unitName: String? get() = virtualFile?.nameWithoutExtension
 
   val LamaPsiElement.controlFlowContainer: LamaControlFlowHolder?
     get() = PsiTreeUtil.getParentOfType(this, LamaControlFlowHolder::class.java)

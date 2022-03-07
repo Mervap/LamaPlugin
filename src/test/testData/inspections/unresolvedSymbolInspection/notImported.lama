@@ -1,0 +1,12 @@
+-- Some comment
+
+import List;
+
+emptyBuffer()
+-- DELIMITER --
+-- Some comment
+
+import Buffer;
+import List;
+
+emptyBuffer()

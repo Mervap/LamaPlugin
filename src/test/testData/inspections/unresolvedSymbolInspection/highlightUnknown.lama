@@ -1,0 +1,5 @@
+var a, b, c;
+
+fun e() {}
+
+<error descr="Symbol 'd' is unresolved">d</error>

@@ -1,0 +1,5 @@
+-- Some comment
+
+import List;
+
+<error descr="Symbol 'emptyBuffer' is unresolved">emptyBuffer</error>()

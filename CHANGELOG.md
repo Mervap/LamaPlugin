@@ -8,6 +8,7 @@
 - Prioritize single argument functions on completion
 - Live Templates for functions, `case`/`for`/`while`/`if` expressions
 - Wrong argument count inspection
+- Unresolved inspection with import quick fix
 
 ### Fixed
 - Documentation comment highlight

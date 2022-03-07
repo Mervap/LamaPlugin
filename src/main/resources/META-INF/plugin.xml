@@ -39,6 +39,11 @@
                          implementationClass="org.jetbrains.lama.inspections.WrongArgumentCountInspection"/>
 
 
+        <localInspection shortName="LamaUnresolveSymboldInspection" language="Lama" enabledByDefault="true" groupName="Lama"
+                         bundle="messages.LamaBundle" key="inspection.unresolved.name"
+                         implementationClass="org.jetbrains.lama.inspections.UnresolvedSymbolInspection"/>
+
+
         <applicationConfigurable parentId="language"
                                  instance="org.jetbrains.lama.settings.LamaSettingsConfigurable"
                                  id="org.jetbrains.lama.settings.LamaSettingsConfigurable"
