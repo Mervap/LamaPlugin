@@ -197,6 +197,20 @@ class LamaIdentifierCompletionTest : LamaBaseTest() {
     doTest("print<caret>", "printf", "fprintf", "sprintf")
   }
 
+  @Test
+  fun testLocalLaterDeclaration() {
+    doTest("""
+      fun compile_a() {
+        fun compile_c() {
+          com<caret>
+        }
+        fun compile_b() {
+          fun compile_d() {}
+        }
+      }
+    """.trimIndent(), "compile_a", "compile_b", "compile_c", "compare", "compareOf", "flatCompare")
+  }
+
   private fun doWrongVariantsTest(text: String, vararg variants: String) {
     doWrongCompletionVariantsTest(*variants) { myFixture.configureByText("lama.lama", text) }
   }

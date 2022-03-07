@@ -63,9 +63,11 @@ private class Analyzer(
   private val controlFlow = controlFlowHolder.controlFlow
   private val closure = mutableSetOf<SymbolInfo<*>>()
   private val result = mutableMapOf<Instruction, LocalSymbolInfos>()
+  private val definitionsToAnalyze = mutableListOf<LamaControlFlowHolder>()
 
   fun process(initialInfo: LocalSymbolInfos): LocalAnalysisResult {
     ProgressManager.checkCanceled()
+    val analyzeDefinionMarker = controlFlowHolder.children.firstOrNull { it is LamaExpression }
     val instructions = controlFlow.instructions
     result[instructions.first()] = initialInfo
 
@@ -73,13 +75,24 @@ private class Analyzer(
     for (instruction in instructions.drop(1)) {
       ProgressManager.checkCanceled()
       val info = joinPredInfos(instruction)
+      if (instruction.element == analyzeDefinionMarker) {
+        analyzeInnerControlFlowHolder(info)
+      }
       summaryInfo = info.updateWith(instruction)
       result[instruction] = summaryInfo
+    }
+    if (definitionsToAnalyze.isNotEmpty()) {
+      analyzeInnerControlFlowHolder(summaryInfo)
     }
 
     val analysisResult = LocalAnalysisResult(result, summaryInfo, closure.toSet())
     controlFlowResults[controlFlowHolder] = analysisResult
     return analysisResult
+  }
+
+  private fun analyzeInnerControlFlowHolder(initInfo: LocalSymbolInfos) {
+    definitionsToAnalyze.forEach { initInfo.analyzeInnerControlFlowHolder(it) }
+    definitionsToAnalyze.clear()
   }
 
   private fun LocalSymbolInfos.updateWith(instruction: Instruction): LocalSymbolInfos {
@@ -90,14 +103,16 @@ private class Analyzer(
       is LamaFunctionDefinition -> {
         val res = element.nameIdentifier?.let { addWrite(it) } ?: this
         if (element != controlFlowHolder) {
-          res.analyzeInnerControlFlowHolder(element)
+          definitionsToAnalyze.add(element)
+//          res.analyzeInnerControlFlowHolder(element)
         }
         return res
       }
       is LamaInfixOperatorDefinition -> {
         val res = addWrite(element.nameOperator)
         if (element != controlFlowHolder) {
-          res.analyzeInnerControlFlowHolder(element)
+          definitionsToAnalyze.add(element)
+//          res.analyzeInnerControlFlowHolder(element)
         }
         return res
       }

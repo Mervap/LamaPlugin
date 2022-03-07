@@ -48,6 +48,32 @@ class LamaLocalResolveTest: LamaBaseTest() {
     isParameter = true)
   }
 
+  @Test
+  fun testLocalLaterDeclaration() {
+    doTest("fun xxxx_b() {}", """
+      fun xxxx_a() {
+        fun xxxx_c() {
+          xxxx_<caret>b()
+        }
+        fun xxxx_b() {}
+        
+        42 + 42
+      }
+    """.trimIndent())
+  }
+
+  @Test
+  fun testLocalLaterDeclarationWithoutExpressions() {
+    doTest("fun xxxx_b() {}", """
+      fun xxxx_a() {
+        fun xxxx_c() {
+          xxxx_<caret>b()
+        }
+        fun xxxx_b() {}
+      }
+    """.trimIndent())
+  }
+
   private fun doTest(targetParentText: String?, text: String, isParameter: Boolean = false) {
     myFixture.configureByText("lama.lama", text)
     val results = resolve()

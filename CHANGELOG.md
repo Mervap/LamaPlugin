@@ -5,6 +5,7 @@
 ## [Unreleased]
 ### Fixed
 - Documentation comment highlight
+- Completion/Go To Declaration for local symbols, which defined later than current 
 
 ## [0.1.2]
 ### Added
