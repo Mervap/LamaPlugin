@@ -47,5 +47,8 @@
         <codeInsight.parameterInfo language="Lama" implementationClass="org.jetbrains.lama.hints.LamaParameterInfoHandler"/>
         <quoteHandler className="org.jetbrains.lama.editor.LamaQuoteHandler" fileType="Lama"/>
         <editorTypedHandler implementationClass="org.jetbrains.lama.editor.LamaTypedHandler"/>
+
+        <liveTemplateContext implementation="org.jetbrains.lama.editor.LamaContextType"/>
+        <defaultLiveTemplates file="liveTemplates/lamaTemplates.xml"/>
     </extensions>
 </idea-plugin>

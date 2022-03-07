@@ -6,6 +6,7 @@
 ### Added
 - Indent `esac`, `od`, `fi` on typing 
 - Prioritize single argument functions on completion
+- Live Templates for functions, `case`/`for`/`while`/`if` expressions
 
 ### Fixed
 - Documentation comment highlight

@@ -1,0 +1,47 @@
+<templateSet group="Lama">
+
+    <template name="fun" value="fun $FUN_NAME$($FUN_ARGS$) {&#10;  $END$&#10;}&#10;"
+              title="function definition" toReformat="true" toShortenFQNames="true">
+        <variable name="FUN_NAME" expression="" defaultValue="" alwaysStopAt="true"/>
+        <variable name="FUN_ARGS" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Lama" value="true"/>
+        </context>
+    </template>
+
+    <template name="case" value="case $CASE_MATCH$ of&#10;  $CASE_PATTERN$ -> $END$&#10;esac&#10;"
+              title="case expression" toReformat="true" toShortenFQNames="true">
+        <variable name="CASE_MATCH" expression="" defaultValue="" alwaysStopAt="true"/>
+        <variable name="CASE_PATTERN" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Lama" value="true"/>
+        </context>
+    </template>
+
+    <template name="if" value="if $IF_CONDITION$ then&#10;  $END$&#10;fi&#10;"
+              title="if expression" toReformat="true" toShortenFQNames="true">
+        <variable name="IF_CONDITION" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Lama" value="true"/>
+        </context>
+    </template>
+
+    <template name="while" value="while $WHILE_CONDITION$ do&#10;  $END$&#10;od&#10;"
+              title="while expression" toReformat="true" toShortenFQNames="true">
+        <variable name="WHILE_CONDITION" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Lama" value="true"/>
+        </context>
+    </template>
+
+    <template name="for" value="for $FOR_BEFORE_ALL$, $FOR_BEFORE_EACH$, $FOR_AFTER_EACH$ do&#10;  $END$&#10;od&#10;"
+              title="for expression" toReformat="true" toShortenFQNames="true">
+        <variable name="FOR_BEFORE_ALL" expression="" defaultValue="" alwaysStopAt="true"/>
+        <variable name="FOR_BEFORE_EACH" expression="" defaultValue="" alwaysStopAt="true"/>
+        <variable name="FOR_AFTER_EACH" expression="" defaultValue="" alwaysStopAt="true"/>
+        <context>
+            <option name="Lama" value="true"/>
+        </context>
+    </template>
+
+</templateSet>
