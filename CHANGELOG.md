@@ -3,6 +3,8 @@
 # LamaPlugin Changelog
 
 ## [Unreleased]
+### Fixed
+- Documentation comment highlight
 
 ## [0.1.2]
 ### Added

@@ -6,7 +6,7 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.PsiWhiteSpace
 import org.jetbrains.lama.highlighting.DOC_COMMENT
 import org.jetbrains.lama.highlighting.FUNCTION_CALL
 import org.jetbrains.lama.highlighting.FUNCTION_DECLARATION
@@ -23,12 +23,32 @@ class LamaAnnotator : Annotator {
 class LamaAnnotatorVisitor(private val holder: AnnotationHolder) : LamaVisitor() {
 
   override fun visitComment(comment: PsiComment) {
-    var next = PsiTreeUtil.skipWhitespacesAndCommentsForward(comment)
+    var next: PsiElement? = comment
+    while (next != null) {
+      if (next !is PsiComment && next !is PsiWhiteSpace) {
+        break
+      }
+      if (next is PsiWhiteSpace && next.text.count { it == '\n' } > 1) {
+        // -- This is not documentation
+        //
+        // -- But this is documentation
+        // -- And this too
+        //
+        // fun hello() {}
+        next = next.nextSibling
+        if (next is PsiComment) {
+          return
+        }
+        continue
+      }
+      next = next.nextSibling
+    }
+
     if (next is LamaScope) {
       next = next.firstChild
     }
     if (next is LamaDefinition || next is LamaVariableDefinitionSeries) {
-       highlight(comment, DOC_COMMENT)
+      highlight(comment, DOC_COMMENT)
     }
   }
 
