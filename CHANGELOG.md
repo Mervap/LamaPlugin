@@ -5,11 +5,13 @@
 ## [Unreleased]
 ### Added
 - Indent `esac`, `od`, `fi` on typing 
+- Prioritize single argument functions on completion
 
 ### Fixed
 - Documentation comment highlight
 - Completion/Go To Declaration for local symbols, which defined later than current
 - No completion on numeric literals and strings
+- Completion after dot
 
 ## [0.1.2]
 ### Added

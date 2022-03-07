@@ -32,7 +32,7 @@ data class LamaLookupElement(
   }
 }
 
-object LamaLookupElementFactory {
+open class LamaLookupElementFactory(val isDotBefore: Boolean) {
   fun createGlobalVariableLookupElement(variable: LamaVariableDefinition): LookupElement {
     return createVariableLookupElement(variable, GLOBAL_GROUPING)
   }
@@ -80,10 +80,17 @@ object LamaLookupElementFactory {
   }
 
   fun createFunctionLookupElement(function: LamaFunctionDefinition, grouping: Int): LookupElement {
+    val shiftedGrouping =
+      if (isDotBefore) {
+        val parameterSize = function.parameterList?.patternList?.size
+        if (parameterSize == null || parameterSize == 1) grouping + 10
+        else grouping
+      }
+      else grouping
     val icon = AllIcons.Nodes.Function
     return createLookupElementWithGrouping(
       LamaLookupElement(function.name, false, icon, function.containingScopePresentation, function.parameters),
-      getInsertHandlerForFunctionCall(function.parameters), grouping
+      getInsertHandlerForFunctionCall(function.parameters), shiftedGrouping
     )
   }
 
@@ -106,6 +113,7 @@ object LamaLookupElementFactory {
   }
 
   private fun getInsertHandlerForFunctionCall(parameterList: String): InsertHandler<LookupElement> {
+    if (isDotBefore) return InsertHandler { _, _ -> }
     val noArgs = parameterList == "()"
     return InsertHandler { context, _ ->
       val document = context.document
@@ -147,4 +155,6 @@ object LamaLookupElementFactory {
       return if (parent == null) containingFile?.name
       else parent.name
     }
+
+  companion object : LamaLookupElementFactory(false)
 }

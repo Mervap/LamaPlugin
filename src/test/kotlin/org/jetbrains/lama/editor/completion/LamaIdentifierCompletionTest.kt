@@ -222,6 +222,33 @@ class LamaIdentifierCompletionTest : LamaBaseTest() {
     doTest("'42'<caret>")
   }
 
+  @Test
+  fun testDot() {
+    doTest("a.<caret>", "string", strict = false)
+  }
+
+  @Test
+  fun testOneArgPriority() {
+    doTest("""
+      fun xxxx_aaaa(a, b) {}
+      fun xxxx_bbbb(c@[a, b, c, d]) {}
+      fun xxxx_cccc(a) {}
+      fun xxxx_dddd([a, b], c) {}
+      
+      xxxx_<caret>
+    """.trimIndent(), "xxxx_aaaa", "xxxx_bbbb", "xxxx_cccc", "xxxx_dddd")
+
+
+    doTest("""
+      fun xxxx_aaaa(a, b) {}
+      fun xxxx_bbbb(c@[a, b, c, d]) {}
+      fun xxxx_cccc(a) {}
+      fun xxxx_dddd([a, b], c) {}
+      
+      something.xxxx_<caret>
+    """.trimIndent(), "xxxx_bbbb", "xxxx_cccc", "xxxx_aaaa", "xxxx_dddd")
+  }
+
   private fun doWrongVariantsTest(text: String, vararg variants: String) {
     doWrongCompletionVariantsTest(*variants) { myFixture.configureByText("lama.lama", text) }
   }

@@ -38,7 +38,7 @@ class IdentifierCompletionProvider : CompletionProvider<CompletionParameters>() 
     val (position, result, isOperator) = if (
       probableIdentifier != null &&
       probableIdentifier.startOffset == parameters.offset &&
-      prevOperator != null
+      prevOperator !is LamaDotOperator
     ) {
       Triple(prevOperator!!, probableResult.withPrefixMatcher(prevOperator!!.name), true)
     }
@@ -55,9 +55,10 @@ class IdentifierCompletionProvider : CompletionProvider<CompletionParameters>() 
 
     val shownNames = HashSet<String>()
     val project = position.project
+    val factory = LamaLookupElementFactory(prevOperator is LamaDotOperator)
 
-    addCompletionFromLocals(position, shownNames, result)
-    addCompletionFromIndices(project, position, shownNames, result, isOperator)
+    addCompletionFromLocals(position, shownNames, result, factory)
+    addCompletionFromIndices(project, position, shownNames, result, isOperator, factory)
   }
 }
 
@@ -65,6 +66,7 @@ private fun addCompletionFromLocals(
   position: LamaPsiElement,
   shownNames: HashSet<String>,
   result: CompletionResultSet,
+  factory: LamaLookupElementFactory,
 ) {
   position.controlFlowContainer?.getLocalSymbolInfo(position)?.symbolInfos?.sortedBy { it.name }?.forEach { info ->
     val name = info.name
@@ -75,22 +77,22 @@ private fun addCompletionFromLocals(
       is OperatorSymbolInfo -> {
         val definition = info.definition.parent as? LamaInfixOperatorDefinition
         if (definition == null) {
-          LamaLookupElementFactory.createLocalInfixLookupElement(info.name)
+          factory.createLocalInfixLookupElement(info.name)
         }
         else {
-          LamaLookupElementFactory.createLocalInfixLookupElement(definition)
+          factory.createLocalInfixLookupElement(definition)
         }
       }
       is IdentifierSymbolInfo -> {
         when (val definition = info.definition.parent) {
           is LamaVariableDefinition -> {
-            LamaLookupElementFactory.createLocalVariableLookupElement(definition)
+            factory.createLocalVariableLookupElement(definition)
           }
           is LamaFunctionDefinition -> {
-            LamaLookupElementFactory.createLocalFunctionLookupElement(definition)
+            factory.createLocalFunctionLookupElement(definition)
           }
           else -> {
-            LamaLookupElementFactory.createLocalVariableLookupElement(info.name)
+            factory.createLocalVariableLookupElement(info.name)
           }
         }
       }
@@ -105,11 +107,16 @@ private fun addCompletionFromIndices(
   shownNames: HashSet<String>,
   result: CompletionResultSet,
   isOperator: Boolean,
+  factory: LamaLookupElementFactory,
 ) {
-  processElementsFromIndex(project, LamaSearchScope.importsScope(element), isOperator, IMPORTS_GROUPING) { it, _ ->
+  processElementsFromIndex(project,
+    LamaSearchScope.importsScope(element),
+    isOperator,
+    IMPORTS_GROUPING,
+    factory) { it, _ ->
     if (shownNames.add(it.lookupString)) result.consume(it)
   }
-  processElementsFromIndex(project, LamaSearchScope.allScope(element), isOperator, GLOBAL_GROUPING) { it, _ ->
+  processElementsFromIndex(project, LamaSearchScope.allScope(element), isOperator, GLOBAL_GROUPING, factory) { it, _ ->
     if (shownNames.add(it.lookupString)) result.consume(it)
   }
 }
@@ -119,13 +126,14 @@ private fun processElementsFromIndex(
   scope: GlobalSearchScope,
   isOperator: Boolean,
   grouping: Int,
+  factory: LamaLookupElementFactory,
   consumer: (LookupElement, VirtualFile) -> Unit,
 ) {
   LamaIdentifierCompletionIndex.process(project, scope, Processor { definition ->
     if (!definition.isPublic) return@Processor true
     val element = when (definition) {
-      is LamaVariableDefinition -> LamaLookupElementFactory.createVariableLookupElement(definition, grouping)
-      is LamaFunctionDefinition -> LamaLookupElementFactory.createFunctionLookupElement(definition, grouping)
+      is LamaVariableDefinition -> factory.createVariableLookupElement(definition, grouping)
+      is LamaFunctionDefinition -> factory.createFunctionLookupElement(definition, grouping)
       else -> error("Unknown definition type")
     }
     consumer(element, definition.containingFile.virtualFile)
@@ -136,7 +144,7 @@ private fun processElementsFromIndex(
   LamaOperatorCompletionIndex.process(project, scope, Processor { definition ->
     if (!definition.isPublic) return@Processor true
     consumer(
-      LamaLookupElementFactory.createInfixLookupElement(definition, grouping),
+      factory.createInfixLookupElement(definition, grouping),
       definition.containingFile.virtualFile
     )
     return@Processor true
