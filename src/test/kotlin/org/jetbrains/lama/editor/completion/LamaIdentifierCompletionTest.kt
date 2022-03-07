@@ -211,6 +211,17 @@ class LamaIdentifierCompletionTest : LamaBaseTest() {
     """.trimIndent(), "compile_a", "compile_b", "compile_c", "compare", "compareOf", "flatCompare")
   }
 
+  @Test
+  fun testNumeric() {
+    doTest("42 + 42<caret>")
+  }
+
+  @Test
+  fun testCharString() {
+    doTest("\"42\"<caret>")
+    doTest("'42'<caret>")
+  }
+
   private fun doWrongVariantsTest(text: String, vararg variants: String) {
     doWrongCompletionVariantsTest(*variants) { myFixture.configureByText("lama.lama", text) }
   }

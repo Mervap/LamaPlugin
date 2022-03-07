@@ -8,7 +8,8 @@
 
 ### Fixed
 - Documentation comment highlight
-- Completion/Go To Declaration for local symbols, which defined later than current 
+- Completion/Go To Declaration for local symbols, which defined later than current
+- No completion on numeric literals and strings
 
 ## [0.1.2]
 ### Added

@@ -12,9 +12,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.refactoring.suggested.endOffset
 import com.intellij.refactoring.suggested.startOffset
 import org.jetbrains.lama.psi.LamaLanguage
-import org.jetbrains.lama.psi.api.LamaExpression
-import org.jetbrains.lama.psi.api.LamaFile
-import org.jetbrains.lama.psi.api.LamaIdentifierExpression
+import org.jetbrains.lama.psi.api.*
 
 class LamaCompletionContributor : CompletionContributor() {
   init {
@@ -56,8 +54,13 @@ object LamaElementFilters {
 private class IdentifierFilter : ElementFilter {
   override fun isAcceptable(element: Any?, context: PsiElement?): Boolean {
     val expression = PsiTreeUtil.getParentOfType(context, LamaExpression::class.java, false)
+    if (expression !is LamaIdentifierExpression) return false
 
-    return expression is LamaIdentifierExpression
+    val prev = PsiTreeUtil.getParentOfType(PsiTreeUtil.prevVisibleLeaf(expression), LamaPsiElement::class.java, false)
+    if (prev is LamaNumericLiteral || prev is LamaStringLiteral || prev is LamaCharLiteral) {
+      return false
+    }
+    return true
   }
 
   override fun isClassAcceptable(hintClass: Class<*>?) = true

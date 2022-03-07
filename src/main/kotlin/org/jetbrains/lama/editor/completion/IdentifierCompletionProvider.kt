@@ -30,7 +30,7 @@ class IdentifierCompletionProvider : CompletionProvider<CompletionParameters>() 
   ) {
     val startPosition = parameters.position
     val probableIdentifier = PsiTreeUtil.getParentOfType(startPosition, LamaIdentifierExpression::class.java, false)
-    val prev by lazy {
+    val prevOperator by lazy {
       probableIdentifier?.prevLeaf(true)?.let {
         PsiTreeUtil.getParentOfType(it, LamaOperator::class.java, false)
       }
@@ -38,9 +38,9 @@ class IdentifierCompletionProvider : CompletionProvider<CompletionParameters>() 
     val (position, result, isOperator) = if (
       probableIdentifier != null &&
       probableIdentifier.startOffset == parameters.offset &&
-      prev != null
+      prevOperator != null
     ) {
-      Triple(prev!!, probableResult.withPrefixMatcher(prev!!.name), true)
+      Triple(prevOperator!!, probableResult.withPrefixMatcher(prevOperator!!.name), true)
     }
     else {
       val id =
