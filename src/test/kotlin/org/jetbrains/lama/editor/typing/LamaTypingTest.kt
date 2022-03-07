@@ -54,6 +54,10 @@ class LamaTypingTest : LamaBaseTest() {
   @Test fun testSingleQuote() = doTest()
   @Test fun testDoubleQuote() = doTest()
 
+  @Test fun testEsac() = doTest()
+  @Test fun testOd() = doTest()
+  @Test fun testFi() = doTest()
+
   @Test
   fun testFunctionBodyLBracket() = doTest {
     while (BraceMatchingUtil.getBraceMatcher(LamaFileType, LamaLanguage) !is PairedBraceMatcherAdapter) {

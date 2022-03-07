@@ -1,0 +1,7 @@
+od
+-- DELIMITER --
+while a > 5 do
+    <caret>
+-- DELIMITER --
+while a > 5 do
+od<caret>

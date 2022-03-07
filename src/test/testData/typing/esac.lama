@@ -1,0 +1,7 @@
+esac
+-- DELIMITER --
+case a of
+    <caret>
+-- DELIMITER --
+case a of
+esac<caret>

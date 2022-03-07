@@ -1,0 +1,7 @@
+fi
+-- DELIMITER --
+if a < 3 then
+    <caret>
+-- DELIMITER --
+if a < 3 then
+fi<caret>
