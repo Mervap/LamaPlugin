@@ -16,20 +16,20 @@ class LamaParameterInfoHandlerTest : LamaBaseTest() {
   }
 
   @Test
-  fun testEmptyArgumentList() = doTest("initArray(<caret>)", "<n>, f")
+  fun testEmptyArgumentList() = doTest("import Array; initArray(<caret>)", "<n>, f")
 
   @Test
   fun testComplexParameter() {
-    doTest("addHashTab(<caret>)", "<ht@[a, compare, hash]>, k, v")
-    doTest("addHashTab([a, v, d], <caret>)", "ht@[a, compare, hash], <k>, v")
-    doTest("addHashTab([a, v<caret>, d], e)", "<ht@[a, compare, hash]>, k, v")
+    doTest("import Collection; addHashTab(<caret>)", "<ht@[a, compare, hash]>, k, v")
+    doTest("import Collection; addHashTab([a, v, d], <caret>)", "ht@[a, compare, hash], <k>, v")
+    doTest("import Collection; addHashTab([a, v<caret>, d], e)", "<ht@[a, compare, hash]>, k, v")
   }
 
   @Test
-  fun testInnerInfo() = doTest("fwrite(randomString(<caret>))", "<len>")
+  fun testInnerInfo() = doTest("import Random; fwrite(randomString(<caret>))", "<len>")
 
   @Test
-  fun testNoParameters() = doTest("emptyBuffer(<caret>)", noParametersMessage)
+  fun testNoParameters() = doTest("import Buffer; emptyBuffer(<caret>)", noParametersMessage)
 
   @Test
   fun testStdUnitDots() {
@@ -38,7 +38,7 @@ class LamaParameterInfoHandlerTest : LamaBaseTest() {
   }
 
   @Test
-  fun testDisabled() = doTest("arrayList(10, 20, <caret>)", "a", isDisabled = true)
+  fun testDisabled() = doTest("import Array; arrayList(10, 20, <caret>)", "a", isDisabled = true)
 
   fun doTest(text: String, vararg expectedResults: String, isDisabled: Boolean = false) {
     val hintFixture = EditorHintFixture(myFixture.testRootDisposable)

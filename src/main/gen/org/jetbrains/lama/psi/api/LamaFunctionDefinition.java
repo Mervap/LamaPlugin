@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.StubBasedPsiElement;
 import org.jetbrains.lama.psi.stubs.LamaFunctionDefinitionStub;
 
-public interface LamaFunctionDefinition extends LamaControlFlowHolder, LamaIdentifierOwnerDefinition, StubBasedPsiElement<LamaFunctionDefinitionStub> {
+public interface LamaFunctionDefinition extends LamaControlFlowHolder, LamaDefinition, StubBasedPsiElement<LamaFunctionDefinitionStub> {
 
   @Nullable
   LamaFunctionBody getFunctionBody();

@@ -27,10 +27,4 @@ public class LamaInfixOperatorImpl extends LamaOperatorImpl implements LamaInfix
     else super.accept(visitor);
   }
 
-  @Override
-  @NotNull
-  public PsiElement setName(@NotNull String name) {
-    return LamaPsiImplUtil.setName(this, name);
-  }
-
 }

@@ -5,12 +5,25 @@ import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiWhiteSpace
 import org.jetbrains.lama.psi.LamaLanguage
 import org.jetbrains.lama.psi.api.LamaFile
+import org.jetbrains.lama.psi.api.LamaIdentifierExpression
 import org.jetbrains.lama.psi.api.LamaPsiElement
+import org.jetbrains.lama.psi.api.LamaSOrCallExpression
+import org.jetbrains.lama.psi.api.LamaScope
 
 object LamaElementFactory {
+  fun createLamaIdentifierFromText(project: Project, text: String): LamaIdentifierExpression {
+    val expression = createLamaExpressionFromText(project, text)
+    return (expression as LamaSOrCallExpression).expression as LamaIdentifierExpression
+  }
+
   fun createLamaPsiElementFromText(project: Project, text: String): LamaPsiElement {
     val file = buildLamaFileFromText(project, text)
     return file.firstChild as LamaPsiElement
+  }
+
+  fun createLamaExpressionFromText(project: Project, text: String): LamaPsiElement {
+    val file = buildLamaFileFromText(project, text)
+    return (file.firstChild as LamaScope).expressionSeries!!.expressionList[0]
   }
 
   fun createNl(project: Project): PsiWhiteSpace {

@@ -33,4 +33,22 @@ public class LamaSOrAtPatternImpl extends LamaPatternImpl implements LamaSOrAtPa
     return notNullChild(PsiTreeUtil.getChildOfType(this, LamaIdentifierExpression.class));
   }
 
+  @Override
+  @NotNull
+  public String getName() {
+    return LamaPsiImplUtil.getName(this);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement setName(@NotNull String name) {
+    return LamaPsiImplUtil.setName(this, name);
+  }
+
+  @Override
+  @NotNull
+  public LamaIdentifierExpression getNameIdentifier() {
+    return LamaPsiImplUtil.getNameIdentifier(this);
+  }
+
 }

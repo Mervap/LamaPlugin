@@ -34,7 +34,13 @@ public class LamaOperatorImpl extends LamaElementImpl implements LamaOperator {
   }
 
   @Override
-  @Nullable
+  @NotNull
+  public PsiElement setName(@NotNull String name) {
+    return LamaPsiImplUtil.setName(this, name);
+  }
+
+  @Override
+  @NotNull
   public LamaReferenceBase<?> getReference() {
     return LamaPsiImplUtil.getReference(this);
   }

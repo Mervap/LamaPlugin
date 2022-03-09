@@ -1,0 +1,9 @@
+public infix //// at / (x, y) {}
+
+1 //<caret>// 2;
+1 //// 3
+-- DELIMITER --
+public infix ++++ at / (x, y) {}
+
+1 ++++ 2;
+1 ++++ 3

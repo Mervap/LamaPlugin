@@ -1,5 +1,6 @@
 package org.jetbrains.lama.psi
 
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
@@ -20,6 +21,8 @@ object LamaPsiUtil {
   val LamaPsiElement.controlFlowContainer: LamaControlFlowHolder?
     get() = PsiTreeUtil.getParentOfType(this, LamaControlFlowHolder::class.java)
 
+  fun isLibraryElement(element: PsiElement): Boolean = !element.containingFile.isWritable
+
   fun LamaIdentifierExpression.isImportIdentifier(): Boolean = parent is LamaImportStatement
 
   fun LamaIdentifierExpression.isNotIdentifierReference(): Boolean = !isIdentifierReference()
@@ -32,13 +35,10 @@ object LamaPsiUtil {
   }
 
   fun LamaIdentifierExpression.isDefinitionIdentifier(): Boolean {
-    return isVariableDefinitionIdentifier() || isFunctionDefinitionIdentifier() || isParameterIdentifier()
+    return isVariableDefinitionIdentifier() || isFunctionDefinitionIdentifier() || isPatternIdentifier()
   }
 
-  fun LamaIdentifierExpression.isParameterIdentifier(): Boolean {
-    val parent = parent
-    return parent is LamaSOrAtPattern && PsiTreeUtil.getParentOfType(parent, LamaParameterList::class.java) != null
-  }
+  fun LamaIdentifierExpression.isPatternIdentifier(): Boolean = parent is LamaSOrAtPattern
 
   fun LamaIdentifierExpression.isVariableDefinitionIdentifier(): Boolean {
     val parent = parent

@@ -1,8 +1,12 @@
 package org.jetbrains.lama
 
 import com.intellij.codeInsight.lookup.Lookup
+import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.actionSystem.DataContext
+import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.vfs.VfsUtil
+import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElementResolveResult
 import com.intellij.psi.PsiPolyVariantReference
 import com.intellij.psi.ResolveResult
@@ -73,6 +77,19 @@ abstract class LamaBaseTest : BasePlatformTestCase() {
       arrayOf(PsiElementResolveResult(result))
     }
   }
+
+  protected open fun createDataContext(): DataContext {
+    return DataContext {
+      when (it) {
+        CommonDataKeys.PROJECT.name -> myFixture.project
+        CommonDataKeys.EDITOR.name -> myFixture.editor
+        CommonDataKeys.PSI_FILE.name -> myFixture.file
+        CommonDataKeys.VIRTUAL_FILE.name -> myFixture.file.virtualFile
+        else -> null
+      }
+    }
+  }
+
 
   companion object {
     const val DELIMITER = "\n-- DELIMITER --\n"

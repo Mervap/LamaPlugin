@@ -59,5 +59,13 @@
 
         <liveTemplateContext implementation="org.jetbrains.lama.editor.LamaContextType"/>
         <defaultLiveTemplates file="liveTemplates/lamaTemplates.xml"/>
+
+        <targetElementEvaluator language="Lama" implementationClass="org.jetbrains.lama.psi.references.LamaTargetElementEvaluator"/>
+        <lang.refactoringSupport language="Lama" implementationClass="org.jetbrains.lama.refactoring.LamaRefactoringProvider"/>
+        <renameInputValidator implementation="org.jetbrains.lama.refactoring.rename.LamaRenameInputValidator"/>
+        <renameHandler implementation="org.jetbrains.lama.refactoring.rename.LamaMemberInplaceRenameHandler"/>
+        <renamePsiElementProcessor implementation="org.jetbrains.lama.refactoring.rename.RenameLamaPsiElementProcessor"
+                                   id="LamaPsiElement"
+                                   order="first"/>
     </extensions>
 </idea-plugin>

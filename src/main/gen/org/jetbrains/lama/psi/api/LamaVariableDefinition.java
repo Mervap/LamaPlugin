@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.StubBasedPsiElement;
 import org.jetbrains.lama.psi.stubs.LamaVariableDefinitionStub;
 
-public interface LamaVariableDefinition extends LamaIdentifierOwnerDefinition, StubBasedPsiElement<LamaVariableDefinitionStub> {
+public interface LamaVariableDefinition extends LamaDefinition, StubBasedPsiElement<LamaVariableDefinitionStub> {
 
   @NotNull
   List<LamaExpression> getExpressionList();

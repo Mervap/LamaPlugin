@@ -151,7 +151,7 @@ open class LamaLookupElementFactory(val isDotBefore: Boolean) {
       val parent = PsiTreeUtil.getParentOfType(
         this,
         LamaFunctionDefinition::class.java, LamaInfixOperatorDefinition::class.java
-      ) as LamaIdentifierOwnerDefinition?
+      ) as LamaDefinition?
       return if (parent == null) containingFile?.name
       else parent.name
     }

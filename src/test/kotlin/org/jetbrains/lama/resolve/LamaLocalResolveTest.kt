@@ -1,8 +1,10 @@
 package org.jetbrains.lama.resolve
 
 import org.jetbrains.lama.LamaBaseTest
-import org.jetbrains.lama.psi.LamaPsiUtil.isParameterIdentifier
+import org.jetbrains.lama.psi.LamaPsiUtil.isPatternIdentifier
 import org.jetbrains.lama.psi.api.LamaIdentifierExpression
+import org.jetbrains.lama.psi.api.LamaPattern
+import org.jetbrains.lama.psi.api.LamaSOrAtPattern
 import org.junit.Test
 
 class LamaLocalResolveTest: LamaBaseTest() {
@@ -74,10 +76,10 @@ class LamaLocalResolveTest: LamaBaseTest() {
     """.trimIndent())
   }
 
-  private fun doTest(targetParentText: String?, text: String, isParameter: Boolean = false) {
+  private fun doTest(targetText: String?, text: String, isParameter: Boolean = false) {
     myFixture.configureByText("lama.lama", text)
     val results = resolve()
-    if (targetParentText == null) {
+    if (targetText == null) {
       assertEquals(0, results.size)
       return
     }
@@ -85,7 +87,7 @@ class LamaLocalResolveTest: LamaBaseTest() {
     assertEquals(1, results.size)
     val element = results[0].element!!
     assertTrue(element.isValid)
-    assertEquals(targetParentText, element.parent.text)
-    assertEquals(isParameter, element is LamaIdentifierExpression && element.isParameterIdentifier())
+    assertEquals(targetText, element.text)
+    assertEquals(isParameter, element is LamaSOrAtPattern)
   }
 }

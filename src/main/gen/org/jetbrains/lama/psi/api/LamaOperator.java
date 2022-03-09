@@ -4,14 +4,18 @@ package org.jetbrains.lama.psi.api;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNamedElement;
 import org.jetbrains.lama.psi.references.LamaReferenceBase;
 
-public interface LamaOperator extends LamaPsiElement {
+public interface LamaOperator extends LamaPsiElement, PsiNamedElement {
 
   @NotNull
   String getName();
 
-  @Nullable
+  @NotNull
+  PsiElement setName(@NotNull String name);
+
+  @NotNull
   LamaReferenceBase<?> getReference();
 
 }

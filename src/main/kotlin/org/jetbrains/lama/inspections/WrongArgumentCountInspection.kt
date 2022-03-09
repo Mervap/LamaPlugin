@@ -23,7 +23,7 @@ class WrongArgumentCountInspection : LamaInspection() {
 
     override fun visitSOrCallExpression(o: LamaSOrCallExpression) {
       val arguments = o.argumentList?.expressionSeriesList?.size ?: return
-      val resolve = o.expression.reference?.multiResolve(false)?.singleOrNull()?.element?.parent ?: return
+      val resolve = o.expression.reference?.multiResolve()?.singleOrNull() ?: return
       if (resolve !is LamaFunctionDefinition) return
 
       val patternList = resolve.parameterList?.patternList

@@ -24,7 +24,7 @@ internal object LamaPsiImplUtil {
 
   @JvmStatic
   fun setName(identifier: LamaIdentifierExpression, name: String): PsiElement {
-    return identifier.replace(LamaElementFactory.createLamaPsiElementFromText(identifier.project, name))
+    return identifier.replace(LamaElementFactory.createLamaIdentifierFromText(identifier.project, name))
   }
 
   @JvmStatic
@@ -34,7 +34,7 @@ internal object LamaPsiImplUtil {
   fun setName(charLiteral: LamaCharLiteral, name: String): PsiElement {
     val oldText = charLiteral.text
     val newText = oldText.replaceRange(1, oldText.length - 1, name)
-    val replacement = LamaElementFactory.createLamaPsiElementFromText(charLiteral.project, newText)
+    val replacement = LamaElementFactory.createLamaExpressionFromText(charLiteral.project, newText)
     return charLiteral.replace(replacement)
   }
 
@@ -45,7 +45,7 @@ internal object LamaPsiImplUtil {
   fun setName(stringLiteral: LamaStringLiteral, name: String): PsiElement {
     val oldText = stringLiteral.text
     val newText = oldText.replaceRange(1, oldText.length - 1, name)
-    val replacement = LamaElementFactory.createLamaPsiElementFromText(stringLiteral.project, newText)
+    val replacement = LamaElementFactory.createLamaExpressionFromText(stringLiteral.project, newText)
     return stringLiteral.replace(replacement)
   }
 
@@ -68,9 +68,14 @@ internal object LamaPsiImplUtil {
   fun getName(operator: LamaOperator): String = operator.text
 
   @JvmStatic
-  fun setName(operator: LamaInfixOperator, name: String): PsiElement {
-    val replacement = LamaElementFactory.createLamaPsiElementFromText(operator.project, "1 $name 1").children[1]
+  fun setName(operator: LamaOperator, name: String): PsiElement {
+    val replacement = LamaElementFactory.createLamaExpressionFromText(operator.project, "1 $name 1").children[1]
     return operator.replace(replacement)
+  }
+
+  @JvmStatic
+  fun getNameIdentifier(definition: LamaInfixOperatorDefinition): LamaOperator {
+    return definition.nameOperator
   }
 
   @JvmStatic
@@ -124,12 +129,10 @@ internal object LamaPsiImplUtil {
     return PsiTreeUtil.getChildOfType(assignment, LamaIdentifierExpression::class.java)
   }
 
-
   @JvmStatic
   fun setName(definition: LamaInfixOperatorDefinition, name: String): PsiElement {
-    val nameOperator = definition.nameOperator
-    val replacement = LamaElementFactory.createLamaPsiElementFromText(nameOperator.project, "1 $name 1").children[1]
-    return nameOperator.replace(replacement)
+    definition.nameOperator.name = name
+    return definition
   }
 
   @JvmStatic
@@ -259,5 +262,17 @@ internal object LamaPsiImplUtil {
   @JvmStatic
   fun getParameterList(expr: LamaFunctionExpression): LamaParameterList {
     return requireNotNull(PsiTreeUtil.getChildOfType(expr, LamaParameterList::class.java))
+  }
+
+  @JvmStatic
+  fun getName(pattern: LamaSOrAtPattern): String = pattern.nameIdentifier.name
+
+  @JvmStatic
+  fun getNameIdentifier(pattern: LamaSOrAtPattern): LamaIdentifierExpression = pattern.identifierExpression
+
+  @JvmStatic
+  fun setName(pattern: LamaSOrAtPattern, name: String): PsiElement {
+    pattern.nameIdentifier.name = name
+    return pattern
   }
 }

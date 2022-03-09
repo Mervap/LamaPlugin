@@ -1,0 +1,17 @@
+var i;
+
+for var i; i := 0; i < 10; i := i + 1 do
+  i<caret> + i;
+  i * i
+od;
+
+i + i
+-- DELIMITER --
+var i;
+
+for var j; j := 0; j < 10; j := j + 1 do
+  j + j;
+  j * j
+od;
+
+i + i

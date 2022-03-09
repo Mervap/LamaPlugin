@@ -1,0 +1,9 @@
+public fun ev<caret>al(a, b) {}
+
+eval(10);
+eval(20);
+-- DELIMITER --
+public fun baz(a, b) {}
+
+baz(10);
+baz(20);

@@ -65,6 +65,12 @@ public class LamaInfixOperatorDefinitionImpl extends LamaInfixOperatorDefinition
 
   @Override
   @NotNull
+  public LamaOperator getNameIdentifier() {
+    return LamaPsiImplUtil.getNameIdentifier(this);
+  }
+
+  @Override
+  @NotNull
   public LamaInfixAssociativity getAssociativity() {
     return LamaPsiImplUtil.getAssociativity(this);
   }

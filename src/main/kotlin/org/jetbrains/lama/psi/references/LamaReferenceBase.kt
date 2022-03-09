@@ -35,6 +35,8 @@ abstract class LamaReferenceBase<T : LamaPsiElement>(protected val psiElement: T
     return if (results.size == 1) results.first().element else null
   }
 
+  fun multiResolve(): List<PsiElement> = multiResolve(false).mapNotNull { it.element }
+
   override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
     val project = psiElement.project
     return ResolveCache.getInstance(project).resolveWithCaching(this, Resolver(), false, false)

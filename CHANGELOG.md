@@ -4,6 +4,7 @@
 
 ## [Unreleased]
 ### Added
+- Renaming
 - Indent `esac`, `od`, `fi` on typing 
 - Prioritize single argument functions on completion
 - Live Templates for functions, `case`/`for`/`while`/`if` expressions
@@ -11,6 +12,7 @@
 - Unresolved inspection with import quick fix
 
 ### Fixed
+- Go To Declaration/Find Usages for operators/patterns
 - Documentation comment highlight
 - Completion/Go To Declaration for local symbols, which defined later than current
 - No completion on numeric literals and strings

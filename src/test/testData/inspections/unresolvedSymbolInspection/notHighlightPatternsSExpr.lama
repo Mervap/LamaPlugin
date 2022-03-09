@@ -43,7 +43,7 @@ fun evalIns(c@[stack, st, world], insn) {
     esac
     | LD    (name) -> [st(name):stack, st, world]
     | ST    (name) -> case stack of
-      v : tail -> [tail, st <- [name, v], world]
+      v : tail -> [tail, st <error descr="Symbol '<-' is unresolved"><-</error> [name, v], world]
     esac
     | CONST (int) -> [int:stack, st, world]
   esac

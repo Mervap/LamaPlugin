@@ -3,7 +3,9 @@ package org.jetbrains.lama.psi.impl
 import com.intellij.extapi.psi.StubBasedPsiElementBase
 import com.intellij.lang.ASTNode
 import com.intellij.lang.Language
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
+import com.intellij.psi.PsiNameIdentifierOwner
 import com.intellij.psi.stubs.IStubElementType
 import com.intellij.psi.stubs.StubElement
 import org.jetbrains.lama.psi.LamaLanguage
@@ -21,4 +23,9 @@ open class LamaBaseElementImpl<T : StubElement<*>> : StubBasedPsiElementBase<T>,
   }
 
   override fun getReference(): LamaReferenceBase<*>? = null
+
+  override fun getNavigationElement(): PsiElement {
+    return if (this is PsiNameIdentifierOwner) nameIdentifier ?: super.getNavigationElement()
+    else super.getNavigationElement()
+  }
 }

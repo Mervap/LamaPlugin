@@ -6,17 +6,17 @@ import com.intellij.psi.stubs.IndexSink
 import com.intellij.psi.stubs.StringStubIndexExtension
 import com.intellij.psi.stubs.StubIndex
 import com.intellij.psi.stubs.StubIndexKey
-import org.jetbrains.lama.psi.api.LamaIdentifierOwnerDefinition
+import org.jetbrains.lama.psi.api.LamaDefinition
 import org.jetbrains.lama.psi.api.LamaInfixOperatorDefinition
 import org.jetbrains.lama.psi.api.LamaPsiElement
 import kotlin.reflect.KClass
 
-class LamaIdentifierNameIndex : StringStubIndexExtension<LamaIdentifierOwnerDefinition>() {
-  override fun getKey(): StubIndexKey<String, LamaIdentifierOwnerDefinition> = KEY
+class LamaIdentifierNameIndex : StringStubIndexExtension<LamaDefinition>() {
+  override fun getKey(): StubIndexKey<String, LamaDefinition> = KEY
 
-  companion object : LamaNameIndex<LamaIdentifierOwnerDefinition>(
+  companion object : LamaNameIndex<LamaDefinition>(
     "lama.name.definition.identifier",
-    LamaIdentifierOwnerDefinition::class
+    LamaDefinition::class
   )
 }
 

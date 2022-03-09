@@ -29,7 +29,7 @@ public class LamaIdentifierExpressionImpl extends LamaExpressionImpl implements 
   }
 
   @Override
-  @Nullable
+  @NotNull
   public LamaReferenceBase<?> getReference() {
     return LamaPsiImplUtil.getReference(this);
   }

@@ -1,0 +1,17 @@
+var zzz;
+
+public fun hello(zzz@[aba, caba], daba) {
+  aba + caba + daba;
+  zz<caret>z
+}
+
+zzz + zzz
+-- DELIMITER --
+var zzz;
+
+public fun hello(yyy@[aba, caba], daba) {
+  aba + caba + daba;
+  yyy
+}
+
+zzz + zzz

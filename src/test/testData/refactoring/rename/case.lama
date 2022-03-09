@@ -1,0 +1,19 @@
+var xxx, yyy;
+
+case Var (10, 20) of
+    Var (xxx, yyy) -> xxx + yyy * xxx
+  | Fun (xxx, yyy) -> xx<caret>x + yyy * xxx
+  | Bar (xxx, yyy) -> xxx + yyy * xxx
+esac;
+
+xxx + yyy * xxx
+-- DELIMITER --
+var xxx, yyy;
+
+case Var (10, 20) of
+    Var (xxx, yyy) -> xxx + yyy * xxx
+  | Fun (zzz, yyy) -> zzz + yyy * zzz
+  | Bar (xxx, yyy) -> xxx + yyy * xxx
+esac;
+
+xxx + yyy * xxx

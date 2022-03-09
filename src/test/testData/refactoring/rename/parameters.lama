@@ -1,0 +1,15 @@
+var aba;
+
+public fun hello([aba, caba], daba) {
+  ab<caret>a + caba + daba
+}
+
+aba + aba
+-- DELIMITER --
+var aba;
+
+public fun hello([laba, caba], daba) {
+  laba + caba + daba
+}
+
+aba + aba

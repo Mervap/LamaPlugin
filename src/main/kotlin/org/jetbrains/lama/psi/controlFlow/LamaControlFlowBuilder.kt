@@ -3,6 +3,8 @@ package org.jetbrains.lama.psi.controlFlow
 import com.intellij.codeInsight.controlflow.ControlFlow
 import com.intellij.codeInsight.controlflow.ControlFlowBuilder
 import com.intellij.codeInsight.controlflow.Instruction
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiNamedElement
 import org.jetbrains.lama.psi.LamaRecursiveVisitor
 import org.jetbrains.lama.psi.api.*
 

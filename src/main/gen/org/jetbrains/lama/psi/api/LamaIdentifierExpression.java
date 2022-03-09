@@ -9,7 +9,7 @@ import org.jetbrains.lama.psi.references.LamaReferenceBase;
 
 public interface LamaIdentifierExpression extends LamaExpression, PsiNamedElement {
 
-  @Nullable
+  @NotNull
   LamaReferenceBase<?> getReference();
 
   @NotNull

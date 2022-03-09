@@ -19,9 +19,9 @@ class LamaParameterInfoHandler : ParameterInfoHandler<LamaArgumentList, LamaPara
 
   override fun findElementForParameterInfo(context: CreateParameterInfoContext): LamaArgumentList? {
     val call = findCall(context) ?: return null
-    val resolve = call.expression.reference?.multiResolve(false)?.mapNotNull { it.element } ?: emptyList()
-    context.itemsToShow = resolve.mapNotNull { resolveResult ->
-      val parameterList = when (val definition = resolveResult.parent) {
+    val resolve = call.expression.reference?.multiResolve() ?: emptyList()
+    context.itemsToShow = resolve.mapNotNull { definition ->
+      val parameterList = when (definition) {
         is LamaFunctionDefinition -> definition.parameterList
         is LamaInfixOperatorDefinition -> definition.parameterList
         else -> null

@@ -26,6 +26,9 @@ public interface LamaInfixOperatorDefinition extends LamaControlFlowHolder, Lama
   PsiElement setName(@NotNull String name);
 
   @NotNull
+  LamaOperator getNameIdentifier();
+
+  @NotNull
   LamaInfixAssociativity getAssociativity();
 
   @NotNull

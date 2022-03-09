@@ -6,20 +6,22 @@ import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiWhiteSpace
+import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import org.jetbrains.lama.messages.LamaBundle
 import org.jetbrains.lama.parser.LamaElementTypes
 import org.jetbrains.lama.psi.LamaPsiUtil.importedUnits
 import org.jetbrains.lama.psi.LamaPsiUtil.isDefinitionIdentifier
+import org.jetbrains.lama.psi.LamaPsiUtil.isDefinitionOperator
 import org.jetbrains.lama.psi.LamaPsiUtil.unitName
-import org.jetbrains.lama.psi.api.LamaIdentifierExpression
-import org.jetbrains.lama.psi.api.LamaPattern
-import org.jetbrains.lama.psi.api.LamaVisitor
+import org.jetbrains.lama.psi.api.*
 import org.jetbrains.lama.psi.elementTypes.LamaElementFactory
+import org.jetbrains.lama.psi.references.LamaReferenceBase
 import org.jetbrains.lama.psi.references.LamaSearchScope
 import org.jetbrains.lama.psi.stubs.indices.LamaIdentifierNameIndex
 import org.jetbrains.lama.psi.stubs.indices.LamaNameIndex
+import org.jetbrains.lama.psi.stubs.indices.LamaOperatorNameIndex
 
 class UnresolvedSymbolInspection : LamaInspection() {
   override fun getDisplayName() = LamaBundle.message("inspection.unresolved.name")
@@ -29,21 +31,28 @@ class UnresolvedSymbolInspection : LamaInspection() {
     isOnTheFly: Boolean,
     session: LocalInspectionToolSession,
   ): PsiElementVisitor = object : LamaVisitor() {
+    override fun visitInfixOperator(o: LamaInfixOperator) {
+      if (o.isDefinitionOperator()) return
+      processReference(o, o.reference, LamaOperatorNameIndex)
+    }
+
     override fun visitIdentifierExpression(o: LamaIdentifierExpression) {
       if (o.isDefinitionIdentifier()) return
-      if (o.parent is LamaPattern) return
-      if (o.elementType == LamaElementTypes.LAMA_UINDENT) return
+      if (o.firstChild.elementType == LamaElementTypes.LAMA_UINDENT) return
+      processReference(o, o.reference, LamaIdentifierNameIndex)
+    }
 
-      val refs = o.reference?.multiResolve(false) ?: return
+    private fun processReference(o: LamaPsiElement, ref: LamaReferenceBase<*>, index: LamaNameIndex<*>) {
+      val refs = ref.multiResolve()
       val importedUnits = o.containingFile.importedUnits
       val filtered = refs.filter {
-        val file = it.element?.containingFile
+        val file = it.containingFile
         file == o.containingFile || file?.unitName in importedUnits
       }
       if (filtered.isNotEmpty()) return
 
-      val name = o.name
-      val units = LamaIdentifierNameIndex.find(name, o.project, LamaSearchScope.allScope(o)).mapNotNull {
+      val name = o.name ?: return
+      val units = index.find(name, o.project, LamaSearchScope.allScope(o)).mapNotNull {
         it.containingFile.unitName
       }.distinct()
       holder.registerProblem(

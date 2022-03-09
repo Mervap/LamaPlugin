@@ -7,7 +7,4 @@ import com.intellij.psi.PsiElement;
 
 public interface LamaInfixOperator extends LamaOperator {
 
-  @NotNull
-  PsiElement setName(@NotNull String name);
-
 }

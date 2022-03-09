@@ -5,5 +5,5 @@ import org.jetbrains.lama.psi.LamaLanguage
 import org.jetbrains.lama.psi.stubs.LamaSkeletonFileStub
 
 class LamaFileElementType : IStubFileElementType<LamaSkeletonFileStub>(LamaLanguage) {
-  override fun getStubVersion(): Int = 3
+  override fun getStubVersion(): Int = 4
 }

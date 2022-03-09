@@ -57,11 +57,12 @@
   extends(".*statement|.*expression|.*literal")=expression
   extends(".*pattern")=pattern
   extends(".*_operator")=operator
-  implements("variable_definition")="org.jetbrains.lama.psi.api.LamaIdentifierOwnerDefinition"
-  implements("function_definition")="org.jetbrains.lama.psi.api.LamaIdentifierOwnerDefinition"
-  implements("infix_operator_definition")="org.jetbrains.lama.psi.api.LamaDefinition"
+  implements(".*_definition")="org.jetbrains.lama.psi.api.LamaDefinition"
   implements("function_expression")="org.jetbrains.lama.psi.api.LamaExpression"
+  implements("s_or_at_pattern")="com.intellij.psi.PsiNameIdentifierOwner"
   implements("identifier_expression")="com.intellij.psi.PsiNamedElement"
+  implements("operator")="org.jetbrains.lama.psi.api.LamaPsiElement"
+  implements("operator")="com.intellij.psi.PsiNamedElement"
   implements("string_literal")="com.intellij.psi.PsiNamedElement"
   implements("char_literal")="com.intellij.psi.PsiNamedElement"
   generateTokenAccessors=false
@@ -125,7 +126,7 @@ function_body ::= "{" function_body_scope "}"   { pin=1; }
 
 infix_operator_definition ::= infix_head parameter_list function_body {
   pin=1
-  methods=[getName setName getAssociativity getParameters isPublic isTopLevel nameOperator="operator[0]" levelOperator="operator[1]"]
+  methods=[getName setName getNameIdentifier getAssociativity getParameters isPublic isTopLevel nameOperator="operator[0]" levelOperator="operator[1]"]
   extends="org.jetbrains.lama.psi.impl.LamaInfixOperatorDefinitionBase"
   stubClass="org.jetbrains.lama.psi.stubs.LamaInfixOperatorDefinitionStub"
   implements="org.jetbrains.lama.psi.api.LamaControlFlowHolder"
@@ -145,7 +146,7 @@ expression ::=
 
 private primitive_expression ::= numeric_literal | string_literal | char_literal | boolean_literal | identifier_expression
 
-fake    operator            ::= { methods=[ getName getReference ] }
+fake    operator            ::= { methods=[ getName setName getReference ] }
 private any_operator        ::= predefined_operator | infix_operator
 private predefined_operator ::= assignment_operator | list_cons_operator  | or_operator | and_operator |
                                 compare_operator    | plus_minus_operator | mul_div_mod_operator
@@ -158,7 +159,7 @@ compare_operator     ::= "==" | "!=" | "<=" | "<" | ">=" | ">"
 plus_minus_operator  ::= "+" | "-"
 mul_div_mod_operator ::= "*" | "/" | "%"
 dot_operator         ::= "."
-infix_operator       ::= INFIX_OP | "@" | "#" | "->" | ("|" !(pattern "->")) | "=" | "?" { methods=[ setName ] }
+infix_operator       ::= INFIX_OP | "@" | "#" | "->" | ("|" !(pattern "->")) | "=" | "?"
 
 
 assignment_expression     ::= expression assignment_operator expression  {
@@ -234,7 +235,9 @@ private simple_pattern ::= wildcard_pattern | s_or_at_pattern | array_pattern | 
                            boolean_literal | sharp_pattern | pattern_parenthesized
 private pattern_parenthesized ::= "(" pattern ")"  { pin=1 }
 wildcard_pattern ::= "_"
-s_or_at_pattern  ::= identifier_expression [ s_pattern_suffix | at_pattern_suffix ]
+s_or_at_pattern  ::= identifier_expression [ s_pattern_suffix | at_pattern_suffix ] {
+  methods=[ getName setName getNameIdentifier ]
+}
 private s_pattern_suffix  ::= "(" pattern_list ")" { pin=1 }
 private at_pattern_suffix ::= "@" pattern          { pin=1 }
 array_pattern ::= "[" [ pattern_list ] "]"         { pin=1 }

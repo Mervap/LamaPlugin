@@ -9,20 +9,13 @@ import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.tree.TokenSet
 import org.jetbrains.lama.lexer.LamaLexer
 import org.jetbrains.lama.messages.LamaBundle
-import org.jetbrains.lama.parser.LamaElementTypes
+import org.jetbrains.lama.parser.LamaElementTypes.*
 import org.jetbrains.lama.parser.LamaParserDefinition
-import org.jetbrains.lama.psi.LamaPsiUtil.isParameterIdentifier
+import org.jetbrains.lama.psi.LamaPsiUtil.isPatternIdentifier
 import org.jetbrains.lama.psi.api.*
 
 class LamaFindUsagesProvider : FindUsagesProvider {
-  override fun getWordsScanner(): WordsScanner {
-    return DefaultWordsScanner(
-      LamaLexer(),
-      TokenSet.create(LamaElementTypes.LAMA_IDENTIFIER_EXPRESSION),
-      LamaParserDefinition().commentTokens,
-      TokenSet.create(LamaElementTypes.LAMA_STRING_LITERAL)
-    )
-  }
+  override fun getWordsScanner(): WordsScanner = LamaWorldScanner()
 
   override fun canFindUsagesFor(psiElement: PsiElement): Boolean = psiElement is PsiNamedElement
 
@@ -37,7 +30,7 @@ class LamaFindUsagesProvider : FindUsagesProvider {
       when {
         parent is LamaVariableDefinition -> LamaBundle.message("find.usages.variable")
         parent is LamaFunctionDefinition -> LamaBundle.message("find.usages.function")
-        element.isParameterIdentifier() -> LamaBundle.message("find.usages.parameter")
+        element.isPatternIdentifier() -> LamaBundle.message("find.usages.parameter")
         else -> LamaBundle.message("find.usages.variable")
       }
     }
@@ -53,4 +46,23 @@ class LamaFindUsagesProvider : FindUsagesProvider {
   }
 
   override fun getNodeText(element: PsiElement, useFullName: Boolean): String = element.text
+}
+
+private class LamaWorldScanner : DefaultWordsScanner(
+  LamaLexer(),
+  TokenSet.create(LAMA_UINDENT, LAMA_LINDENT),
+  LamaParserDefinition().commentTokens,
+  TokenSet.create(LAMA_STRING, LAMA_CHAR),
+  TokenSet.EMPTY,
+  OPERATOR_TOKEN_SET,
+) {
+
+  override fun getVersion(): Int = super.getVersion() + 1
+
+  companion object {
+    private val OPERATOR_TOKEN_SET = TokenSet.create(
+      LAMA_INFIX_OP, LAMA_LIST_CONS, LAMA_OR, LAMA_AND, LAMA_EQEQ, LAMA_NEQ, LAMA_LEQ, LAMA_LE, LAMA_GEQ, LAMA_GE,
+      LAMA_MINUS, LAMA_PLUS, LAMA_MUL, LAMA_DIV, LAMA_MOD
+    )
+  }
 }

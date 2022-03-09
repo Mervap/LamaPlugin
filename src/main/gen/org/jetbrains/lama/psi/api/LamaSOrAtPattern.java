@@ -4,10 +4,20 @@ package org.jetbrains.lama.psi.api;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNameIdentifierOwner;
 
-public interface LamaSOrAtPattern extends LamaPattern {
+public interface LamaSOrAtPattern extends LamaPattern, PsiNameIdentifierOwner {
 
   @NotNull
   LamaIdentifierExpression getIdentifierExpression();
+
+  @NotNull
+  String getName();
+
+  @NotNull
+  PsiElement setName(@NotNull String name);
+
+  @NotNull
+  LamaIdentifierExpression getNameIdentifier();
 
 }

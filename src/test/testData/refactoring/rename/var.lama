@@ -1,0 +1,9 @@
+var i;
+
+i<caret> + i;
+i
+-- DELIMITER --
+var hello;
+
+hello + hello;
+hello
