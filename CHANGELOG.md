@@ -19,6 +19,7 @@
 - No completion on numeric literals and strings
 - Completion after dot
 - No need to mount `/tmp` for `lima`
+- Missing pair double quote
 
 ## [0.1.2]
 ### Added

@@ -1,0 +1,11 @@
+"
+-- DELIMITER --
+fun hello() {
+  var a = <caret>;
+  var b = "world"
+}
+-- DELIMITER --
+fun hello() {
+  var a = "<caret>";
+  var b = "world"
+}

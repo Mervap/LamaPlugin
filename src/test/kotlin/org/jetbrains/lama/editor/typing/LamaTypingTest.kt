@@ -53,6 +53,7 @@ class LamaTypingTest : LamaBaseTest() {
 
   @Test fun testSingleQuote() = doTest()
   @Test fun testDoubleQuote() = doTest()
+  @Test fun testMultilineDoubleQuote() = doTest()
 
   @Test fun testEsac() = doTest()
   @Test fun testOd() = doTest()
