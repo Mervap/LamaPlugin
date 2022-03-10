@@ -10,6 +10,7 @@
 - Live Templates for functions, `case`/`for`/`while`/`if` expressions
 - Wrong argument count inspection
 - Unresolved inspection with import quick fix
+- Improve dot functions support
 
 ### Fixed
 - Go To Declaration/Find Usages for operators/patterns
@@ -17,6 +18,7 @@
 - Completion/Go To Declaration for local symbols, which defined later than current
 - No completion on numeric literals and strings
 - Completion after dot
+- No need to mount `/tmp` for `lima`
 
 ## [0.1.2]
 ### Added

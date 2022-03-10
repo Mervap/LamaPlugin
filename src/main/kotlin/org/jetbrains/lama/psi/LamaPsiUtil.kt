@@ -6,6 +6,7 @@ import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.lama.parser.LamaElementTypes.*
 import org.jetbrains.lama.psi.api.*
+import org.jetbrains.lama.util.LamaStdUnitUtil
 
 @Suppress("MemberVisibilityCanBePrivate")
 object LamaPsiUtil {
@@ -13,7 +14,7 @@ object LamaPsiUtil {
   val PsiFile.importedUnits: List<String>
     get() {
       if (this !is LamaFile) return emptyList()
-      return importStatements.mapNotNull { it.identifierExpression?.name } + "Std"
+      return importStatements.mapNotNull { it.identifierExpression?.name } + LamaStdUnitUtil.UNIT_NAME
     }
 
   val PsiFile.unitName: String? get() = virtualFile?.nameWithoutExtension
@@ -22,6 +23,11 @@ object LamaPsiUtil {
     get() = PsiTreeUtil.getParentOfType(this, LamaControlFlowHolder::class.java)
 
   fun isLibraryElement(element: PsiElement): Boolean = !element.containingFile.isWritable
+
+  fun LamaSOrCallExpression.isDotCall(): Boolean {
+    val parent = parent
+    return parent is LamaOperatorExpression && parent.operator is LamaDotOperator && parent.rightExpr == this
+  }
 
   fun LamaIdentifierExpression.isImportIdentifier(): Boolean = parent is LamaImportStatement
 

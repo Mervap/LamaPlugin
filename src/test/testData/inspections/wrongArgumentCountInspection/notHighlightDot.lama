@@ -1,0 +1,11 @@
+var world;
+
+fun hello(world, arg) {}
+
+hello<weak_warning descr="'hello' required 2 arguments, but 1 provided">(10)</weak_warning>
+hello(world, 10)
+world.hello(10)
+world.hello<weak_warning descr="'hello' required 2 arguments, but 3 provided">(world, 10)</weak_warning>
+hello<weak_warning descr="'hello' required 2 arguments, but 1 provided">(10)</weak_warning>.hello(10)
+hello(world, 10).hello(10)
+hello(world, 10).hello(10).hello(10).hello(10)

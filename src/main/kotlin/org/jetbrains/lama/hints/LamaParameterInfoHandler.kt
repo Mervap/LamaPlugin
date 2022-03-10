@@ -6,6 +6,7 @@ import com.intellij.refactoring.suggested.endOffset
 import com.intellij.refactoring.suggested.startOffset
 import org.jetbrains.lama.hints.LamaParameterInfoHandler.Companion.LamaParameterInfo
 import org.jetbrains.lama.messages.LamaBundle
+import org.jetbrains.lama.psi.LamaPsiUtil.isDotCall
 import org.jetbrains.lama.psi.api.LamaArgumentList
 import org.jetbrains.lama.psi.api.LamaFunctionDefinition
 import org.jetbrains.lama.psi.api.LamaInfixOperatorDefinition
@@ -43,6 +44,7 @@ class LamaParameterInfoHandler : ParameterInfoHandler<LamaArgumentList, LamaPara
       return
     }
 
+    val isDotCall = (parameterOwner.parent as LamaSOrCallExpression).isDotCall()
     context.objectsToView.map { it as LamaParameterInfo }.forEach { parameterInfo ->
       val arguments = parameterOwner.expressionSeriesList
       val ind = arguments.indexOfLast { it.endOffset < caretOffset }
@@ -52,7 +54,7 @@ class LamaParameterInfoHandler : ParameterInfoHandler<LamaArgumentList, LamaPara
           ind != -1 -> ind + 1
           firstArgumentOffset <= caretOffset -> 0
           else -> arguments.size
-        }
+        } + if (isDotCall) 1 else 0
     }
   }
 
@@ -88,7 +90,7 @@ class LamaParameterInfoHandler : ParameterInfoHandler<LamaArgumentList, LamaPara
     var argumentList =
       ParameterInfoUtils.findParentOfType(context.file, context.offset - 1, LamaArgumentList::class.java)
     if (argumentList == null || parameterListStart < 0) {
-      return argumentList?.parent as LamaSOrCallExpression
+      return argumentList?.parent as LamaSOrCallExpression?
     }
 
     while (parameterListStart != argumentList!!.textRange.startOffset) {

@@ -40,6 +40,13 @@ class LamaParameterInfoHandlerTest : LamaBaseTest() {
   @Test
   fun testDisabled() = doTest("import Array; arrayList(10, 20, <caret>)", "a", isDisabled = true)
 
+  @Test
+  fun testDotCall() = doTest("""
+    var world;
+    fun hello(world, x) {}
+    world.hello(1<caret>0)
+  """.trimIndent(), "world, <x>")
+
   fun doTest(text: String, vararg expectedResults: String, isDisabled: Boolean = false) {
     val hintFixture = EditorHintFixture(myFixture.testRootDisposable)
     myFixture.configureByText("lama.lama", text)

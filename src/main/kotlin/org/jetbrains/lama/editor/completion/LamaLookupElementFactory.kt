@@ -32,7 +32,7 @@ data class LamaLookupElement(
   }
 }
 
-open class LamaLookupElementFactory(val isDotBefore: Boolean) {
+open class LamaLookupElementFactory(private val isDotBefore: Boolean) {
   fun createGlobalVariableLookupElement(variable: LamaVariableDefinition): LookupElement {
     return createVariableLookupElement(variable, GLOBAL_GROUPING)
   }
@@ -80,17 +80,17 @@ open class LamaLookupElementFactory(val isDotBefore: Boolean) {
   }
 
   fun createFunctionLookupElement(function: LamaFunctionDefinition, grouping: Int): LookupElement {
+    val parameterCnt = function.parameterList?.patternList?.size ?: 0
     val shiftedGrouping =
       if (isDotBefore) {
-        val parameterSize = function.parameterList?.patternList?.size
-        if (parameterSize == null || parameterSize == 1) grouping + 10
+        if (parameterCnt == 1) grouping + 10
         else grouping
       }
       else grouping
     val icon = AllIcons.Nodes.Function
     return createLookupElementWithGrouping(
       LamaLookupElement(function.name, false, icon, function.containingScopePresentation, function.parameters),
-      getInsertHandlerForFunctionCall(function.parameters), shiftedGrouping
+      getInsertHandlerForFunctionCall(parameterCnt), shiftedGrouping
     )
   }
 
@@ -112,16 +112,15 @@ open class LamaLookupElementFactory(val isDotBefore: Boolean) {
     )
   }
 
-  private fun getInsertHandlerForFunctionCall(parameterList: String): InsertHandler<LookupElement> {
-    if (isDotBefore) return InsertHandler { _, _ -> }
-    val noArgs = parameterList == "()"
+  private fun getInsertHandlerForFunctionCall(parametersCnt: Int): InsertHandler<LookupElement> {
     return InsertHandler { context, _ ->
+      if (isDotBefore && parametersCnt <= 1) return@InsertHandler
       val document = context.document
       val parenthesesRelativeOffset = findParentheses(document.text, context.tailOffset)
       if (parenthesesRelativeOffset == null) {
         document.insertString(context.tailOffset, "()")
       }
-      val relativeCaretOffset = (if (noArgs) 2 else 1) + (parenthesesRelativeOffset ?: 0)
+      val relativeCaretOffset = (if (parametersCnt == 0) 2 else 1) + (parenthesesRelativeOffset ?: 0)
       context.editor.caretModel.moveCaretRelatively(relativeCaretOffset, 0, false, false, false)
     }
   }

@@ -15,15 +15,17 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.jetbrains.lama.compiler.LamacLocation
 import org.jetbrains.lama.util.LamaStdUnitUtil
 import org.jetbrains.lama.util.ProjectRootUtil.invalidateProjectRoots
+import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.name
 import kotlin.test.assertContains
 
 abstract class LamaBaseTest : BasePlatformTestCase() {
   override fun getTestDataPath(): String = "src/test/testData"
 
   fun addStdlib() {
-    val stdlibRoot = LamacLocation.stdlibSourcesRoot(myFixture.project)?.toFile() ?: error("Stdlib not found")
+    val stdlibRoot = LamacLocation.stdlibSourcesRoot(myFixture.project) ?: error("Stdlib not found")
     var tryes = 0
-    while (stdlibRoot.list()?.contains(LamaStdUnitUtil.UNIT_NAME_WITH_EXT) != true) {
+    while (stdlibRoot.listDirectoryEntries().map { it.name }.sorted() != listOf("Lama", LamaStdUnitUtil.UNIT_NAME_WITH_EXT)) {
       if (tryes > 100) {
         error("Stdlib not fetched")
       }
@@ -31,7 +33,7 @@ abstract class LamaBaseTest : BasePlatformTestCase() {
       ++tryes
     }
 
-    VfsUtil.markDirtyAndRefresh(false, true, true, stdlibRoot)
+    VfsUtil.markDirtyAndRefresh(false, true, true, stdlibRoot.toFile())
     runWriteAction { myFixture.project.invalidateProjectRoots() }
   }
 

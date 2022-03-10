@@ -249,6 +249,34 @@ class LamaIdentifierCompletionTest : LamaBaseTest() {
     """.trimIndent(), "xxxx_bbbb", "xxxx_cccc", "xxxx_aaaa", "xxxx_dddd")
   }
 
+  @Test
+  fun testDotApply() {
+    doApplyCompletionTest("""
+      var xxxx_world;
+      fun xxxx_a(env) {}
+      
+      xxxx_world.xxxx<caret>
+    """.trimIndent(), """
+      var xxxx_world;
+      fun xxxx_a(env) {}
+      
+      xxxx_world.xxxx_a<caret>
+    """.trimIndent(), "xxxx_a")
+
+    doApplyCompletionTest("""
+      var xxxx_world;
+      fun xxxx_a(env, x) {}
+      
+      xxxx_world.xxxx<caret>
+    """.trimIndent(), """
+      var xxxx_world;
+      fun xxxx_a(env, x) {}
+      
+      xxxx_world.xxxx_a(<caret>)
+    """.trimIndent(), "xxxx_a")
+
+  }
+
   private fun doWrongVariantsTest(text: String, vararg variants: String) {
     doWrongCompletionVariantsTest(*variants) { myFixture.configureByText("lama.lama", text) }
   }

@@ -4,10 +4,11 @@ import org.junit.Test
 
 class WrongArgumentCountInspectionTest : LamaInspectionTest() {
 
-  @Test fun testHighlightFewArgs() = doTest()
-  @Test fun testHighlightALotArgs() = doTest()
-  @Test fun testNotHighlightOkArgs() = doTest()
-  @Test fun testNotHighlightVarargs() = doTest()
+  @Test fun testHighlightFewArgs() = doWeakTest()
+  @Test fun testHighlightALotArgs() = doWeakTest()
+  @Test fun testNotHighlightOkArgs() = doWeakTest()
+  @Test fun testNotHighlightVarargs() = doWeakTest()
+  @Test fun testNotHighlightDot() = doWeakTest()
 
   override val inspection = WrongArgumentCountInspection::class.java
 }

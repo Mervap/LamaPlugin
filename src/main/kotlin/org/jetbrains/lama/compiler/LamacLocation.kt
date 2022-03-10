@@ -16,6 +16,7 @@ import com.intellij.util.io.createDirectories
 import com.intellij.util.io.delete
 import com.intellij.util.io.exists
 import org.jetbrains.lama.messages.LamaBundle
+import org.jetbrains.lama.util.LamaStdUnitUtil
 import org.jetbrains.lama.util.LamaStdUnitUtil.addStdUnitStubToDirectory
 import org.jetbrains.lama.util.PathUtil.safePath
 import java.nio.file.Path
@@ -23,6 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.io.path.createTempDirectory
 import kotlin.io.path.notExists
 import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.name
 
 interface LamacLocation {
   val userHome: Path?
@@ -76,21 +78,22 @@ private object LimaLocation : LamacLocation {
 
   override fun stdlibSourcesRoot(project: Project): Path? {
     val expected = Path.of(PathManager.getHomePath(), "lamacStdlib")
-    if (expected.exists() && expected.listDirectoryEntries().size == 14) {
+    if (!copyTaskInProgress.compareAndSet(false, true)) {
       return expected
     }
-    expected.createDirectories()
-    if (!copyTaskInProgress.compareAndSet(false, true)) {
+
+    if (expected.exists() && expected.listDirectoryEntries().map { it.name }.sorted() == listOf("Lama", LamaStdUnitUtil.UNIT_NAME_WITH_EXT)) {
       return expected
     }
 
     ProgressManager.getInstance().run(
       object : Task.Backgroundable(project, LamaBundle.message("lamac.lima.copy.task.title"), false) {
         override fun run(indicator: ProgressIndicator) {
-          val limaShare = LamacManager.compilerHomePath?.stdlibRoot() ?: return
-          val tmpDir = createTempDirectory(Path.of("/", "tmp", "lima"), "stdlib")
           try {
-            val output = runOnLima("cp $limaShare/*.lama $tmpDir")
+            expected.delete(true)
+            expected.createDirectories()
+            val limaShare = LamacManager.compilerHomePath?.stdlibRoot() ?: return
+            val output = runOnHost(GeneralCommandLine("limactl", "copy", "default:$limaShare", expected.toString(), "-r"))
             if (output.exitCode != 0) {
               error("""
                 Can't fetch stdlib from lima
@@ -99,11 +102,9 @@ private object LimaLocation : LamacLocation {
                 Stderr: ${output.stderr}
               """.trimIndent())
             }
-            tmpDir.toFile().copyRecursively(expected.toFile(), true)
             javaClass.addStdUnitStubToDirectory(expected)
           }
           finally {
-            tmpDir.delete(true)
             copyTaskInProgress.compareAndSet(true, false)
           }
         }
@@ -112,8 +113,10 @@ private object LimaLocation : LamacLocation {
     return expected
   }
 
-  private fun runOnLima(command: String): ProcessOutput {
-    val handler = OSProcessHandler(GeneralCommandLine("lima", "eval", command))
+  private fun runOnLima(command: String): ProcessOutput = runOnHost(GeneralCommandLine("lima", "eval", command))
+
+  private fun runOnHost(command: GeneralCommandLine): ProcessOutput {
+    val handler = OSProcessHandler(command)
     val processRunner = CapturingProcessRunner(handler)
     return processRunner.runProcess(5000)
   }

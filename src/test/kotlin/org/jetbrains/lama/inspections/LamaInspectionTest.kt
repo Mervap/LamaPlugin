@@ -31,6 +31,10 @@ abstract class LamaInspectionTest : LamaBaseTest() {
     doTestBase(filename, checkWarnings = true)
   }
 
+  protected fun doWeakTest(filename: String = testFilename) {
+    doTestBase(filename, checkWarnings = true, checkWeakWarnings = true)
+  }
+
   private val testFilename: String
     get() = getTestName(true) + ".${LamaFileType.defaultExtension}"
 
