@@ -82,7 +82,7 @@ private object LimaLocation : LamacLocation {
       return expected
     }
 
-    if (expected.exists() && expected.listDirectoryEntries().map { it.name }.sorted() == listOf("Lama", LamaStdUnitUtil.UNIT_NAME_WITH_EXT)) {
+    if (expected.exists() && expected.listDirectoryEntries("*.lama").size == 14) {
       return expected
     }
 
@@ -91,7 +91,6 @@ private object LimaLocation : LamacLocation {
         override fun run(indicator: ProgressIndicator) {
           try {
             expected.delete(true)
-            expected.createDirectories()
             val limaShare = LamacManager.compilerHomePath?.stdlibRoot() ?: return
             val output = runOnHost(GeneralCommandLine("limactl", "copy", "default:$limaShare", expected.toString(), "-r"))
             if (output.exitCode != 0) {

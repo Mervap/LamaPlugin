@@ -25,7 +25,7 @@ abstract class LamaBaseTest : BasePlatformTestCase() {
   fun addStdlib() {
     val stdlibRoot = LamacLocation.stdlibSourcesRoot(myFixture.project) ?: error("Stdlib not found")
     var tryes = 0
-    while (stdlibRoot.listDirectoryEntries().map { it.name }.sorted() != listOf("Lama", LamaStdUnitUtil.UNIT_NAME_WITH_EXT)) {
+    while (stdlibRoot.listDirectoryEntries("*.lama").size != 14) {
       if (tryes > 100) {
         error("Stdlib not fetched")
       }
