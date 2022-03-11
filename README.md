@@ -41,8 +41,5 @@ If you on macOS and want to have a good experience you need to:
 ## Contributing
 
 Any contributing are welcome. You're encouraged to contribute to the plugin if you've found any issues or missing
-functionality that you would want to see.
-
-At the moment, really need help with:
-* Icons
-* Windows support (wsl2 + CI/CD)
+functionality that you would want to see. Check out [CONTRIBUTING.md](CONTRIBUTING.md) to learn how to set up the
+project. If you don't know what to do, check open [Issues](https://github.com/Mervap/LamaPlugin/issues).
