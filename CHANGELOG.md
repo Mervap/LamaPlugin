@@ -3,6 +3,8 @@
 # LamaPlugin Changelog
 
 ## [Unreleased]
+
+## [0.2.0]
 ### Added
 - Renaming
 - Indent `esac`, `od`, `fi` on typing 
@@ -24,6 +26,7 @@
 ## [0.1.2]
 ### Added
 - Quote typing helper
+
 
 ### Fixed
 - No continuation indent on enter at the end of the expression
