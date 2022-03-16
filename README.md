@@ -9,6 +9,8 @@
 Plugin for [Lama](https://github.com/JetBrains-Research/Lama) language
 <!-- Plugin description end -->
 
+To get full list of supported features check [FEATURES.md](docs/FEATURES.md)
+
 ## Supported OS
 
 - [x] Linux
