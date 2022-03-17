@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface LamaSyntaxPrimaryArray extends LamaPsiElement {
+public interface LamaSyntaxPrimaryArray extends LamaSyntaxPrimaryExpression {
 
   @NotNull
   List<LamaExpressionSeries> getExpressionSeriesList();

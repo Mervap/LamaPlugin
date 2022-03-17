@@ -8,18 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface LamaSyntaxBinding extends LamaPsiElement {
 
   @Nullable
-  LamaIdentifierExpression getIdentifierExpression();
-
-  @Nullable
   LamaPattern getPattern();
 
   @NotNull
-  List<LamaSyntaxPrimaryArray> getSyntaxPrimaryArrayList();
-
-  @Nullable
-  LamaSyntaxPrimaryExpressionFrom getSyntaxPrimaryExpressionFrom();
-
-  @Nullable
-  LamaSyntaxPrimaryParenthesized getSyntaxPrimaryParenthesized();
+  LamaSyntaxPrimaryExpression getSyntaxPrimaryExpression();
 
 }

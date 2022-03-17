@@ -57,6 +57,7 @@ public interface LamaElementTypes {
   IElementType LAMA_SYNTAX_BINDING = new LamaElementType("LAMA_SYNTAX_BINDING");
   IElementType LAMA_SYNTAX_EXPRESSION = new LamaElementType("LAMA_SYNTAX_EXPRESSION");
   IElementType LAMA_SYNTAX_PRIMARY_ARRAY = new LamaElementType("LAMA_SYNTAX_PRIMARY_ARRAY");
+  IElementType LAMA_SYNTAX_PRIMARY_CALL = new LamaElementType("LAMA_SYNTAX_PRIMARY_CALL");
   IElementType LAMA_SYNTAX_PRIMARY_EXPRESSION_FROM = new LamaElementType("LAMA_SYNTAX_PRIMARY_EXPRESSION_FROM");
   IElementType LAMA_SYNTAX_PRIMARY_PARENTHESIZED = new LamaElementType("LAMA_SYNTAX_PRIMARY_PARENTHESIZED");
   IElementType LAMA_SYNTAX_SEQ = new LamaElementType("LAMA_SYNTAX_SEQ");
@@ -279,6 +280,9 @@ public interface LamaElementTypes {
       }
       else if (type == LAMA_SYNTAX_PRIMARY_ARRAY) {
         return new LamaSyntaxPrimaryArrayImpl(node);
+      }
+      else if (type == LAMA_SYNTAX_PRIMARY_CALL) {
+        return new LamaSyntaxPrimaryCallImpl(node);
       }
       else if (type == LAMA_SYNTAX_PRIMARY_EXPRESSION_FROM) {
         return new LamaSyntaxPrimaryExpressionFromImpl(node);

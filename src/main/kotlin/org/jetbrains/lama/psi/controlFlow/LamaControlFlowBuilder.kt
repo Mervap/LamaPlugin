@@ -177,6 +177,25 @@ private class LamaControlFlowBuilder : LamaRecursiveVisitor() {
     builder.prevInstruction = end
   }
 
+  override fun visitSyntaxBinding(binding: LamaSyntaxBinding) {
+    binding.syntaxPrimaryExpression.accept()
+    binding.pattern.accept()
+    startNode(binding)
+  }
+
+  override fun visitSyntaxExpression(syntax: LamaSyntaxExpression) {
+    val branches = mutableListOf<Instruction>()
+    for (branch in syntax.syntaxSeqList) {
+      branch.syntaxBindingList.forEach { it.accept() }
+      branch.expression.accept()
+      branches.add(startNode(branch))
+    }
+    val end = startNode(syntax)
+    for (branch in branches) {
+      builder.addEdge(branch, end)
+    }
+  }
+
   private fun startNode(o: LamaPsiElement): Instruction {
     return builder.startNode(o)
   }

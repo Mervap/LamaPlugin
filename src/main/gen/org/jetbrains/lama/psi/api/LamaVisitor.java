@@ -213,15 +213,23 @@ public class LamaVisitor extends PsiElementVisitor {
   }
 
   public void visitSyntaxPrimaryArray(@NotNull LamaSyntaxPrimaryArray o) {
+    visitSyntaxPrimaryExpression(o);
+  }
+
+  public void visitSyntaxPrimaryCall(@NotNull LamaSyntaxPrimaryCall o) {
+    visitSyntaxPrimaryExpression(o);
+  }
+
+  public void visitSyntaxPrimaryExpression(@NotNull LamaSyntaxPrimaryExpression o) {
     visitPsiElement(o);
   }
 
   public void visitSyntaxPrimaryExpressionFrom(@NotNull LamaSyntaxPrimaryExpressionFrom o) {
-    visitPsiElement(o);
+    visitSyntaxPrimaryExpression(o);
   }
 
   public void visitSyntaxPrimaryParenthesized(@NotNull LamaSyntaxPrimaryParenthesized o) {
-    visitPsiElement(o);
+    visitSyntaxPrimaryExpression(o);
   }
 
   public void visitSyntaxSeq(@NotNull LamaSyntaxSeq o) {

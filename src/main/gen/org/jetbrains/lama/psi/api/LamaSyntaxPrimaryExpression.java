@@ -5,9 +5,6 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface LamaSyntaxPrimaryParenthesized extends LamaSyntaxPrimaryExpression {
-
-  @NotNull
-  List<LamaSyntaxSeq> getSyntaxSeqList();
+public interface LamaSyntaxPrimaryExpression extends LamaPsiElement {
 
 }

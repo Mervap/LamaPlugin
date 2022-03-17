@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static org.jetbrains.lama.parser.LamaElementTypes.*;
 import org.jetbrains.lama.psi.api.*;
 
-public class LamaSyntaxPrimaryArrayImpl extends LamaSyntaxPrimaryExpressionImpl implements LamaSyntaxPrimaryArray {
+public class LamaSyntaxPrimaryCallImpl extends LamaSyntaxPrimaryExpressionImpl implements LamaSyntaxPrimaryCall {
 
-  public LamaSyntaxPrimaryArrayImpl(@NotNull ASTNode node) {
+  public LamaSyntaxPrimaryCallImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull LamaVisitor visitor) {
-    visitor.visitSyntaxPrimaryArray(this);
+    visitor.visitSyntaxPrimaryCall(this);
   }
 
   @Override
@@ -29,8 +29,14 @@ public class LamaSyntaxPrimaryArrayImpl extends LamaSyntaxPrimaryExpressionImpl 
 
   @Override
   @NotNull
-  public List<LamaExpressionSeries> getExpressionSeriesList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaExpressionSeries.class);
+  public LamaIdentifierExpression getIdentifierExpression() {
+    return notNullChild(PsiTreeUtil.getChildOfType(this, LamaIdentifierExpression.class));
+  }
+
+  @Override
+  @NotNull
+  public List<LamaSyntaxPrimaryArray> getSyntaxPrimaryArrayList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaSyntaxPrimaryArray.class);
   }
 
 }

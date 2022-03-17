@@ -54,6 +54,7 @@
     QUEST="?"
   ]
 
+  extends("syntax_primary_.*")=syntax_primary_expression
   extends(".*statement|.*expression|.*literal")=expression
   extends(".*pattern")=pattern
   extends(".*_operator")=operator
@@ -192,11 +193,14 @@ syntax_expression   ::= syntax "(" syntax_seqs ")"   { pin=1 }
 private syntax_seqs ::= syntax_seq ("|" syntax_seq)* { pin(".*")=1 }
 syntax_seq ::= syntax_binding+ [ syntax_seq_body ]   { pin=1 }
 private syntax_seq_body ::= "{" expression "}"       { pin=1 }
-syntax_binding ::= [ "-" ] [ pattern "=" ] syntax_primary ("*" | "+" | "?")*  { pin = 3}
-private syntax_primary ::= (identifier_expression syntax_primary_array*) | syntax_primary_parenthesized | syntax_primary_expression_from
-syntax_primary_array           ::= "[" [ expression_series_list ] "]" { pin=1 }
-syntax_primary_parenthesized   ::= "(" syntax_seqs ")"                { pin=1 }
-syntax_primary_expression_from ::= "$(" expression_series ")"         { pin=1 }
+syntax_binding ::= [ "-" ] [ pattern "=" ] syntax_primary ("*" | "+" | "?")*  { pin=3 }
+
+fake syntax_primary_expression ::= {}
+private syntax_primary ::= syntax_primary_call | syntax_primary_parenthesized | syntax_primary_expression_from
+syntax_primary_call            ::= identifier_expression syntax_primary_array* { pin=1 }
+syntax_primary_array           ::= "[" [ expression_series_list ] "]"          { pin=1 }
+syntax_primary_parenthesized   ::= "(" syntax_seqs ")"                         { pin=1 }
+syntax_primary_expression_from ::= "$(" expression_series ")"                  { pin=1 }
 
 numeric_literal ::= NUMBER | "-" NUMBER
 string_literal  ::= STRING { methods=[ getName setName ] }

@@ -2,6 +2,13 @@ var sq = syntax (e1=token ["a"] e2=token ["b"] {Seq (e1, e2)}),
       al = syntax (e=(token ["a"] | token ["b"]) {Alt (e)}),
       rp = syntax (e=token ["a"]* {Rep (e)});
 
+var gg = syntax (
+  kSkip                                      { Skip }       |
+  kRead name = inbr[lParen, lident, rParen]  { Read(name) } |
+  kWrite exp = inbr[lParen, exp, rParen]     { Write(exp) } |
+  name = lident -s[":="] value = exp         { Assn(name, value) }
+);
+
 printf ("%s\n", parseString (syntax (p=sq eof {p}), "ab").string);
 printf ("%s\n", parseString (syntax (p=al eof {p}), "a").string);
 printf ("%s\n", parseString (syntax (p=al eof {p}), "b").string);

@@ -5,9 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface LamaSyntaxPrimaryParenthesized extends LamaSyntaxPrimaryExpression {
+public interface LamaSyntaxPrimaryCall extends LamaSyntaxPrimaryExpression {
 
   @NotNull
-  List<LamaSyntaxSeq> getSyntaxSeqList();
+  LamaIdentifierExpression getIdentifierExpression();
+
+  @NotNull
+  List<LamaSyntaxPrimaryArray> getSyntaxPrimaryArrayList();
 
 }

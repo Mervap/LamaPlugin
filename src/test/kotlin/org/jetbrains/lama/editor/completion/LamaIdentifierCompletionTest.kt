@@ -277,6 +277,38 @@ class LamaIdentifierCompletionTest : LamaBaseTest() {
 
   }
 
+  @Test
+  fun testSyntaxBindings() {
+    doTest("""
+      var xxxx_d;
+      syntax (
+        xxxx_a = token["a"] xxxx_<caret> xxxx_c = token["c"] { xxxx_a } 
+      )
+    """.trimIndent(), "xxxx_a", "xxxx_d")
+
+    doTest("""
+      syntax (
+        xxxx_a = token["a"] xxxx_c = token["c"] { xxxx_<caret> } 
+      )
+    """.trimIndent(), "xxxx_a", "xxxx_c")
+
+    doTest("""
+      syntax (
+        xxxx_a = token["a"] xxxx_b = token["b"] { xxxx_b } |
+        xxxx_c = token["c"] xxxx_d = token["d"] { xxxx_<caret> }
+      )
+    """.trimIndent(), "xxxx_c", "xxxx_d")
+
+    doTest("""
+      var xxxx_a;
+      
+      syntax (
+        xxxx_b = token["b"] { xxxx_b } |
+        xxxx_c = token["c"] xxxx_<caret>
+      )
+    """.trimIndent(), "xxxx_a", "xxxx_c")
+  }
+
   private fun doWrongVariantsTest(text: String, vararg variants: String) {
     doWrongCompletionVariantsTest(*variants) { myFixture.configureByText("lama.lama", text) }
   }

@@ -6,6 +6,9 @@
 ### Added
 - Exception hyperlink with navigation
 
+### Fixed
+- Improve syntax expressions support
+
 ## [0.2.0]
 ### Added
 - Renaming

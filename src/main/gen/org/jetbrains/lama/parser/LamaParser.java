@@ -36,6 +36,7 @@ public class LamaParser implements PsiParser, LightPsiParser {
   }
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
+    create_token_set_(LAMA_SYNTAX_PRIMARY_ARRAY, LAMA_SYNTAX_PRIMARY_CALL, LAMA_SYNTAX_PRIMARY_EXPRESSION_FROM, LAMA_SYNTAX_PRIMARY_PARENTHESIZED),
     create_token_set_(LAMA_ARRAY_PATTERN, LAMA_LIST_PATTERN, LAMA_PATTERN, LAMA_SHARP_PATTERN,
       LAMA_S_OR_AT_PATTERN, LAMA_WILDCARD_PATTERN),
     create_token_set_(LAMA_AND_OPERATOR, LAMA_ASSIGNMENT_OPERATOR, LAMA_COMPARE_OPERATOR, LAMA_DOT_OPERATOR,
@@ -1236,38 +1237,14 @@ public class LamaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (identifier_expression syntax_primary_array*) | syntax_primary_parenthesized | syntax_primary_expression_from
+  // syntax_primary_call | syntax_primary_parenthesized | syntax_primary_expression_from
   static boolean syntax_primary(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "syntax_primary")) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = syntax_primary_0(b, l + 1);
+    r = syntax_primary_call(b, l + 1);
     if (!r) r = syntax_primary_parenthesized(b, l + 1);
     if (!r) r = syntax_primary_expression_from(b, l + 1);
-    exit_section_(b, m, null, r);
     return r;
-  }
-
-  // identifier_expression syntax_primary_array*
-  private static boolean syntax_primary_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "syntax_primary_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = identifier_expression(b, l + 1);
-    r = r && syntax_primary_0_1(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // syntax_primary_array*
-  private static boolean syntax_primary_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "syntax_primary_0_1")) return false;
-    while (true) {
-      int c = current_position_(b);
-      if (!syntax_primary_array(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "syntax_primary_0_1", c)) break;
-    }
-    return true;
   }
 
   /* ********************************************************** */
@@ -1289,6 +1266,31 @@ public class LamaParser implements PsiParser, LightPsiParser {
   private static boolean syntax_primary_array_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "syntax_primary_array_1")) return false;
     expression_series_list(b, l + 1);
+    return true;
+  }
+
+  /* ********************************************************** */
+  // identifier_expression syntax_primary_array*
+  public static boolean syntax_primary_call(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "syntax_primary_call")) return false;
+    if (!nextTokenIs(b, "<syntax primary call>", LAMA_LINDENT, LAMA_UINDENT)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, LAMA_SYNTAX_PRIMARY_CALL, "<syntax primary call>");
+    r = identifier_expression(b, l + 1);
+    p = r; // pin = 1
+    r = r && syntax_primary_call_1(b, l + 1);
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // syntax_primary_array*
+  private static boolean syntax_primary_call_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "syntax_primary_call_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!syntax_primary_array(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "syntax_primary_call_1", c)) break;
+    }
     return true;
   }
 

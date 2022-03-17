@@ -10,12 +10,13 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static org.jetbrains.lama.parser.LamaElementTypes.*;
 import org.jetbrains.lama.psi.api.*;
 
-public class LamaSyntaxPrimaryParenthesizedImpl extends LamaElementImpl implements LamaSyntaxPrimaryParenthesized {
+public class LamaSyntaxPrimaryParenthesizedImpl extends LamaSyntaxPrimaryExpressionImpl implements LamaSyntaxPrimaryParenthesized {
 
   public LamaSyntaxPrimaryParenthesizedImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull LamaVisitor visitor) {
     visitor.visitSyntaxPrimaryParenthesized(this);
   }

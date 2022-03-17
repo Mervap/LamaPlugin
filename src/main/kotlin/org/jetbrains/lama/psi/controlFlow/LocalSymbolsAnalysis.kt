@@ -7,6 +7,7 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.containers.orNull
+import com.jetbrains.rd.util.first
 import org.jetbrains.lama.psi.LamaPsiUtil.controlFlowContainer
 import org.jetbrains.lama.psi.LamaPsiUtil.isDefinitionIdentifier
 import org.jetbrains.lama.psi.LamaPsiUtil.isDefinitionOperator
@@ -196,8 +197,15 @@ private class Analyzer(
   private fun joinPredInfos(instruction: Instruction): LocalSymbolInfos {
     val element = instruction.element
     if (isDestructuringElement(element)) {
-      val prevSibling = PsiTreeUtil.getPrevSiblingOfType(element, LamaPsiElement::class.java)
-      return prevSibling?.let { result[controlFlow.getInstructionByElement(prevSibling)] } ?: LocalSymbolInfos()
+      var currentElement = element
+      while (currentElement != null && currentElement !is LamaFile) {
+        val prevSibling = PsiTreeUtil.getPrevSiblingOfType(currentElement, LamaPsiElement::class.java)
+        if (prevSibling != null) {
+          return result[controlFlow.getInstructionByElement(prevSibling)] ?: result.first().value
+        }
+        currentElement = currentElement.parent
+      }
+      return LocalSymbolInfos()
     }
     return joinPredInfos(
       instruction.allPred()
@@ -214,19 +222,28 @@ private class Analyzer(
     contract {
       returns(true) implies (element != null)
     }
-    if (element is LamaCaseBranch) {
-      // [a, b] -> c
-      // | [b, e] -> <caret> -- a and b invisible
-      return true
+    return when (element) {
+      is LamaCaseBranch -> {
+        //   [a, b] -> c
+        // | [b, e] -> <caret> -- a and b invisible
+        true
+      }
+      is LamaForStatement -> {
+        // for var i = 0, i < 10, i := 1 do
+        //   -- here i is visible
+        // od
+        // -- but here not
+        true
+      }
+      is LamaSyntaxSeq -> {
+        // syntax (
+        //   t = token["s"]  { -- t is visible here } |
+        //   tt = token["z"] { -- but not here }
+        // )
+        true
+      }
+      else -> false
     }
-    if (element is LamaForStatement) {
-      // for var i = 0, i < 10, i := 1 do
-      //   -- here i is visible
-      // od
-      // -- but here not
-      return true
-    }
-    return false
   }
 
   private fun joinPredInfos(infos: List<LocalSymbolInfos>): LocalSymbolInfos {

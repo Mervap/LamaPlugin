@@ -1,5 +1,6 @@
 package org.jetbrains.lama.resolve
 
+import junit.framework.TestCase
 import org.jetbrains.lama.LamaBaseTest
 import org.jetbrains.lama.psi.LamaPsiUtil.isPatternIdentifier
 import org.jetbrains.lama.psi.api.LamaIdentifierExpression
@@ -76,6 +77,33 @@ class LamaLocalResolveTest: LamaBaseTest() {
     """.trimIndent())
   }
 
+  @Test
+  fun testSyntaxBindings() {
+    doTest("name", """
+      syntax (
+        name = hello["a"] { na<caret>me } 
+      )
+    """.trimIndent())
+
+    doTest(null, """
+      syntax (
+        name  = hello["a"] { name } |
+        name1 = hello["b"] { nam<caret>e }
+      )
+    """.trimIndent())
+
+    doTest("op", """
+      fun binop(op) {
+        [
+          syntax (pos -s[op]),
+          fun (a) {
+            o<caret>p
+          }
+        ]
+      }
+    """.trimIndent(), isParameter = true)
+  }
+
   private fun doTest(targetText: String?, text: String, isParameter: Boolean = false) {
     myFixture.configureByText("lama.lama", text)
     val results = resolve()
@@ -88,6 +116,8 @@ class LamaLocalResolveTest: LamaBaseTest() {
     val element = results[0].element!!
     assertTrue(element.isValid)
     assertEquals(targetText, element.text)
-    assertEquals(isParameter, element is LamaSOrAtPattern)
+    if (isParameter) {
+      assertTrue(element is LamaSOrAtPattern)
+    }
   }
 }

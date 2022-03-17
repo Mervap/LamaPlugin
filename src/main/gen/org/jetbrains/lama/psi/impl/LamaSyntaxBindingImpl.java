@@ -28,32 +28,14 @@ public class LamaSyntaxBindingImpl extends LamaElementImpl implements LamaSyntax
 
   @Override
   @Nullable
-  public LamaIdentifierExpression getIdentifierExpression() {
-    return PsiTreeUtil.getChildOfType(this, LamaIdentifierExpression.class);
-  }
-
-  @Override
-  @Nullable
   public LamaPattern getPattern() {
     return PsiTreeUtil.getChildOfType(this, LamaPattern.class);
   }
 
   @Override
   @NotNull
-  public List<LamaSyntaxPrimaryArray> getSyntaxPrimaryArrayList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaSyntaxPrimaryArray.class);
-  }
-
-  @Override
-  @Nullable
-  public LamaSyntaxPrimaryExpressionFrom getSyntaxPrimaryExpressionFrom() {
-    return PsiTreeUtil.getChildOfType(this, LamaSyntaxPrimaryExpressionFrom.class);
-  }
-
-  @Override
-  @Nullable
-  public LamaSyntaxPrimaryParenthesized getSyntaxPrimaryParenthesized() {
-    return PsiTreeUtil.getChildOfType(this, LamaSyntaxPrimaryParenthesized.class);
+  public LamaSyntaxPrimaryExpression getSyntaxPrimaryExpression() {
+    return notNullChild(PsiTreeUtil.getChildOfType(this, LamaSyntaxPrimaryExpression.class));
   }
 
 }
