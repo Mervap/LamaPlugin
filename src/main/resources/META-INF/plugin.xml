@@ -67,5 +67,7 @@
         <renamePsiElementProcessor implementation="org.jetbrains.lama.refactoring.rename.RenameLamaPsiElementProcessor"
                                    id="LamaPsiElement"
                                    order="first"/>
+
+        <consoleFilterProvider implementation="org.jetbrains.lama.execution.LamaConsoleFilterProvider"/>
     </extensions>
 </idea-plugin>

@@ -10,6 +10,12 @@ with the IntelliJ IDEA, you are unlikely to be interested in this list
   <br/><br/>
   ![](img/highlight.png)
 
+- **Exception Highlighting**
+
+  And navigation to source!  
+  <br/><br/>
+  ![](img/exception.png)
+
 - **Code Formatter**
 
   `ctrl+alt+l` - reformat your code. Result depends on many setting which you can change

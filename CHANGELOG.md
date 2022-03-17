@@ -3,6 +3,8 @@
 # LamaPlugin Changelog
 
 ## [Unreleased]
+### Added
+- Exception hyperlink with navigation
 
 ## [0.2.0]
 ### Added
