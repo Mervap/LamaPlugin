@@ -187,7 +187,7 @@ private class LamaControlFlowBuilder : LamaRecursiveVisitor() {
     val branches = mutableListOf<Instruction>()
     for (branch in syntax.syntaxSeqList) {
       branch.syntaxBindingList.forEach { it.accept() }
-      branch.expression.accept()
+      branch.syntaxSeqBody?.accept()
       branches.add(startNode(branch))
     }
     val end = startNode(syntax)

@@ -10,14 +10,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static org.jetbrains.lama.parser.LamaElementTypes.*;
 import org.jetbrains.lama.psi.api.*;
 
-public class LamaSyntaxSeqImpl extends LamaElementImpl implements LamaSyntaxSeq {
+public class LamaSyntaxSeqBodyImpl extends LamaElementImpl implements LamaSyntaxSeqBody {
 
-  public LamaSyntaxSeqImpl(@NotNull ASTNode node) {
+  public LamaSyntaxSeqBodyImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull LamaVisitor visitor) {
-    visitor.visitSyntaxSeq(this);
+    visitor.visitSyntaxSeqBody(this);
   }
 
   @Override
@@ -27,15 +27,9 @@ public class LamaSyntaxSeqImpl extends LamaElementImpl implements LamaSyntaxSeq 
   }
 
   @Override
-  @NotNull
-  public List<LamaSyntaxBinding> getSyntaxBindingList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, LamaSyntaxBinding.class);
-  }
-
-  @Override
   @Nullable
-  public LamaSyntaxSeqBody getSyntaxSeqBody() {
-    return PsiTreeUtil.getChildOfType(this, LamaSyntaxSeqBody.class);
+  public LamaScope getScope() {
+    return PsiTreeUtil.getChildOfType(this, LamaScope.class);
   }
 
 }

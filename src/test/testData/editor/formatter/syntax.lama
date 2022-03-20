@@ -1,0 +1,47 @@
+import Parser;
+import Lexer;
+import Fun;
+import Ostap;
+
+var stmt = memo $ eta syntax (
+               kSkip                                     { Skip }                         |
+  name=lident -s[":="] value=exp            { Assn(name, value) }            |
+  -kIf thenStmt -kFi                                                         |
+  -kWhile condition       =exp -kDo body=      stmt_seq -kOd {
+                 While(condition, body)
+}                    |
+                 -kDo body =stmt_seq -kWhile        condition=exp       -kOd {
+                   DoWhile(body, condition)
+                 }                  |
+  -kFor beforeAll=stmt_seq      -s[","]
+                 condition=exp                -s[","]
+    afterAll=stmt_seq          -kDo
+                body=stmt_seq
+    -kOd {
+    Seq(beforeAll, While(condition, Seq(body, afterAll)))
+  }
+);
+-- DELIMITER --
+import Parser;
+import Lexer;
+import Fun;
+import Ostap;
+
+var stmt = memo $ eta syntax (
+  kSkip { Skip }                                       |
+  name=lident -s[":="] value=exp { Assn(name, value) } |
+  -kIf thenStmt -kFi                                   |
+  -kWhile condition=exp -kDo body=stmt_seq -kOd {
+    While(condition, body)
+  }                                                    |
+  -kDo body=stmt_seq -kWhile condition=exp -kOd {
+    DoWhile(body, condition)
+  }                                                    |
+  -kFor beforeAll=stmt_seq -s[","]
+    condition=exp -s[","]
+    afterAll=stmt_seq -kDo
+    body=stmt_seq
+    -kOd {
+    Seq(beforeAll, While(condition, Seq(body, afterAll)))
+  }
+);

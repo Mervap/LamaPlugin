@@ -69,17 +69,23 @@ private val SPACE_AFTER = TokenSet.create(
 class LamaFormattingContext(private val settings: CodeStyleSettings) {
   private val spacingBuilder = createSpacingBuilder(settings)
 
-  private val childIndentAlignments: MutableMap<ASTNode, Alignment> = FactoryMap.create { Alignment.createAlignment() }
+  private val childIndentAlignments = alignmentMap(false)
+  private val childIndentShiftAlignments = alignmentMap(true)
+  private val caseBranchAlignment = alignmentMap(true)
 
   fun computeAlignment(node: ASTNode): Alignment? {
     val parent = node.treeParent ?: return null
     val nodePsi by lazy { node.psi }
     val parentElementType = parent.elementType
     val common = settings.getCommonSettings(LamaLanguage)
+    val custom = settings.lamaSettings()
 
     return when {
       common.ALIGN_MULTILINE_PARAMETERS && parentElementType in PATTERN_LIST_PARENTS && nodePsi is LamaPattern -> childIndentAlignments[parent]
       common.ALIGN_MULTILINE_PARAMETERS_IN_CALLS && parentElementType in EXPRESSION_SERIES_LIST_PARENTS && node.firstChildNode != null -> childIndentAlignments[parent]
+      custom.ALIGN_SYNTAX_OR && parentElementType == LAMA_SYNTAX_EXPRESSION && node.elementType == LAMA_CASE_OR -> childIndentShiftAlignments[parent]
+      custom.ALIGN_CASE_ARROW && parentElementType == LAMA_CASE_BRANCH && node.elementType == LAMA_ARROW -> childIndentShiftAlignments[parent.treeParent]
+      custom.ALIGN_CASE_BRANCH && parentElementType == LAMA_CASE_BRANCH && nodePsi is LamaPattern -> caseBranchAlignment[parent.treeParent]
       else -> null
     }
   }
@@ -113,7 +119,7 @@ class LamaFormattingContext(private val settings: CodeStyleSettings) {
     val parent = psi.parent
     return when {
       psi is LamaFile || parent is LamaFile -> Indent.getNoneIndent()
-      psi is LamaScope || psi is LamaFunctionBody -> Indent.getNormalIndent()
+      psi is LamaScope || psi is LamaFunctionBody || psi is LamaSyntaxSeqBody -> Indent.getNormalIndent()
       psi is LamaForStatement || psi is LamaDoStatement || psi is LamaWhileStatement -> Indent.getNormalIndent()
       psi is LamaIfStatement || psi is LamaCaseStatement-> Indent.getNormalIndent()
       psi is LamaCaseBranch || psi is LamaIfBranch -> Indent.getNormalIndent()
@@ -154,6 +160,7 @@ class LamaFormattingContext(private val settings: CodeStyleSettings) {
       parent is LamaForStatement && (psi is LamaExpression || parent.beforeAll == psi) -> Indent.getContinuationIndent()
       psi is LamaScope -> Indent.getNormalIndent()
       psi is LamaVariableDefinition || parent is LamaVariableDefinition -> Indent.getContinuationIndent()
+      parent is LamaSyntaxSeq -> Indent.getContinuationWithoutFirstIndent()
       parent is LamaParameterList -> Indent.getContinuationWithoutFirstIndent()
       parent is LamaArrayPattern || parent is LamaListPattern -> Indent.getContinuationWithoutFirstIndent()
       parent is LamaListExpression || parent is LamaArgumentList -> Indent.getContinuationWithoutFirstIndent()
@@ -174,7 +181,7 @@ private fun createSpacingBuilder(settings: CodeStyleSettings): SpacingBuilder {
     .spacing(1, Int.MAX_VALUE, 0, true, common.KEEP_BLANK_LINES_IN_CODE)
 
     // Binary operators
-    .around(LAMA_EQ).spaceIf(common.SPACE_AROUND_ASSIGNMENT_OPERATORS)
+    .aroundInside(LAMA_EQ, LAMA_VARIABLE_DEFINITION).spaceIf(common.SPACE_AROUND_ASSIGNMENT_OPERATORS)
     .around(LAMA_ASSIGNMENT_OPERATOR).spaceIf(common.SPACE_AROUND_ASSIGNMENT_OPERATORS)
     .around(LAMA_COMPARE_OPERATOR).spaceIf(common.SPACE_AROUND_RELATIONAL_OPERATORS)
     .around(LAMA_PLUS_MINUS_OPERATOR).spaceIf(common.SPACE_AROUND_ADDITIVE_OPERATORS)
@@ -185,6 +192,15 @@ private fun createSpacingBuilder(settings: CodeStyleSettings): SpacingBuilder {
     .around(LAMA_INFIX_OPERATOR).spaceIf(custom.SPACE_AROUND_INFIX_OPERATOR)
     .around(LAMA_LIST_CONS_OPERATOR).spaceIf(custom.SPACE_AROUND_LIST_CONS_OPERATOR)
     .around(LAMA_DOT_OPERATOR).spaceIf(custom.SPACE_AROUND_DOT_OPERATOR)
+
+    // Syntax
+    .aroundInside(LAMA_EQ, LAMA_SYNTAX_BINDING).spaceIf(custom.SPACE_AROUND_BINDING_EQ)
+    .between(LAMA_SYNTAX_BINDING, LAMA_SYNTAX_BINDING).spaces(1)
+    .betweenInside(LAMA_SYNTAX_BINDING, LAMA_SYNTAX_SEQ_BODY, LAMA_SYNTAX_SEQ).spaces(1)
+    .betweenInside(LAMA_SYNTAX_SEQ, LAMA_CASE_OR, LAMA_SYNTAX_EXPRESSION).spaces(1)
+
+    // Pattern
+    .aroundInside(LAMA_LIST_CONS, LAMA_PATTERN).spaces(1)
 
     // Parentheses group
     .betweenInside(LAMA_LPAR, LAMA_RPAR, LAMA_ARGUMENT_LIST).spaceIf(common.SPACE_WITHIN_EMPTY_METHOD_CALL_PARENTHESES)
@@ -229,6 +245,10 @@ private fun createSpacingBuilder(settings: CodeStyleSettings): SpacingBuilder {
     // Other
     .around(LAMA_ARROW).spaces(1)
     .after(SPACE_AFTER).spaces(1)
+}
+
+private fun alignmentMap(allowBackwardShift: Boolean = false): Map<ASTNode, Alignment> {
+  return FactoryMap.create { Alignment.createAlignment(allowBackwardShift) }
 }
 
 private fun getNoneIndent(relativeToDirectParent: Boolean): Indent {

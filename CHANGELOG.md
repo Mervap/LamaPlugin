@@ -5,9 +5,11 @@
 ## [Unreleased]
 ### Added
 - Exception hyperlink with navigation
+- Alignment options for case/syntax branches
 
 ### Fixed
 - Improve syntax expressions support
+- Improve syntax formatter support
 
 ## [0.2.0]
 ### Added

@@ -1360,15 +1360,15 @@ public class LamaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // "{" expression "}"
-  static boolean syntax_seq_body(PsiBuilder b, int l) {
+  // "{" function_body_scope "}"
+  public static boolean syntax_seq_body(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "syntax_seq_body")) return false;
     if (!nextTokenIs(b, LAMA_LBRACE)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
+    Marker m = enter_section_(b, l, _NONE_, LAMA_SYNTAX_SEQ_BODY, null);
     r = consumeToken(b, LAMA_LBRACE);
     p = r; // pin = 1
-    r = r && report_error_(b, expression(b, l + 1, -1));
+    r = r && report_error_(b, function_body_scope(b, l + 1));
     r = p && consumeToken(b, LAMA_RBRACE) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;

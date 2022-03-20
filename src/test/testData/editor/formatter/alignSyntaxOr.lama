@@ -1,0 +1,13 @@
+syntax (
+  basic |
+  -kLol token["kek"] -kCheburek |
+  -z -z z z z |
+  common
+)
+-- DELIMITER --
+syntax (
+  basic                         |
+  -kLol token["kek"] -kCheburek |
+  -z -z z z z                   |
+  common
+)

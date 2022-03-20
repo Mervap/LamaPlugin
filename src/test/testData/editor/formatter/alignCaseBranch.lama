@@ -1,0 +1,17 @@
+case i of
+  READ    -> "READ"
+  | WRITE -> "WRITE"
+esac;
+
+case i of
+  READ -> "READ"
+esac
+-- DELIMITER --
+case i of
+    READ  -> "READ"
+  | WRITE -> "WRITE"
+esac;
+
+case i of
+  READ -> "READ"
+esac

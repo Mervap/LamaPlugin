@@ -1,0 +1,7 @@
+syntax (
+  hello=token["hello"] world=token["world"]
+)
+-- DELIMITER --
+syntax (
+  hello = token["hello"] world = token["world"]
+)

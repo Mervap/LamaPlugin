@@ -5,12 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface LamaSyntaxSeq extends LamaPsiElement {
-
-  @NotNull
-  List<LamaSyntaxBinding> getSyntaxBindingList();
+public interface LamaSyntaxSeqBody extends LamaPsiElement {
 
   @Nullable
-  LamaSyntaxSeqBody getSyntaxSeqBody();
+  LamaScope getScope();
 
 }

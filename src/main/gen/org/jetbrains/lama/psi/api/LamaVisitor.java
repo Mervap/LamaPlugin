@@ -236,6 +236,10 @@ public class LamaVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitSyntaxSeqBody(@NotNull LamaSyntaxSeqBody o) {
+    visitPsiElement(o);
+  }
+
   public void visitVariableDefinition(@NotNull LamaVariableDefinition o) {
     visitDefinition(o);
   }

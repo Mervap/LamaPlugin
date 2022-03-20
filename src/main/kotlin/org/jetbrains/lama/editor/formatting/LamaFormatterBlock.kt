@@ -5,6 +5,8 @@ import com.intellij.lang.ASTNode
 import com.intellij.lang.Language
 import com.intellij.psi.formatter.FormatterUtil.isWhitespaceOrEmpty
 import com.intellij.psi.formatter.common.AbstractBlock
+import org.jetbrains.lama.parser.LamaElementTypes
+import org.jetbrains.lama.parser.LamaElementTypes.LAMA_CASE_BRANCH
 import org.jetbrains.lama.psi.LamaLanguage
 
 class LamaFormatterBlock(private val context: LamaFormattingContext, node: ASTNode) :
@@ -24,7 +26,8 @@ class LamaFormatterBlock(private val context: LamaFormattingContext, node: ASTNo
 
   override fun getChildAttributes(newChildIndex: Int): ChildAttributes {
     val indent = context.computeNewChildIndent(node, subBlocks.size == newChildIndex)
-    return ChildAttributes(indent, getFirstChildAlignment())
+    val alignment = if (node.elementType == LAMA_CASE_BRANCH) null else getFirstChildAlignment()
+    return ChildAttributes(indent, alignment)
   }
 
   override fun isIncomplete(): Boolean {

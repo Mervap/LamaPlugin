@@ -192,7 +192,7 @@ lazy_expression  ::= lazy  expression   { pin=1 }
 syntax_expression   ::= syntax "(" syntax_seqs ")"   { pin=1 }
 private syntax_seqs ::= syntax_seq ("|" syntax_seq)* { pin(".*")=1 }
 syntax_seq ::= syntax_binding+ [ syntax_seq_body ]   { pin=1 }
-private syntax_seq_body ::= "{" expression "}"       { pin=1 }
+syntax_seq_body ::= "{" function_body_scope "}"      { pin=1; methods=[ body="syntax_seq_expression" ] }
 syntax_binding ::= [ "-" ] [ pattern "=" ] syntax_primary ("*" | "+" | "?")*  { pin=3 }
 
 fake syntax_primary_expression ::= {}

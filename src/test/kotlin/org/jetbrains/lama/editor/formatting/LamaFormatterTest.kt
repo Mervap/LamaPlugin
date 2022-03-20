@@ -27,6 +27,7 @@ class LamaFormatterTest : LamaBaseTest() {
   @Test fun testSpaceAroundDot() = doCustomOptionTest(LamaSettings::SPACE_AROUND_DOT_OPERATOR)
   @Test fun testSpaceAroundListCons() = doCustomOptionTest(LamaSettings::SPACE_AROUND_LIST_CONS_OPERATOR)
   @Test fun testSpaceAroundOr() = doCustomOptionTest(LamaSettings::SPACE_AROUND_DISJUNCTION_OPERATORS)
+  @Test fun testSpaceAroundSyntaxEq() = doCustomOptionTest(LamaSettings::SPACE_AROUND_BINDING_EQ)
 
   @Test fun testSpaceWithinArgumentList() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_METHOD_CALL_PARENTHESES)
   @Test fun testSpaceWithinBraces() = doCommonOptionTest(CommonSettings::SPACE_WITHIN_BRACES)
@@ -42,7 +43,12 @@ class LamaFormatterTest : LamaBaseTest() {
 
   @Test fun testSpaceAfterComma() = doCommonOptionTest(CommonSettings::SPACE_AFTER_COMMA)
 
+  @Test fun testAlignSyntaxOr() = doCustomOptionTest(LamaSettings::ALIGN_SYNTAX_OR)
+  @Test fun testAlignCaseArrow() = doCustomOptionTest(LamaSettings::ALIGN_CASE_ARROW)
+  @Test fun testAlignCaseBranch() = doCustomOptionTest(LamaSettings::ALIGN_CASE_BRANCH)
+
   @Test fun testScopes() = doTest()
+  @Test fun testSyntax() = doTest()
 
   private fun doCommonOptionTest(option: KMutableProperty1<CommonSettings, Boolean>) {
     return doOptionTest { option.set(getCommonSettings(LamaLanguage), it) }

@@ -68,6 +68,13 @@ class LamaCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() {
         val customizableOptions = CodeStyleSettingsCustomizableOptions.getInstance()
         consumer.showCustomOption(
           LamaCodeStyleSettings::class.java,
+          LamaCodeStyleSettings::SPACE_AROUND_BINDING_EQ.name,
+          LamaBundle.message("code.style.binding.eq"),
+          customizableOptions.SPACES_AROUND_OPERATORS
+        )
+
+        consumer.showCustomOption(
+          LamaCodeStyleSettings::class.java,
           LamaCodeStyleSettings::SPACE_AROUND_DISJUNCTION_OPERATORS.name,
           LamaBundle.message("code.style.disjunction.operator"),
           customizableOptions.SPACES_AROUND_OPERATORS
@@ -107,7 +114,25 @@ class LamaCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() {
       SettingsType.WRAPPING_AND_BRACES_SETTINGS -> {
         consumer.showStandardOptions(
           Common::ALIGN_MULTILINE_PARAMETERS.name,
-          Common::ALIGN_MULTILINE_PARAMETERS_IN_CALLS.name
+          Common::ALIGN_MULTILINE_PARAMETERS_IN_CALLS.name,
+          LamaCodeStyleSettings::ALIGN_SYNTAX_OR.name,
+          LamaCodeStyleSettings::ALIGN_CASE_ARROW.name,
+          LamaCodeStyleSettings::ALIGN_CASE_BRANCH.name,
+        )
+        consumer.showCustomOption(
+          LamaCodeStyleSettings::class.java,
+          LamaCodeStyleSettings::ALIGN_SYNTAX_OR.name,
+          LamaBundle.message("code.style.align.syntax.or"), null
+        )
+        consumer.showCustomOption(
+          LamaCodeStyleSettings::class.java,
+          LamaCodeStyleSettings::ALIGN_CASE_ARROW.name,
+          LamaBundle.message("code.style.align.case.arrow"), null
+        )
+        consumer.showCustomOption(
+          LamaCodeStyleSettings::class.java,
+          LamaCodeStyleSettings::ALIGN_CASE_BRANCH.name,
+          LamaBundle.message("code.style.align.case.branch"), null
         )
       }
       else -> {} // do nothing

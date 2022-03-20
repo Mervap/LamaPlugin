@@ -61,6 +61,7 @@ public interface LamaElementTypes {
   IElementType LAMA_SYNTAX_PRIMARY_EXPRESSION_FROM = new LamaElementType("LAMA_SYNTAX_PRIMARY_EXPRESSION_FROM");
   IElementType LAMA_SYNTAX_PRIMARY_PARENTHESIZED = new LamaElementType("LAMA_SYNTAX_PRIMARY_PARENTHESIZED");
   IElementType LAMA_SYNTAX_SEQ = new LamaElementType("LAMA_SYNTAX_SEQ");
+  IElementType LAMA_SYNTAX_SEQ_BODY = new LamaElementType("LAMA_SYNTAX_SEQ_BODY");
   IElementType LAMA_S_OR_AT_PATTERN = new LamaElementType("LAMA_S_OR_AT_PATTERN");
   IElementType LAMA_S_OR_CALL_EXPRESSION = new LamaElementType("LAMA_S_OR_CALL_EXPRESSION");
   IElementType LAMA_VARIABLE_DEFINITION = LamaElementTypeFactory.getElementTypeByName("LAMA_VARIABLE_DEFINITION");
@@ -292,6 +293,9 @@ public interface LamaElementTypes {
       }
       else if (type == LAMA_SYNTAX_SEQ) {
         return new LamaSyntaxSeqImpl(node);
+      }
+      else if (type == LAMA_SYNTAX_SEQ_BODY) {
+        return new LamaSyntaxSeqBodyImpl(node);
       }
       else if (type == LAMA_S_OR_AT_PATTERN) {
         return new LamaSOrAtPatternImpl(node);
