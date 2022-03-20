@@ -3,9 +3,12 @@
 # LamaPlugin Changelog
 
 ## [Unreleased]
+
+## [0.2.1]
 ### Added
 - Exception hyperlink with navigation
 - Alignment options for case/syntax branches
+
 
 ### Fixed
 - Improve syntax expressions support
@@ -21,6 +24,7 @@
 - Unresolved inspection with import quick fix
 - Improve dot functions support
 
+
 ### Fixed
 - Go To Declaration/Find Usages for operators/patterns
 - Documentation comment highlight
@@ -33,6 +37,7 @@
 ## [0.1.2]
 ### Added
 - Quote typing helper
+
 
 
 ### Fixed
