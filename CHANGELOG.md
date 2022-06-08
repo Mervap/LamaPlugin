@@ -3,6 +3,10 @@
 # LamaPlugin Changelog
 
 ## [Unreleased]
+### Fixed 
+- Unresolved reference problems in syntax expression & repeat statements
+- Prioritize dot on list constructor operator
+- Support 2022.2 EAP
 
 ## [0.2.1]
 ### Added

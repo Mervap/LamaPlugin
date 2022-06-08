@@ -7,6 +7,8 @@
 
 <!-- Plugin description -->
 Plugin for [Lama](https://github.com/JetBrains-Research/Lama) language
+
+It provides highlighting, powerful completion, renaming, contains a few simple inspections and much more!
 <!-- Plugin description end -->
 
 To get full list of supported features check [FEATURES.md](docs/FEATURES.md)
