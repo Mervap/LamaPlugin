@@ -3,7 +3,9 @@
 # LamaPlugin Changelog
 
 ## [Unreleased]
-### Fixed 
+
+## [0.2.2]
+### Fixed
 - Unresolved reference problems in syntax expression & repeat statements
 - Prioritize dot on list constructor operator
 - Support 2022.2 EAP
@@ -12,6 +14,7 @@
 ### Added
 - Exception hyperlink with navigation
 - Alignment options for case/syntax branches
+
 
 
 ### Fixed
@@ -29,6 +32,7 @@
 - Improve dot functions support
 
 
+
 ### Fixed
 - Go To Declaration/Find Usages for operators/patterns
 - Documentation comment highlight
@@ -41,6 +45,7 @@
 ## [0.1.2]
 ### Added
 - Quote typing helper
+
 
 
 
