@@ -139,11 +139,11 @@ private strict_expression_batch ::= expression        (";"  expression)*        
 expression_series               ::= expression        (";"? expression)*
 
 expression ::=
-    if_statement    | while_statement | for_statement   | do_statement       | case_statement | function_impl_expression | assignment_expression |
-    dot_expression  | eta_expression  | lazy_expression | syntax_expression  | infix_operator_expression |
-    skip_expression | or_expression   | and_expression  | compare_expression | plus_minus_expression | mul_div_mod_expression |
-    parenthesized_expression | array_expression  | list_expression | subscription_expression | list_cons_expression |
-    infix_expression | s_expression   | call_expression | primitive_expression { methods=[ getReference ] }
+    if_statement     | while_statement | for_statement      | do_statement | case_statement | function_impl_expression | assignment_expression |
+    eta_expression   | lazy_expression | syntax_expression  | infix_operator_expression     | skip_expression | or_expression |
+    and_expression   | compare_expression | plus_minus_expression | mul_div_mod_expression  | parenthesized_expression |
+    array_expression | list_expression | subscription_expression  | list_cons_expression    | dot_expression |
+    infix_expression | s_expression    | call_expression | primitive_expression { methods=[ getReference ] }
 
 private primitive_expression ::= numeric_literal | string_literal | char_literal | boolean_literal | identifier_expression
 

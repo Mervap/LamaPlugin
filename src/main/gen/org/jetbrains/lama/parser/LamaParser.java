@@ -1605,22 +1605,22 @@ public class LamaParser implements PsiParser, LightPsiParser {
   // 4: ATOM(case_statement)
   // 5: ATOM(function_impl_expression)
   // 6: BINARY(assignment_expression)
-  // 7: BINARY(dot_expression)
-  // 8: ATOM(eta_expression)
-  // 9: ATOM(lazy_expression)
-  // 10: ATOM(syntax_expression)
-  // 11: BINARY(infix_operator_expression)
-  // 12: ATOM(skip_expression)
-  // 13: BINARY(or_expression)
-  // 14: BINARY(and_expression)
-  // 15: BINARY(compare_expression)
-  // 16: BINARY(plus_minus_expression)
-  // 17: BINARY(mul_div_mod_expression)
-  // 18: ATOM(parenthesized_expression)
-  // 19: ATOM(array_expression)
-  // 20: ATOM(list_expression)
-  // 21: POSTFIX(subscription_expression)
-  // 22: BINARY(list_cons_expression)
+  // 7: ATOM(eta_expression)
+  // 8: ATOM(lazy_expression)
+  // 9: ATOM(syntax_expression)
+  // 10: BINARY(infix_operator_expression)
+  // 11: ATOM(skip_expression)
+  // 12: BINARY(or_expression)
+  // 13: BINARY(and_expression)
+  // 14: BINARY(compare_expression)
+  // 15: BINARY(plus_minus_expression)
+  // 16: BINARY(mul_div_mod_expression)
+  // 17: ATOM(parenthesized_expression)
+  // 18: ATOM(array_expression)
+  // 19: ATOM(list_expression)
+  // 20: POSTFIX(subscription_expression)
+  // 21: BINARY(list_cons_expression)
+  // 22: BINARY(dot_expression)
   // 23: ATOM(infix_expression)
   // 24: POSTFIX(s_expression)
   // 25: POSTFIX(call_expression)
@@ -1665,40 +1665,40 @@ public class LamaParser implements PsiParser, LightPsiParser {
         r = expression(b, l, 5);
         exit_section_(b, l, m, LAMA_ASSIGNMENT_EXPRESSION, r, true, null);
       }
-      else if (g < 7 && dot_operator(b, l + 1)) {
-        r = expression(b, l, 7);
+      else if (g < 10 && infix_operator(b, l + 1)) {
+        r = expression(b, l, 10);
         exit_section_(b, l, m, LAMA_OPERATOR_EXPRESSION, r, true, null);
       }
-      else if (g < 11 && infix_operator(b, l + 1)) {
-        r = expression(b, l, 11);
+      else if (g < 12 && or_operator(b, l + 1)) {
+        r = expression(b, l, 12);
         exit_section_(b, l, m, LAMA_OPERATOR_EXPRESSION, r, true, null);
       }
-      else if (g < 13 && or_operator(b, l + 1)) {
+      else if (g < 13 && and_operator(b, l + 1)) {
         r = expression(b, l, 13);
         exit_section_(b, l, m, LAMA_OPERATOR_EXPRESSION, r, true, null);
       }
-      else if (g < 14 && and_operator(b, l + 1)) {
+      else if (g < 14 && compare_operator(b, l + 1)) {
         r = expression(b, l, 14);
         exit_section_(b, l, m, LAMA_OPERATOR_EXPRESSION, r, true, null);
       }
-      else if (g < 15 && compare_operator(b, l + 1)) {
+      else if (g < 15 && plus_minus_operator(b, l + 1)) {
         r = expression(b, l, 15);
         exit_section_(b, l, m, LAMA_OPERATOR_EXPRESSION, r, true, null);
       }
-      else if (g < 16 && plus_minus_operator(b, l + 1)) {
+      else if (g < 16 && mul_div_mod_operator(b, l + 1)) {
         r = expression(b, l, 16);
         exit_section_(b, l, m, LAMA_OPERATOR_EXPRESSION, r, true, null);
       }
-      else if (g < 17 && mul_div_mod_operator(b, l + 1)) {
-        r = expression(b, l, 17);
-        exit_section_(b, l, m, LAMA_OPERATOR_EXPRESSION, r, true, null);
-      }
-      else if (g < 21 && subscription_expression_0(b, l + 1)) {
+      else if (g < 20 && subscription_expression_0(b, l + 1)) {
         r = true;
         exit_section_(b, l, m, LAMA_SUBSCRIPTION_EXPRESSION, r, true, null);
       }
-      else if (g < 22 && list_cons_operator(b, l + 1)) {
-        r = expression(b, l, 21);
+      else if (g < 21 && list_cons_operator(b, l + 1)) {
+        r = expression(b, l, 20);
+        exit_section_(b, l, m, LAMA_OPERATOR_EXPRESSION, r, true, null);
+      }
+      else if (g < 22 && dot_operator(b, l + 1)) {
+        r = expression(b, l, 22);
         exit_section_(b, l, m, LAMA_OPERATOR_EXPRESSION, r, true, null);
       }
       else if (g < 24 && leftMarkerIs(b, LAMA_IDENTIFIER_EXPRESSION) && s_expression_0(b, l + 1)) {

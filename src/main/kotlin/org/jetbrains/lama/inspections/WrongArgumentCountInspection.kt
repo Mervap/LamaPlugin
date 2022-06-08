@@ -33,7 +33,6 @@ class WrongArgumentCountInspection : LamaInspection() {
         LamaBundle.message("inspection.wrong.argument.count.description", resolve.name, parametersCount, argumentsCnt),
         ProblemHighlightType.WEAK_WARNING
       )
-      // TODO limactl copy
     }
   }
 }
