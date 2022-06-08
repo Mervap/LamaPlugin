@@ -79,6 +79,27 @@ class LamaIdentifierCompletionTest : LamaBaseTest() {
   }
 
   @Test
+  fun testRepeat() {
+    val text = """
+      var xxxx_a, xxxx_b;
+      
+      xxxx<caret1>;
+
+      do
+        var xxxx_c;
+        s := s + xxxx<caret2>
+      while xxxx<caret3> != 0 od;
+      
+      xxxx<caret4>
+    """.trimIndent()
+
+    doTest(text.preserveSingleCaret(1), "xxxx_a", "xxxx_b")
+    doTest(text.preserveSingleCaret(2), "xxxx_a", "xxxx_b", "xxxx_c")
+    doTest(text.preserveSingleCaret(3), "xxxx_a", "xxxx_b", "xxxx_c")
+    doTest(text.preserveSingleCaret(4), "xxxx_a", "xxxx_b")
+  }
+
+  @Test
   fun testParameters() {
     val text = """
       var xxxx_a = 3;

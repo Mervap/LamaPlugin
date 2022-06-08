@@ -104,6 +104,18 @@ class LamaLocalResolveTest: LamaBaseTest() {
     """.trimIndent(), isParameter = true)
   }
 
+  @Test
+  fun testSyntaxPrimaryParenthesized() {
+    doTest("xxx", """
+      syntax (xxx=lident e=(basic) {
+        case e of
+            None     -> returnST ${'$'} [xx<caret>x, None]
+          | Some (e) -> e(Val) => fun (e) { [xxx, Some(e)] }
+        esac
+      });
+    """.trimIndent())
+  }
+
   private fun doTest(targetText: String?, text: String, isParameter: Boolean = false) {
     myFixture.configureByText("lama.lama", text)
     val results = resolve()

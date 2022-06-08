@@ -1,5 +1,6 @@
 package org.jetbrains.lama.controlFlow
 
+import com.intellij.psi.PsiInvalidElementAccessException
 import com.intellij.refactoring.suggested.startOffset
 import org.jetbrains.lama.LamaBaseTest
 import org.jetbrains.lama.psi.LamaRecursiveVisitor
@@ -65,7 +66,12 @@ class RControlFlowTest : LamaBaseTest() {
         holder.controlFlow.instructions.forEach {
           append(it)
           append(" (")
-          append(it.element?.text?.firstLine() ?: "<no_text>")
+          try {
+            append(it.element?.text?.firstLine() ?: "<no_text>")
+          }
+          catch (e : PsiInvalidElementAccessException) {
+            append("<Fake element>")
+          }
           appendLine(")")
         }
         appendLine()

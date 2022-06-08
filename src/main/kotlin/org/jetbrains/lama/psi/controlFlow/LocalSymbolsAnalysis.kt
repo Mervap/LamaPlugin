@@ -3,9 +3,12 @@
 package org.jetbrains.lama.psi.controlFlow
 
 import com.intellij.codeInsight.controlflow.Instruction
+import com.intellij.diagnostic.AttachmentFactory
+import com.intellij.openapi.diagnostic.Attachment
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.util.containers.Stack
 import com.intellij.util.containers.orNull
 import com.jetbrains.rd.util.first
 import org.jetbrains.lama.psi.LamaPsiUtil.controlFlowContainer
@@ -65,18 +68,25 @@ private class Analyzer(
   private val closure = mutableSetOf<SymbolInfo<*>>()
   private val result = mutableMapOf<Instruction, LocalSymbolInfos>()
   private val definitionsToAnalyze = mutableListOf<LamaControlFlowHolder>()
+  private val destructuringStack = Stack<LocalSymbolInfos>()
 
   fun process(initialInfo: LocalSymbolInfos): LocalAnalysisResult {
     ProgressManager.checkCanceled()
-    val analyzeDefinionMarker = controlFlowHolder.children.firstOrNull { it is LamaExpression }
+    val analyzeDefinitionMarker = controlFlowHolder.children.firstOrNull { it is LamaExpression }
     val instructions = controlFlow.instructions
     result[instructions.first()] = initialInfo
 
     var summaryInfo = initialInfo
     for (instruction in instructions.drop(1)) {
       ProgressManager.checkCanceled()
+      if (instruction.element == DESTRUCT_ELEMENT) {
+        destructuringStack.push(summaryInfo)
+        result[instruction] = summaryInfo
+        continue
+      }
+
       val info = joinPredInfos(instruction)
-      if (instruction.element == analyzeDefinionMarker) {
+      if (instruction.element == analyzeDefinitionMarker) {
         analyzeInnerControlFlowHolder(info)
       }
       summaryInfo = info.updateWith(instruction)
@@ -134,7 +144,10 @@ private class Analyzer(
       }
       is LamaControlFlowHolder -> {
         val parent = element.parent
-        if (parent is LamaForStatement && parent.beforeAll == element) {
+        if (
+          parent is LamaForStatement && parent.beforeAll == element ||
+          parent is LamaDoStatement && parent.body == element
+        ) {
           val analysisResult = analyzeInnerControlFlowHolder(element)
           return analysisResult.summaryInfo
         }
@@ -197,15 +210,18 @@ private class Analyzer(
   private fun joinPredInfos(instruction: Instruction): LocalSymbolInfos {
     val element = instruction.element
     if (isDestructuringElement(element)) {
-      var currentElement = element
-      while (currentElement != null && currentElement !is LamaFile) {
-        val prevSibling = PsiTreeUtil.getPrevSiblingOfType(currentElement, LamaPsiElement::class.java)
-        if (prevSibling != null) {
-          return result[controlFlow.getInstructionByElement(prevSibling)] ?: result.first().value
+      if (destructuringStack.isEmpty()) {
+        val attachment = element.containingFile?.virtualFile?.let { AttachmentFactory.createAttachment(it) }
+        val message = "No found destructuring marker for $instruction"
+        if (attachment == null) {
+          logger.error(message)
         }
-        currentElement = currentElement.parent
+        else {
+          logger.error(message, attachment)
+        }
+        return result.first().value
       }
-      return LocalSymbolInfos()
+      return destructuringStack.pop()
     }
     return joinPredInfos(
       instruction.allPred()
@@ -218,6 +234,7 @@ private class Analyzer(
     )
   }
 
+  @OptIn(ExperimentalContracts::class)
   private fun isDestructuringElement(element: PsiElement?): Boolean {
     contract {
       returns(true) implies (element != null)
@@ -232,6 +249,14 @@ private class Analyzer(
         // for var i = 0, i < 10, i := 1 do
         //   -- here i is visible
         // od
+        // -- but here not
+        true
+      }
+      is LamaDoStatement -> {
+        // do
+        //   var n = read();
+        // while n != 0 -- here n is visible
+        // od;
         // -- but here not
         true
       }
@@ -257,5 +282,9 @@ private class Analyzer(
       }
     }
     return LocalSymbolInfos(merged.forked())
+  }
+
+  companion object {
+    private val logger = logger<LamaControlFlowHolder>()
   }
 }

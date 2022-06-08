@@ -3,8 +3,7 @@ package org.jetbrains.lama.psi.controlFlow
 import com.intellij.codeInsight.controlflow.ControlFlow
 import com.intellij.codeInsight.controlflow.ControlFlowBuilder
 import com.intellij.codeInsight.controlflow.Instruction
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiNamedElement
+import com.intellij.psi.util.PsiUtilCore
 import org.jetbrains.lama.psi.LamaRecursiveVisitor
 import org.jetbrains.lama.psi.api.*
 
@@ -12,6 +11,8 @@ internal fun buildControlFlow(controlFlowHolder: LamaControlFlowHolder): LamaCon
   val builder = LamaControlFlowBuilder()
   return LamaControlFlow(builder.build(controlFlowHolder).instructions)
 }
+
+internal val DESTRUCT_ELEMENT = PsiUtilCore.NULL_PSI_ELEMENT
 
 private class LamaControlFlowBuilder : LamaRecursiveVisitor() {
   private val builder = ControlFlowBuilder()
@@ -55,6 +56,7 @@ private class LamaControlFlowBuilder : LamaRecursiveVisitor() {
     case.expressionSeries?.accept(this)
     val branches = mutableListOf<Instruction>()
     for (branch in case.caseBranchList) {
+      startDestructuringNode()
       val pattern = branch.pattern.accept()
       branch.scope?.accept()
       val branchIns = startNode(branch)
@@ -68,7 +70,7 @@ private class LamaControlFlowBuilder : LamaRecursiveVisitor() {
   }
 
   override fun visitDoStatement(o: LamaDoStatement) {
-    val beforeBody = builder.prevInstruction
+    val beforeBody = startDestructuringNode()
     o.body.accept()
     val condition = o.condition.accept()
     startNode(o)
@@ -81,6 +83,7 @@ private class LamaControlFlowBuilder : LamaRecursiveVisitor() {
   }
 
   override fun visitForStatement(forSt: LamaForStatement) {
+    startDestructuringNode()
     val beforeAll = forSt.beforeAll.accept()
     val beforeEach = forSt.beforeEach.accept()
     val end = startNode(forSt)
@@ -183,21 +186,34 @@ private class LamaControlFlowBuilder : LamaRecursiveVisitor() {
     startNode(binding)
   }
 
-  override fun visitSyntaxExpression(syntax: LamaSyntaxExpression) {
+  private fun <T : LamaPsiElement> visitSeqBindingsWrapper(wrapper: T, getSyntaxSeqList: T.() -> List<LamaSyntaxSeq>) {
     val branches = mutableListOf<Instruction>()
-    for (branch in syntax.syntaxSeqList) {
+    for (branch in wrapper.getSyntaxSeqList()) {
+      startDestructuringNode()
       branch.syntaxBindingList.forEach { it.accept() }
       branch.syntaxSeqBody?.accept()
       branches.add(startNode(branch))
     }
-    val end = startNode(syntax)
+    val end = startNode(wrapper)
     for (branch in branches) {
       builder.addEdge(branch, end)
     }
   }
 
+  override fun visitSyntaxExpression(syntax: LamaSyntaxExpression) {
+    return visitSeqBindingsWrapper(syntax, LamaSyntaxExpression::getSyntaxSeqList)
+  }
+
+  override fun visitSyntaxPrimaryParenthesized(paren: LamaSyntaxPrimaryParenthesized) {
+    return visitSeqBindingsWrapper(paren, LamaSyntaxPrimaryParenthesized::getSyntaxSeqList)
+  }
+
   private fun startNode(o: LamaPsiElement): Instruction {
     return builder.startNode(o)
+  }
+
+  private fun startDestructuringNode(): Instruction {
+    return builder.startNode(DESTRUCT_ELEMENT)
   }
 
   private fun LamaPsiElement?.accept(): Instruction {
