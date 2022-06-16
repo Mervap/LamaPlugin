@@ -3,6 +3,7 @@
 # LamaPlugin Changelog
 
 ## [Unreleased]
+Only internal dependency fixes
 
 ## [0.2.2]
 ### Fixed
