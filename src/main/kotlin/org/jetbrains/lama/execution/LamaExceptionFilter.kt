@@ -1,7 +1,6 @@
 package org.jetbrains.lama.execution
 
 import com.intellij.execution.filters.*
-import com.intellij.grazie.utils.dropPostfix
 import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.text.StringUtil
@@ -27,7 +26,7 @@ class LamaExceptionFilter(private val project: Project) : Filter {
     }
 
     val (fileName, lineNumber, column) = matcher.group("ref").split(":")
-    val unitName = fileName.dropPostfix(".lama")
+    val unitName = fileName.dropLast(".lama".length)
     val file = LamaUnitsIndex.findUnitsByName(unitName, project).singleOrNull() ?: return null
     val info = OpenFileHyperlinkInfo(project, file, lineNumber.toInt() - 1, column.toInt())
 
