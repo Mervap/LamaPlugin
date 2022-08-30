@@ -8,6 +8,7 @@ import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.util.IncorrectOperationException
 import org.jetbrains.lama.psi.api.LamaPsiElement
 
+@Suppress("MemberVisibilityCanBePrivate")
 abstract class LamaReferenceBase<T : LamaPsiElement>(protected val psiElement: T) : PsiPolyVariantReference {
 
   @Throws(IncorrectOperationException::class)

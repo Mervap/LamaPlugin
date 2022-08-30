@@ -6,9 +6,11 @@ import com.intellij.codeInsight.controlflow.impl.ControlFlowImpl
 import com.intellij.psi.PsiElement
 import java.util.*
 
-class LamaControlFlow(instructions: Array<Instruction>): ControlFlowImpl(instructions) {
+class LamaControlFlow(instructions: Array<Instruction>) : ControlFlowImpl(instructions) {
   private val reachable = BitSet()
-  private val element2Instruction = instructions.mapNotNull { instruction -> instruction.element?.let { it to instruction } }.toMap()
+  private val element2Instruction = instructions.mapNotNull { instruction ->
+    instruction.element?.let { it to instruction }
+  }.toMap()
 
   init {
     ControlFlowUtil.process(this.instructions, 0) { instruction ->

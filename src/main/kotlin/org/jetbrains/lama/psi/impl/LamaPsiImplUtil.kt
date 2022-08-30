@@ -56,7 +56,8 @@ internal object LamaPsiImplUtil {
   fun getReference(identifier: LamaIdentifierExpression): LamaReferenceBase<*> {
     return if (identifier.isImportIdentifier()) {
       LamaUnitReference(identifier)
-    } else {
+    }
+    else {
       LamaIdentifierReference(identifier)
     }
   }
@@ -81,7 +82,7 @@ internal object LamaPsiImplUtil {
   @JvmStatic
   fun getLeftExpr(expr: LamaOperatorExpression): LamaExpression? {
     val expressions = PsiTreeUtil.getChildrenOfType(expr, LamaExpression::class.java)
-    return if (expressions == null || expressions.isEmpty()) null else expressions[0]
+    return if (expressions.isNullOrEmpty()) null else expressions[0]
   }
 
   @JvmStatic

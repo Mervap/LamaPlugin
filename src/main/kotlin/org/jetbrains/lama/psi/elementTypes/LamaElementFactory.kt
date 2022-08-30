@@ -4,11 +4,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiWhiteSpace
 import org.jetbrains.lama.psi.LamaLanguage
-import org.jetbrains.lama.psi.api.LamaFile
-import org.jetbrains.lama.psi.api.LamaIdentifierExpression
-import org.jetbrains.lama.psi.api.LamaPsiElement
-import org.jetbrains.lama.psi.api.LamaSOrCallExpression
-import org.jetbrains.lama.psi.api.LamaScope
+import org.jetbrains.lama.psi.api.*
 
 object LamaElementFactory {
   fun createLamaIdentifierFromText(project: Project, text: String): LamaIdentifierExpression {

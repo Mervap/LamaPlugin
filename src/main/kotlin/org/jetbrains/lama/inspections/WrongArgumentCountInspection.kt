@@ -6,7 +6,9 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
 import org.jetbrains.lama.messages.LamaBundle
 import org.jetbrains.lama.psi.LamaPsiUtil.isDotCall
-import org.jetbrains.lama.psi.api.*
+import org.jetbrains.lama.psi.api.LamaFunctionDefinition
+import org.jetbrains.lama.psi.api.LamaSOrCallExpression
+import org.jetbrains.lama.psi.api.LamaVisitor
 
 class WrongArgumentCountInspection : LamaInspection() {
   override fun getDisplayName() = LamaBundle.message("inspection.wrong.argument.count.name")

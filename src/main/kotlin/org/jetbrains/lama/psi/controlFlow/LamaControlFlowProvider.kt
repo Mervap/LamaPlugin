@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.lama.psi.api.LamaControlFlowHolder
 
-class LamaControlFlowProvider: ControlFlowProvider {
+class LamaControlFlowProvider : ControlFlowProvider {
   override fun getAdditionalInfo(instruction: Instruction): String? = null
 
   override fun getControlFlow(element: PsiElement): ControlFlow? {

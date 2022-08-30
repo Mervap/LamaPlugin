@@ -27,7 +27,6 @@ class LamaSettingsConfigurable : BoundSearchableConfigurable(
     LamacManager.compilerHome = compilerHomeInput
   }
 
-  @Suppress("UnstableApiUsage")
   override fun createPanel(): DialogPanel {
     return panel {
       row(LamaBundle.message("lama.settings.lamac.path.label")) {

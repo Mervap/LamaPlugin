@@ -5,7 +5,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.util.SystemInfo
 import org.jetbrains.lama.util.PathUtil.safePath
-import org.jetbrains.lama.util.ProjectRootUtil.invalidateProjectRoots
+import org.jetbrains.lama.util.invalidateProjectRoots
 import java.nio.file.Path
 
 object LamacManager {

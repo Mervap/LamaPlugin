@@ -4,7 +4,6 @@ package org.jetbrains.lama.psi.controlFlow
 
 import com.intellij.codeInsight.controlflow.Instruction
 import com.intellij.diagnostic.AttachmentFactory
-import com.intellij.openapi.diagnostic.Attachment
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.psi.PsiElement

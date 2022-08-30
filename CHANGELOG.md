@@ -4,6 +4,7 @@
 
 ## [Unreleased]
 Support 2022.3 EAP
+Fix inspection descriptions
 
 ## [0.2.3]
 Only internal dependency fixes

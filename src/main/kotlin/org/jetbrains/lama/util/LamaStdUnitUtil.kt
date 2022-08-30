@@ -17,6 +17,6 @@ object LamaStdUnitUtil {
     }
   }
 
-  val UNIT_NAME = "Std"
+  const val UNIT_NAME = "Std"
   val UNIT_NAME_WITH_EXT = "$UNIT_NAME.${LamaFileType.defaultExtension}"
 }

@@ -14,6 +14,7 @@ import org.jetbrains.lama.psi.controlFlow.buildControlFlow
 
 abstract class LamaControlFlowHolderImpl<T : StubElement<*>> : LamaBaseElementImpl<T>, LamaControlFlowHolder {
   constructor(node: ASTNode) : super(node)
+  @Suppress("UNCHECKED_CAST")
   constructor(stub: StubElement<*>, nodeType: IStubElementType<*, *>) : super(stub as T, nodeType)
 
   override val controlFlow: LamaControlFlow

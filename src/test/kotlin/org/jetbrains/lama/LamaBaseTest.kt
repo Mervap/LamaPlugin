@@ -3,20 +3,16 @@ package org.jetbrains.lama
 import com.intellij.codeInsight.lookup.Lookup
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.DataContext
-import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.vfs.VfsUtil
-import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElementResolveResult
 import com.intellij.psi.PsiPolyVariantReference
 import com.intellij.psi.ResolveResult
 import com.intellij.testFramework.UsefulTestCase
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.jetbrains.lama.compiler.LamacLocation
-import org.jetbrains.lama.util.LamaStdUnitUtil
-import org.jetbrains.lama.util.ProjectRootUtil.invalidateProjectRoots
+import org.jetbrains.lama.util.invalidateProjectRoots
 import kotlin.io.path.listDirectoryEntries
-import kotlin.io.path.name
 import kotlin.test.assertContains
 
 abstract class LamaBaseTest : BasePlatformTestCase() {

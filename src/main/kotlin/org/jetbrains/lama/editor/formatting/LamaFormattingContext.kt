@@ -121,7 +121,7 @@ class LamaFormattingContext(private val settings: CodeStyleSettings) {
       psi is LamaFile || parent is LamaFile -> Indent.getNoneIndent()
       psi is LamaScope || psi is LamaFunctionBody || psi is LamaSyntaxSeqBody -> Indent.getNormalIndent()
       psi is LamaForStatement || psi is LamaDoStatement || psi is LamaWhileStatement -> Indent.getNormalIndent()
-      psi is LamaIfStatement || psi is LamaCaseStatement-> Indent.getNormalIndent()
+      psi is LamaIfStatement || psi is LamaCaseStatement -> Indent.getNormalIndent()
       psi is LamaCaseBranch || psi is LamaIfBranch -> Indent.getNormalIndent()
       psi is LamaArgumentList -> Indent.getContinuationIndent()
       psi is LamaParameterList -> Indent.getContinuationIndent()
@@ -134,6 +134,7 @@ class LamaFormattingContext(private val settings: CodeStyleSettings) {
     }
   }
 
+  @Suppress("UNUSED_PARAMETER")
   fun computeWrap(node: ASTNode): Wrap {
     return Wrap.createWrap(WrapType.NONE, true)
   }

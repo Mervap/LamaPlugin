@@ -69,7 +69,7 @@ class RControlFlowTest : LamaBaseTest() {
           try {
             append(it.element?.text?.firstLine() ?: "<no_text>")
           }
-          catch (e : PsiInvalidElementAccessException) {
+          catch (e: PsiInvalidElementAccessException) {
             append("<Fake element>")
           }
           appendLine(")")

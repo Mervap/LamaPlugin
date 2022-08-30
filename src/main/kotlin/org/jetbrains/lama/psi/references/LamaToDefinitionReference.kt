@@ -43,7 +43,7 @@ class LamaOperatorReference(element: LamaOperator) :
   }
 }
 
-abstract class LamaToDefinitionReference<RefElem : LamaPsiElement, Def: LamaDefinition>(
+abstract class LamaToDefinitionReference<RefElem : LamaPsiElement, Def : LamaDefinition>(
   element: RefElem,
   private val nameIndex: LamaNameIndex<Def>,
 ) : LamaReferenceBase<RefElem>(element) {

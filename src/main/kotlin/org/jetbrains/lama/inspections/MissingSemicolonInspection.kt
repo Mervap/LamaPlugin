@@ -67,7 +67,7 @@ class MissingSemicolonInspection : LamaInspection() {
     private val MissingBetweenExpressionFix = MissingSemicolonQuickFix(false)
     private val MissingLastChildFix = MissingSemicolonQuickFix(true)
 
-    private class MissingSemicolonQuickFix(private val isPartOfPsi: Boolean): LocalQuickFix {
+    private class MissingSemicolonQuickFix(private val isPartOfPsi: Boolean) : LocalQuickFix {
       override fun getFamilyName() = LamaBundle.message("inspection.missing.semicolon.fix.name")
 
       override fun applyFix(project: Project, descriptor: ProblemDescriptor) {

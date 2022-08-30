@@ -33,6 +33,8 @@ data class LamaLookupElement(
 }
 
 open class LamaLookupElementFactory(private val isDotBefore: Boolean) {
+
+  @Suppress("unused")
   fun createGlobalVariableLookupElement(variable: LamaVariableDefinition): LookupElement {
     return createVariableLookupElement(variable, GLOBAL_GROUPING)
   }
@@ -45,6 +47,7 @@ open class LamaLookupElementFactory(private val isDotBefore: Boolean) {
     return createVariableLookupElement(name, null, LOCAL_GROUPING)
   }
 
+  @Suppress("unused")
   fun createGlobalFunctionLookupElement(function: LamaFunctionDefinition): LookupElement {
     return createFunctionLookupElement(function, GLOBAL_GROUPING)
   }
@@ -53,6 +56,7 @@ open class LamaLookupElementFactory(private val isDotBefore: Boolean) {
     return createFunctionLookupElement(function, LOCAL_GROUPING)
   }
 
+  @Suppress("unused")
   fun createGlobalInfixLookupElement(infix: LamaInfixOperatorDefinition): LookupElement {
     return createInfixLookupElement(infix, GLOBAL_GROUPING)
   }

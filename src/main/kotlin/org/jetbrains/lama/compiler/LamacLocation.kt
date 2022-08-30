@@ -12,19 +12,14 @@ import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.SystemInfo
 import com.intellij.util.SystemProperties
-import com.intellij.util.io.createDirectories
 import com.intellij.util.io.delete
 import com.intellij.util.io.exists
 import org.jetbrains.lama.messages.LamaBundle
-import org.jetbrains.lama.util.LamaStdUnitUtil
 import org.jetbrains.lama.util.LamaStdUnitUtil.addStdUnitStubToDirectory
 import org.jetbrains.lama.util.PathUtil.safePath
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.io.path.createTempDirectory
-import kotlin.io.path.notExists
 import kotlin.io.path.listDirectoryEntries
-import kotlin.io.path.name
 
 interface LamacLocation {
   val userHome: Path?

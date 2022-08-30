@@ -5,7 +5,6 @@ import com.intellij.lang.ASTNode
 import com.intellij.lang.Language
 import com.intellij.psi.formatter.FormatterUtil.isWhitespaceOrEmpty
 import com.intellij.psi.formatter.common.AbstractBlock
-import org.jetbrains.lama.parser.LamaElementTypes
 import org.jetbrains.lama.parser.LamaElementTypes.LAMA_CASE_BRANCH
 import org.jetbrains.lama.psi.LamaLanguage
 

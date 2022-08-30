@@ -1,14 +1,10 @@
 package org.jetbrains.lama.resolve
 
-import junit.framework.TestCase
 import org.jetbrains.lama.LamaBaseTest
-import org.jetbrains.lama.psi.LamaPsiUtil.isPatternIdentifier
-import org.jetbrains.lama.psi.api.LamaIdentifierExpression
-import org.jetbrains.lama.psi.api.LamaPattern
 import org.jetbrains.lama.psi.api.LamaSOrAtPattern
 import org.junit.Test
 
-class LamaLocalResolveTest: LamaBaseTest() {
+class LamaLocalResolveTest : LamaBaseTest() {
 
   @Test
   fun testLocalVar() {

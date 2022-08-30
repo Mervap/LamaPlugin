@@ -7,6 +7,7 @@ object LamaNamesValidator : NamesValidator {
   override fun isKeyword(name: String, project: Project?) = isKeyword(name)
   override fun isIdentifier(name: String, project: Project?) = isIdentifier(name)
 
+  @Suppress("MemberVisibilityCanBePrivate")
   fun isKeyword(name: String) = name in RESERVED_WORDS
 
   fun isIdentifier(name: String) = !isKeyword(name) && name matches IDENTIFIER_REGEX

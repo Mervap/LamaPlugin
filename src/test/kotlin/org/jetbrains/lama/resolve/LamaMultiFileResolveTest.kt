@@ -7,7 +7,6 @@ import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.lama.LamaMultiFileTest
 import org.jetbrains.lama.psi.LamaLanguage
 import org.jetbrains.lama.psi.api.LamaDefinition
-import org.jetbrains.lama.psi.api.LamaInfixOperatorDefinition
 import org.junit.Test
 
 class LamaMultiFileResolveTest : LamaMultiFileTest("resolve") {

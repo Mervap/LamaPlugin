@@ -109,11 +109,13 @@ private fun addCompletionFromIndices(
   isOperator: Boolean,
   factory: LamaLookupElementFactory,
 ) {
-  processElementsFromIndex(project,
+  processElementsFromIndex(
+    project,
     LamaSearchScope.importsScope(element),
     isOperator,
     IMPORTS_GROUPING,
-    factory) { it, _ ->
+    factory
+  ) { it, _ ->
     if (shownNames.add(it.lookupString)) result.consume(it)
   }
   processElementsFromIndex(project, LamaSearchScope.allScope(element), isOperator, GLOBAL_GROUPING, factory) { it, _ ->

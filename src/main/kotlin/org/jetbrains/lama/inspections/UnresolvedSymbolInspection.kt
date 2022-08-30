@@ -3,10 +3,8 @@ package org.jetbrains.lama.inspections
 import com.intellij.codeInspection.*
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiComment
-import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiWhiteSpace
-import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import org.jetbrains.lama.messages.LamaBundle
@@ -15,7 +13,10 @@ import org.jetbrains.lama.psi.LamaPsiUtil.importedUnits
 import org.jetbrains.lama.psi.LamaPsiUtil.isDefinitionIdentifier
 import org.jetbrains.lama.psi.LamaPsiUtil.isDefinitionOperator
 import org.jetbrains.lama.psi.LamaPsiUtil.unitName
-import org.jetbrains.lama.psi.api.*
+import org.jetbrains.lama.psi.api.LamaIdentifierExpression
+import org.jetbrains.lama.psi.api.LamaInfixOperator
+import org.jetbrains.lama.psi.api.LamaPsiElement
+import org.jetbrains.lama.psi.api.LamaVisitor
 import org.jetbrains.lama.psi.elementTypes.LamaElementFactory
 import org.jetbrains.lama.psi.references.LamaReferenceBase
 import org.jetbrains.lama.psi.references.LamaSearchScope
