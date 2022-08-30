@@ -3,6 +3,7 @@
 # LamaPlugin Changelog
 
 ## [Unreleased]
+Support 2022.3 EAP
 
 ## [0.2.3]
 Only internal dependency fixes
