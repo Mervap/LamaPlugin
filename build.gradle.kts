@@ -21,7 +21,7 @@ repositories {
 sourceSets["main"].java.srcDirs("src/main/gen")
 
 dependencies {
-  implementation("io.lacuna:bifurcan:0.2.0-alpha6")
+  implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
   testImplementation(kotlin("test"))
 }
 

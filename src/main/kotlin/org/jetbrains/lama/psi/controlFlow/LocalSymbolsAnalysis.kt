@@ -8,17 +8,17 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.psi.PsiElement
 import com.intellij.util.containers.Stack
-import com.intellij.util.containers.orNull
 import com.jetbrains.rd.util.first
+import kotlinx.collections.immutable.ImmutableCollection
+import kotlinx.collections.immutable.PersistentMap
+import kotlinx.collections.immutable.mutate
+import kotlinx.collections.immutable.persistentMapOf
 import org.jetbrains.lama.psi.LamaPsiUtil.controlFlowContainer
 import org.jetbrains.lama.psi.LamaPsiUtil.isDefinitionIdentifier
 import org.jetbrains.lama.psi.LamaPsiUtil.isDefinitionOperator
 import org.jetbrains.lama.psi.LamaPsiUtil.isNotDefinitionOperator
 import org.jetbrains.lama.psi.LamaPsiUtil.isNotIdentifierReference
 import org.jetbrains.lama.psi.api.*
-import org.jetbrains.lama.util.IPersistentList
-import org.jetbrains.lama.util.IPersistentMap
-import org.jetbrains.lama.util.PersistentMap
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
@@ -38,9 +38,9 @@ class IdentifierSymbolInfo(name: String, definition: LamaIdentifierExpression) :
 
 class OperatorSymbolInfo(name: String, definition: LamaOperator) : SymbolInfo<LamaOperator>(name, definition)
 
-class LocalSymbolInfos(private val symbols: IPersistentMap<String, SymbolInfo<*>> = PersistentMap.empty()) {
-  val symbolInfos: IPersistentList<SymbolInfo<*>>
-    get() = symbols.values()
+class LocalSymbolInfos(private val symbols: PersistentMap<String, SymbolInfo<*>> = persistentMapOf()) {
+  val symbolInfos: ImmutableCollection<SymbolInfo<*>>
+    get() = symbols.values
 
   fun withSymbol(name: String, symbolInfo: SymbolInfo<*>): LocalSymbolInfos {
     val newSymbols = symbols.put(name, symbolInfo)
@@ -49,7 +49,7 @@ class LocalSymbolInfos(private val symbols: IPersistentMap<String, SymbolInfo<*>
 
   @Suppress("UNCHECKED_CAST")
   operator fun <T : LamaPsiElement> get(name: String): SymbolInfo<T>? {
-    return symbols.get(name)?.orNull() as SymbolInfo<T>?
+    return symbols[name] as SymbolInfo<T>?
   }
 }
 
@@ -274,13 +274,14 @@ private class Analyzer(
     if (infos.size == 1) {
       return infos.single()
     }
-    val merged = PersistentMap.empty<String, SymbolInfo<*>>().linear()
-    for (info in infos) {
-      for (symbolInfo in info.symbolInfos) {
-        merged.put(symbolInfo.name, symbolInfo)
+    val merged = persistentMapOf<String, SymbolInfo<*>>().mutate {
+      for (info in infos) {
+        for (symbolInfo in info.symbolInfos) {
+          it[symbolInfo.name] = symbolInfo
+        }
       }
     }
-    return LocalSymbolInfos(merged.forked())
+    return LocalSymbolInfos(merged)
   }
 
   companion object {
