@@ -3,11 +3,12 @@
 # LamaPlugin Changelog
 
 ## [Unreleased]
-Support 2022.3 EAP
-Fix inspection descriptions
+
+## [0.2.4]
+- Support 2022.3 EAP
+- Fix inspection descriptions
 
 ## [0.2.3]
-Only internal dependency fixes
 
 ## [0.2.2]
 ### Fixed
@@ -19,6 +20,7 @@ Only internal dependency fixes
 ### Added
 - Exception hyperlink with navigation
 - Alignment options for case/syntax branches
+
 
 
 
@@ -40,6 +42,7 @@ Only internal dependency fixes
 
 
 
+
 ### Fixed
 - Go To Declaration/Find Usages for operators/patterns
 - Documentation comment highlight
@@ -52,6 +55,7 @@ Only internal dependency fixes
 ## [0.1.2]
 ### Added
 - Quote typing helper
+
 
 
 
