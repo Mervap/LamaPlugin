@@ -18,7 +18,7 @@ class LamaCodeStyleSettings(container: CodeStyleSettings) : CustomCodeStyleSetti
 
   @JvmField var ALIGN_SYNTAX_OR: Boolean = true
   @JvmField var ALIGN_CASE_ARROW: Boolean = true
-  @JvmField var ALIGN_CASE_BRANCH: Boolean = false
+  @JvmField var ALIGN_CASE_BRANCH: Boolean = true
 }
 
 fun CodeStyleSettings.lamaSettings(): LamaCodeStyleSettings {

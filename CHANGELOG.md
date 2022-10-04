@@ -3,6 +3,8 @@
 # LamaPlugin Changelog
 
 ## [Unreleased]
+### Fixed
+- Change formatter defaults
 
 ## [0.2.4]
 - Support 2022.3 EAP
