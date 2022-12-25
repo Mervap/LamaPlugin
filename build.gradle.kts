@@ -1,3 +1,4 @@
+import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -5,9 +6,9 @@ fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
   id("java")
-  id("org.jetbrains.kotlin.jvm") version "1.7.10"
-  id("org.jetbrains.intellij") version "1.8.1"
-  id("org.jetbrains.changelog") version "1.3.1"
+  id("org.jetbrains.kotlin.jvm") version "1.7.22"
+  id("org.jetbrains.intellij") version "1.11.0"
+  id("org.jetbrains.changelog") version "2.0.0"
   id("org.jetbrains.qodana") version "0.1.13"
 }
 
@@ -25,6 +26,10 @@ dependencies {
   testImplementation(kotlin("test"))
 }
 
+kotlin {
+  jvmToolchain(17)
+}
+
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
   pluginName.set(properties("pluginName"))
@@ -36,8 +41,8 @@ intellij {
 }
 
 changelog {
-  version.set(properties("pluginVersion"))
   groups.set(emptyList())
+  repositoryUrl.set(properties("pluginRepositoryUrl"))
 }
 
 // Configure Gradle Qodana Plugin - read more: https://github.com/JetBrains/gradle-qodana-plugin
@@ -49,16 +54,8 @@ qodana {
 }
 
 tasks {
-  // Set the JVM compatibility versions
-  properties("javaVersion").let {
-    withType<JavaCompile> {
-      sourceCompatibility = it
-      targetCompatibility = it
-    }
-    withType<KotlinCompile> {
-      kotlinOptions.jvmTarget = it
-      kotlinOptions.freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn")
-    }
+  withType<KotlinCompile> {
+    kotlinOptions.freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn")
   }
 
   wrapper {
@@ -85,9 +82,12 @@ tasks {
 
     // Get the latest available change notes from the changelog file
     changeNotes.set(provider {
-      changelog.run {
-        getOrNull(properties("pluginVersion")) ?: getLatest()
-      }.toHTML()
+      with(changelog) {
+        renderItem(
+          getOrNull(properties("pluginVersion")) ?: getLatest(),
+          Changelog.OutputType.HTML,
+        )
+      }
     })
   }
 
