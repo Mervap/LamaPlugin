@@ -1,0 +1,10 @@
+case i of
+    1 -> false
+  | 2 -><caret>
+esac
+-- DELIMITER --
+case i of
+    1 -> false
+  | 2 ->
+    <caret>
+esac

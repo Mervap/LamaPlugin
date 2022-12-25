@@ -1,6 +1,6 @@
 public fun showSMInsn(i) {
   case i of
-    READ -> "READ"
+      READ -> "READ"
     | WRITE -> "WRITE"
     | BINOP (s) -> sprintf("BINOP %s", s)
     | LD    (x) -> sprintf("LD %s", x)
@@ -18,7 +18,7 @@ public fun showSMInsn(i) {
 -- DELIMITER --
 public fun showSMInsn(i) {
   case i of
-    READ           -> "READ"
+      READ         -> "READ"
     | WRITE        -> "WRITE"
     | BINOP (s)    -> sprintf("BINOP %s", s)
     | LD    (x)    -> sprintf("LD %s", x)

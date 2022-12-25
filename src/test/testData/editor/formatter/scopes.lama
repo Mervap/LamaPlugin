@@ -19,6 +19,18 @@ m ::= addMap(deref(m), x, ry);
 
               esac;
 
+case [   a,    b] of
+             [None, None    ] -> false
+| [       None, Some (      ry)] ->
+m ::= addMap(deref(m), x, ry);
+                false
+
+               | [Some (rx), None] ->
+              m ::= addMap(deref(m), y, rx);
+  false
+
+              esac;
+
                 case x of
   #array -> cmpargs(x, y, 0)
   | #fun   ->                 if (diff := x[0] - y[0]) == 0
@@ -53,11 +65,23 @@ public fun id(x) { x }
 
 var a = 3, b = 5;
 case [a, b] of
-  [None, None]        ->
-    var v = [1];
-    m ::= addMap(addMap(deref(m), x, v), y, v);
-    false
+    [None, None]      ->
+      var v = [1];
+      m ::= addMap(addMap(deref(m), x, v), y, v);
+      false
 
+  | [None, Some (ry)] ->
+      m ::= addMap(deref(m), x, ry);
+      false
+
+  | [Some (rx), None] ->
+      m ::= addMap(deref(m), y, rx);
+      false
+
+esac;
+
+case [a, b] of
+    [None, None]      -> false
   | [None, Some (ry)] ->
     m ::= addMap(deref(m), x, ry);
     false
@@ -69,16 +93,16 @@ case [a, b] of
 esac;
 
 case x of
-  #array  -> cmpargs(x, y, 0)
-  | #fun  -> if (diff := x[0] - y[0]) == 0
+    #array -> cmpargs(x, y, 0)
+  | #fun   -> if (diff := x[0] - y[0]) == 0
     then cmpargs(x, y, 1)
     else diff
   fi
-  | #sexp -> if (diff := compareTags(x, y)) == 0
+  | #sexp  -> if (diff := compareTags(x, y)) == 0
     then cmpargs(x, y, 0)
     else diff
   fi
-  | _     -> compare(x, y)
+  | _      -> compare(x, y)
 esac;
 
 if rx == ry

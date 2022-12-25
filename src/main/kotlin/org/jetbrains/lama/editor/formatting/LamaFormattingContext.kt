@@ -7,6 +7,7 @@ import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.TokenType
 import com.intellij.psi.codeStyle.CodeStyleSettings
 import com.intellij.psi.tree.TokenSet
+import com.intellij.psi.util.elementType
 import com.intellij.util.containers.FactoryMap
 import org.jetbrains.lama.parser.LamaElementTypes.*
 import org.jetbrains.lama.parser.LamaParserDefinition
@@ -122,7 +123,8 @@ class LamaFormattingContext(private val settings: CodeStyleSettings) {
       psi is LamaScope || psi is LamaFunctionBody || psi is LamaSyntaxSeqBody -> Indent.getNormalIndent()
       psi is LamaForStatement || psi is LamaDoStatement || psi is LamaWhileStatement -> Indent.getNormalIndent()
       psi is LamaIfStatement || psi is LamaCaseStatement -> Indent.getNormalIndent()
-      psi is LamaCaseBranch || psi is LamaIfBranch -> Indent.getNormalIndent()
+      psi is LamaIfBranch -> Indent.getNormalIndent()
+      psi is LamaCaseBranch -> psi.getScopeIndent()
       psi is LamaArgumentList -> Indent.getContinuationIndent()
       psi is LamaParameterList -> Indent.getContinuationIndent()
       psi is LamaPattern -> getContinuationIndentIfNoError(psi, isLastChild)
@@ -159,7 +161,7 @@ class LamaFormattingContext(private val settings: CodeStyleSettings) {
         }
       }
       parent is LamaForStatement && (psi is LamaExpression || parent.beforeAll == psi) -> Indent.getContinuationIndent()
-      psi is LamaScope -> Indent.getNormalIndent()
+      psi is LamaScope -> parent.getScopeIndent()
       psi is LamaVariableDefinition || parent is LamaVariableDefinition -> Indent.getContinuationIndent()
       parent is LamaSyntaxSeq -> Indent.getContinuationWithoutFirstIndent()
       parent is LamaParameterList -> Indent.getContinuationWithoutFirstIndent()
@@ -169,6 +171,25 @@ class LamaFormattingContext(private val settings: CodeStyleSettings) {
       parent is LamaExpression && parent.firstChild != psi -> Indent.getContinuationWithoutFirstIndent()
       else -> Indent.getNoneIndent()
     }
+  }
+
+  private fun PsiElement.getScopeIndent(): Indent {
+    if (this !is LamaCaseBranch) {
+      return Indent.getNormalIndent()
+    }
+
+    val custom = settings.lamaSettings()
+    if (!custom.ALIGN_CASE_BRANCH || firstChild.elementType != LAMA_CASE_OR) {
+      return Indent.getNormalIndent()
+    }
+
+    val firstBranch = (parent as LamaCaseStatement).caseBranchList.first()
+    return if (firstBranch.textContains('\n')) {
+      val common = settings.getCommonSettings(LamaLanguage)
+      val indentSize = common.indentOptions?.INDENT_SIZE ?: 2
+      Indent.getSpaceIndent(2 * indentSize)
+    }
+    else Indent.getNormalIndent()
   }
 }
 

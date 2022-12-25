@@ -5,6 +5,7 @@
 ## [Unreleased]
 ### Fixed
 - Change formatter defaults
+- Case bodies indents calculated to look the same
 
 ## [0.2.4]
 - Support 2022.3 EAP
