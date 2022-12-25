@@ -128,7 +128,8 @@ private object LimaLocation : LamacLocation {
       false,
       null
     )
-    return result!!
+    @Suppress("UNCHECKED_CAST")
+    return result as T
   }
 }
 
