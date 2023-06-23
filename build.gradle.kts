@@ -6,10 +6,10 @@ fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
   id("java")
-  id("org.jetbrains.kotlin.jvm") version "1.7.22"
-  id("org.jetbrains.intellij") version "1.11.0"
-  id("org.jetbrains.changelog") version "2.0.0"
-  id("org.jetbrains.qodana") version "0.1.13"
+  alias(libs.plugins.kotlin)
+  alias(libs.plugins.gradleIntelliJPlugin)
+  alias(libs.plugins.changelog)
+  alias(libs.plugins.qodana)
 }
 
 group = properties("pluginGroup")

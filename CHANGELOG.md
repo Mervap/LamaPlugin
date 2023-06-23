@@ -3,6 +3,7 @@
 # LamaPlugin Changelog
 
 ## [Unreleased]
+- Support 2023.2 EAP
 
 ## [0.2.5] - 2022-12-26
 
